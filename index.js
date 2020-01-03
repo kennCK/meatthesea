@@ -1,6 +1,6 @@
 import { Routes } from 'common';
 import Data from 'services/Data';
-
+import axios from 'axios'
 const Api = {
   authenticate: (username, password, callback) => {
     const body = {
@@ -39,6 +39,16 @@ const Api = {
     fetch(apiRoute, fetchOptions).then(response => response.json()).then(json => {
       callback(json)
     }).catch(error => console.log('error', error))
+  },
+  upload: (route, parameter, callback) => {
+    const apiRoute = Data.token ? route + '?token=' + Data.token : route;
+    axios.post(apiRoute, parameter)
+    .then(response => {
+      callback(response)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 };
 

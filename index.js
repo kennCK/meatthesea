@@ -2,7 +2,7 @@ import { Routes } from 'common';
 import Data from 'services/Data';
 import axios from 'axios'
 const Api = {
-  authenticate: (username, password, callback) => {
+  authenticate: (username, password, callback, errorCallback = null) => {
     const body = {
       username: username,
       password: password,
@@ -15,9 +15,13 @@ const Api = {
     };
     fetch(Routes.auth, fetchOptions).then((response) => response.json()).then((json) => {
       callback(json);
-    }).catch((error) => console.log('error', error))
+    }).catch((error) => {
+      if(errorCallback){
+        errorCallback(error)
+      }
+    })
   },
-  getAuthUser: (token, callback) => {
+  getAuthUser: (token, callback, errorCallback = null) => {
     const body = {
     };
     const fetchOptions = {
@@ -27,9 +31,13 @@ const Api = {
     };
     fetch(Routes.authUser + '?token=' + token, fetchOptions).then((response) => response.json()).then((json) => {
       callback(json);
-    }).catch((error) => console.log('error', error))
+    }).catch((error) => {
+      if(errorCallback){
+        errorCallback(error)
+      }
+    })
   },
-  request: (route, parameter, callback) => {
+  request: (route, parameter, callback, errorCallback = null) => {
     const apiRoute = Data.token ? route + '?token=' + Data.token : route;
     const fetchOptions = {
       method: 'POST',
@@ -38,16 +46,22 @@ const Api = {
     }
     fetch(apiRoute, fetchOptions).then(response => response.json()).then(json => {
       callback(json)
-    }).catch(error => console.log('error', error))
+    }).catch(error => {
+      if(errorCallback){
+        errorCallback(error)
+      }
+    })
   },
-  upload: (route, parameter, callback) => {
+  upload: (route, parameter, callback, errorCallback = null) => {
     const apiRoute = Data.token ? route + '?token=' + Data.token : route;
     axios.post(apiRoute, parameter)
     .then(response => {
       callback(response)
     })
     .catch(function (error) {
-      console.log(error);
+      if(errorCallback){
+        errorCallback(error)
+      }
     });
   }
 };

@@ -9,51 +9,9 @@ export default {
   APP_HOST: 'com.runwayexpressriders',
   DrawerMenu: [
   {
-    title: 'Deliveries',
-    route: 'Delivery',
+    title: 'Dashboard',
+    route: 'Dashboard',
     icon: faShippingFast,
-    iconStyle: {
-      color: Color.primary
-    }
-  },
-  {
-    title: 'Wallet',
-    route: 'Ledger',
-    icon: faCreditCard,
-    iconStyle: {
-      color: Color.primary
-    }
-  },
-  {
-    title: 'My Deposit',
-    route: 'Deposit',
-    icon: faCreditCard,
-    iconStyle: {
-      color: Color.primary
-    }
-  }
-  ],
-  DrawerMenuMerchant: [
-  {
-    title: 'My Orders',
-    route: 'MyOrders',
-    icon: faShippingFast,
-    iconStyle: {
-      color: Color.primary
-    }
-  },
-  {
-    title: 'Products',
-    route: 'Products',
-    icon: faCreditCard,
-    iconStyle: {
-      color: Color.primary
-    }
-  },
-  {
-    title: 'Wallet',
-    route: 'Ledger',
-    icon: faCreditCard,
     iconStyle: {
       color: Color.primary
     }
@@ -87,9 +45,8 @@ export default {
   }],
   pusher: {
     broadcast_type: 'pusher',
-    channel: 'runway',
+    channel: 'meatthesea',
     notifications: 'App\\Events\\Notifications',
-    rider: 'App\\Events\\Rider',
     typing: 'typing',
     messages: 'App\\Events\\Message',
     messageGroup: 'App\\Events\\MessageGroup',
@@ -97,7 +54,7 @@ export default {
   tutorials: [
     {
       key: 1,
-      title: 'Welcome to RunwayExpress!',
+      title: 'Welcome to MTS!',
       text: 'Delivering food and more to your doorstep!',
       icon: null,
       image: require('assets/logo.png'),
@@ -125,7 +82,7 @@ export default {
   paymentCenters: [{
     title: 'BDO',
     value: 'bdo',
-    account_name: 'RunwayExpress Mobile Application',
+    account_name: 'MTS Mobile Application',
     account_number: '123-123-123-123'
   }],
   currency: [{

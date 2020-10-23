@@ -1,7 +1,3 @@
 {
-  "name": "src",
-  "dependencies": {
-    "@crowdlinker/react-native-pager": "^0.2.3",
-    "react-native-device-info": "^6.0.2"
-  }
+  "name": "src"
 }

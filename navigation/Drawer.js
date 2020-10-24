@@ -7,10 +7,11 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'modules/slider';
 import { Color, BasicStyles } from 'common';
 import Dashboard from 'modules/basics/Welcome.js';
-
+import { connect } from 'react-redux'
+import OptionRight from './OptionRight'
 
 class MenuDrawerContentStructure extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       loginState: true
@@ -23,21 +24,21 @@ class MenuDrawerContentStructure extends Component {
     const { theme } = this.props.state;
     return (
       <View style={{ flexDirection: 'row' }}>
-        {this.state.loginState === true && 
+        {this.state.loginState === true &&
           <TouchableOpacity onPress={this.toggleDrawer.bind(this)}>
             {/*Donute Button Image */}
-            <FontAwesomeIcon icon={ faBars } size={BasicStyles.iconSize} style={[BasicStyles.iconStyle, {
+            <FontAwesomeIcon icon={faBars} size={BasicStyles.iconSize} style={[BasicStyles.iconStyle, {
               color: theme ? theme.primary : Color.primary
-            }]}/>
+            }]} />
           </TouchableOpacity>
         }
-        
+
       </View>
     );
   }
 }
 
-const mapStateToProps = state => ({state: state});
+const mapStateToProps = state => ({ state: state });
 
 const mapDispatchToProps = dispatch => {
   const { actions } = require('@redux');
@@ -71,7 +72,7 @@ const Drawer = createDrawerNavigator({
     },
   }
 }, {
-  contentComponent: Slider
-});
+    contentComponent: Slider
+  });
 
 export default Drawer;

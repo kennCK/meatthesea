@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import { connect } from 'react-redux';
 import {
   View,
   TextInput,
@@ -619,7 +619,5 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Login);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

@@ -7,7 +7,6 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'modules/slider';
 import { Color, BasicStyles } from 'common';
 import Dashboard from 'modules/basics/Welcome.js';
-<<<<<<< HEAD
 import OptionRight from './OptionRight'
 import { connect } from 'react-redux';
 

@@ -2,11 +2,11 @@ import Color from './Color.js';
 import { faCreditCard, faEdit, faComments, faCheck, faPaperPlane, faUser, faTachometerAlt, faQuestionCircle, faUsers, faFile, faShippingFast } from '@fortawesome/free-solid-svg-icons';
 export default {
   company: 'Increment Technologies',
-  APP_NAME: '@RunwayExpressRiders_',
-  APP_NAME_BASIC: 'RunwayExpressPartners',
-  APP_EMAIL: 'support@runwayexpress.co.uk',
-  APP_WEBSITE: 'www.runwayexpress.co.uk',
-  APP_HOST: 'com.runwayexpressriders',
+  APP_NAME: '@MeatTheSea_',
+  APP_NAME_BASIC: 'MeatTheSea',
+  APP_EMAIL: 'support@meatthesea.co.uk',
+  APP_WEBSITE: 'www.meatthesea.co.uk',
+  APP_HOST: 'com.meatthesea',
   DrawerMenu: [
   {
     title: 'Dashboard',
@@ -66,7 +66,7 @@ export default {
       `Share the benefits of <<popular products>> with your friends and family. ` +
       `Give them ₱100 towards their first purchase when they confirm your invite. ` +
       `You’ll get ₱100 when they do!`,
-    emailMessage: 'I\'d like to invite you on RunwayExpress!'
+    emailMessage: 'I\'d like to invite you on MeatTheSea!'
   },
   categories:[
     {

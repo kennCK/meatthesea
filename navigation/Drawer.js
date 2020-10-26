@@ -4,11 +4,11 @@ import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faBars} from '@fortawesome/free-solid-svg-icons';
-import Slider from 'modules/slider';
+import Slider from 'components/Slider/index.js';
 import {Color, BasicStyles} from 'common';
 import Dashboard from 'modules/basics/Welcome.js';
-import {connect} from 'react-redux';
 import OptionRight from './OptionRight';
+import {connect} from 'react-redux';
 
 class MenuDrawerContentStructure extends Component {
   constructor(props) {

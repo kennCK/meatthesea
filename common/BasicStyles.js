@@ -69,7 +69,7 @@ export default {
   },
   btn: {
     height: 50,
-    backgroundColor: Color.primary,
+    // backgroundColor: Color.primary,
     width: width - 40,
     marginBottom: 20,
     alignItems: 'center',

@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
-import { createStackNavigator } from 'react-navigation-stack';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import React, {Component} from 'react';
+import {View, TouchableOpacity, Text} from 'react-native';
+import {createStackNavigator} from 'react-navigation-stack';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
 import Notifications from 'modules/notification';
-import { Color, BasicStyles } from 'common';
-import { connect } from 'react-redux';
+import {Color, BasicStyles} from 'common';
+import {connect} from 'react-redux';
 
 class HeaderOptions extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
   }
   back = () => {
@@ -16,10 +16,14 @@ class HeaderOptions extends Component {
   };
   render() {
     return (
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{flexDirection: 'row'}}>
         <TouchableOpacity onPress={this.back.bind(this)}>
           {/*Donute Button Image */}
-          <FontAwesomeIcon icon={ faChevronLeft } size={BasicStyles.iconSize} style={BasicStyles.iconStyle}/>
+          <FontAwesomeIcon
+            icon={faChevronLeft}
+            size={BasicStyles.iconSize}
+            style={BasicStyles.iconStyle}
+          />
         </TouchableOpacity>
       </View>
     );
@@ -27,42 +31,41 @@ class HeaderOptions extends Component {
 }
 
 class HeaderRight extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
   }
   render() {
-    const { notifications } = this.props.state;
+    const {notifications} = this.props.state;
     return (
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{flexDirection: 'row'}}>
         <View>
-        { notifications.unread > 0 && (
-          <Text style={BasicStyles.badge}>{notifications.unread}</Text>
-          )
-        }
+          {notifications.unread > 0 && (
+            <Text style={BasicStyles.badge}>{notifications.unread}</Text>
+          )}
         </View>
       </View>
     );
   }
 }
 
-const mapStateToProps = state => ({ state: state });
+const mapStateToProps = state => ({state: state});
 
 const mapDispatchToProps = dispatch => {
-  const { actions } = require('@redux');
+  const {actions} = require('@redux');
   return {
-    logout: () => dispatch(actions.logout())
+    logout: () => dispatch(actions.logout()),
   };
 };
 
 let HeaderRightWithRedux = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(HeaderRight);
 
 const NotificationStack = createStackNavigator({
   notificationScreen: {
-    screen: Notifications, 
-    navigationOptions: ({ navigation }) => ({
+    screen: Notifications,
+    navigationOptions: ({navigation}) => ({
       title: 'Notifications',
       headerLeft: <HeaderOptions navigationProps={navigation} />,
       headerRight: <HeaderRightWithRedux navigationProps={navigation} />,
@@ -71,11 +74,11 @@ const NotificationStack = createStackNavigator({
         backgroundColor: Color.primary,
       },
       headerTintColor: '#fff',
-    })
-  }
-})
+    }),
+  },
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(NotificationStack);

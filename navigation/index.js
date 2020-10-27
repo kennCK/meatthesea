@@ -6,7 +6,7 @@ import Register from 'modules/accounts/Register';
 import Drawer from './Drawer';
 import {createAppContainer} from 'react-navigation';
 import ReturnInPersonStack from 'modules/returnInPerson/ReturnInPersonDrawer';
-
+import PickupCrockeryStack from 'modules/pickupCrockery/PickupCrockeryDrawer';
 // login stack
 const LoginStack = createStackNavigator(
   {
@@ -59,6 +59,7 @@ const PrimaryNav = createStackNavigator(
     registerStack: {screen: RegisterStack},
     joinWaitListStack: {screen: JoinWaitListStack},
     returnInPersonStack: {screen: ReturnInPersonStack},
+    pickupCrockeryStack: {screen: PickupCrockeryStack},
     drawerStack: {screen: Drawer},
   },
   {

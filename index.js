@@ -54,7 +54,15 @@ const Api = {
   },
   upload: (route, parameter, callback, errorCallback = null) => {
     const apiRoute = Data.token ? route + '?token=' + Data.token : route;
-    axios.post(apiRoute, parameter)
+    console.log({ apiRoute, parameter })
+    axios({
+      url: apiRoute,
+      method: 'POST',
+      data: parameter,
+      headers: {
+        Accept: 'application/json', 'Content-Type': 'multipart/form-data'
+      },
+    })
     .then(response => {
       callback(response)
     })

@@ -1,7 +1,8 @@
 import {createStackNavigator} from 'react-navigation-stack';
-import Login from 'modules/login';
-import ForgotPassword from 'modules/basics/ForgotPassword';
-import Register from 'modules/basics/Register';
+import Login from 'modules/accounts/Login';
+import ForgotPassword from 'modules/accounts/ForgotPassword';
+import JoinWaitList from 'modules/accounts/JoinWaitList';
+import Register from 'modules/accounts/Register';
 import Drawer from './Drawer';
 import {createAppContainer} from 'react-navigation';
 import ReturnInPersonStack from 'modules/returnInPerson/ReturnInPersonDrawer';
@@ -28,10 +29,21 @@ const ForgotPasswordStack = createStackNavigator(
   },
 );
 
-// Forgot Password stack
+// Register stack
 const RegisterStack = createStackNavigator(
   {
     registerScreen: {screen: Register},
+  },
+  {
+    headerMode: 'none',
+    navigationOptions: {},
+  },
+);
+
+// JpinWaitList stack
+const JoinWaitListStack = createStackNavigator(
+  {
+    JoinWaitListScreen: {screen: JoinWaitList},
   },
   {
     headerMode: 'none',
@@ -45,6 +57,7 @@ const PrimaryNav = createStackNavigator(
     loginStack: {screen: LoginStack},
     forgotPasswordStack: {screen: ForgotPasswordStack},
     registerStack: {screen: RegisterStack},
+    joinWaitListStack: {screen: JoinWaitListStack},
     returnInPersonStack: {screen: ReturnInPersonStack},
     drawerStack: {screen: Drawer},
   },

@@ -53,6 +53,7 @@ const Api = {
     })
   },
   upload: (route, parameter, callback, errorCallback = null) => {
+    console.log('route', Data.token ? route + '?token=' + Data.token : route)
     const apiRoute = Data.token ? route + '?token=' + Data.token : route;
     console.log({ apiRoute, parameter })
     axios({
@@ -61,12 +62,34 @@ const Api = {
       data: parameter,
       headers: {
         Accept: 'application/json', 'Content-Type': 'multipart/form-data'
-      },
+      }
     })
     .then(response => {
       callback(response)
     })
     .catch(function (error) {
+      console.info(error.config)
+      if(errorCallback){
+        errorCallback(error)
+      }
+    });
+  },
+  uploadByFetch: (route, parameter, callback, errorCallback = null) => {
+    const apiRoute = Data.token ? route + '?token=' + Data.token : route;
+    fetch(apiRoute, {
+      method: "POST",
+      body: parameter,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(response => response.json())
+    .then(response => {
+      console.log('success upload')
+      callback(response)
+    })
+    .catch(error => {
+      console.log('error upload')
       if(errorCallback){
         errorCallback(error)
       }

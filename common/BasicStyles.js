@@ -1,5 +1,5 @@
 import Color from './Color';
-import { Dimensions } from 'react-native';
+import {Dimensions} from 'react-native';
 const width = Math.round(Dimensions.get('window').width);
 export default {
   formControl: {
@@ -9,7 +9,7 @@ export default {
     width: width - 40,
     paddingLeft: 10,
     marginBottom: 20,
-    borderRadius: 5
+    borderRadius: 5,
   },
   formControlModal: {
     height: 50,
@@ -19,7 +19,7 @@ export default {
     marginLeft: '5%',
     marginBottom: 20,
     borderRadius: 5,
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   formControlCreate: {
     height: 50,
@@ -28,20 +28,20 @@ export default {
     width: '100%',
     marginBottom: 20,
     borderRadius: 5,
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   pickerStyle: {
     height: 50,
     borderBottomColor: Color.gray,
     borderBottomWidth: 1,
-    width: '90%'
+    width: '90%',
   },
   pickerStyleCreate: {
     height: 50,
     borderBottomColor: Color.gray,
     borderBottomWidth: 1,
     width: '100%',
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   pickerStyleIOS: {
     inputIOS: {
@@ -53,8 +53,8 @@ export default {
       marginRight: 18,
       marginLeft: 10,
       height: 50,
-      paddingLeft: 10
-    }
+      paddingLeft: 10,
+    },
   },
   pickerStyleIOSNoMargin: {
     inputIOS: {
@@ -64,8 +64,8 @@ export default {
       color: '#000',
       height: 50,
       width: '100%',
-      paddingLeft: 10
-    }
+      paddingLeft: 10,
+    },
   },
   btn: {
     height: 50,
@@ -74,32 +74,32 @@ export default {
     marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 5
+    borderRadius: 5,
   },
   btnPrimary: {
-    backgroundColor: Color.primary
+    backgroundColor: Color.primary,
   },
   btnSecondary: {
-    backgroundColor: Color.secondary
+    backgroundColor: Color.secondary,
   },
   btnWarning: {
-    backgroundColor: Color.warning
+    backgroundColor: Color.warning,
   },
   textWhite: {
-    color: Color.white
+    color: Color.white,
   },
   iconSize: 24,
   iconStyle: {
     color: Color.white,
     paddingLeft: 20,
-    paddingRight: 20
+    paddingRight: 20,
   },
   titleText: {
     fontSize: 13,
     paddingTop: 2,
     paddingBottom: 2,
     paddingLeft: 20,
-    paddingRight: 20
+    paddingRight: 20,
   },
   normalText: {
     fontSize: 12,
@@ -107,16 +107,16 @@ export default {
     paddingTop: 2,
     paddingBottom: 2,
     paddingLeft: 20,
-    paddingRight: 20
+    paddingRight: 20,
   },
   normalFontSize: {
-    fontSize: 12
+    fontSize: 12,
   },
   Separator: {
     height: 0.5,
     width: width - 40,
     backgroundColor: Color.lightGray,
-    marginLeft: 20
+    marginLeft: 20,
   },
   badge: {
     backgroundColor: Color.danger,
@@ -124,12 +124,21 @@ export default {
     borderRadius: 5,
     paddingLeft: 5,
     paddingRight: 5,
-    marginRight: 10
+    marginRight: 10,
   },
   profileImageSize: {
     height: 30,
     width: 30,
-    borderRadius: 15
+    borderRadius: 15,
   },
-  profileIconSize: 30
-}
+  profileIconSize: 30,
+  headerTintColor: 'black',
+  headerTitleContainerStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 60,
+  },
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
+};

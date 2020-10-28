@@ -56,4 +56,4 @@ class PendingPickup extends Component {
     }
 }
 
-export default PendingPickup;
+export default PendingPickupr;

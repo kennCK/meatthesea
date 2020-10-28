@@ -1,76 +1,73 @@
-
-import { createStackNavigator } from 'react-navigation-stack';
+import {createStackNavigator} from 'react-navigation-stack';
+import Login from 'modules/accounts/Login';
+import ForgotPassword from 'modules/accounts/ForgotPassword';
+import JoinWaitList from 'modules/accounts/JoinWaitList';
+import Register from 'modules/accounts/Register';
 import Drawer from './Drawer';
-import {
-  Login,
-  Register,
-  ForgotPassword,
-  JoinWaitList,
-  AppOnBoarding
-} from 'modules/accounts'
-
+import {createAppContainer} from 'react-navigation';
+import ReturnInPersonStack from 'modules/returnInPerson/ReturnInPersonDrawer';
+import PickupCrockeryStack from 'modules/pickupCrockery/PickupCrockeryDrawer';
 // login stack
-const LoginStack = createStackNavigator({
-  loginScreen: { screen: Login }
-}, {
+const LoginStack = createStackNavigator(
+  {
+    loginScreen: {screen: Login},
+  },
+  {
     headerMode: 'none',
-    navigationOptions: {
-    }
-  })
+    navigationOptions: {},
+  },
+);
 
 // Forgot Password stack
-const ForgotPasswordStack = createStackNavigator({
-  forgotPasswordScreen: { screen: ForgotPassword }
-}, {
+const ForgotPasswordStack = createStackNavigator(
+  {
+    forgotPasswordScreen: {screen: ForgotPassword},
+  },
+  {
     headerMode: 'none',
-    navigationOptions: {
-    }
-  })
+    navigationOptions: {},
+  },
+);
 
 // Register stack
-const RegisterStack = createStackNavigator({
-  registerScreen: { screen: Register }
-}, {
+const RegisterStack = createStackNavigator(
+  {
+    registerScreen: {screen: Register},
+  },
+  {
     headerMode: 'none',
-    navigationOptions: {
-    }
-  })
+    navigationOptions: {},
+  },
+);
 
 // JpinWaitList stack
-const JoinWaitListStack = createStackNavigator({
-  JoinWaitListScreen: { screen: JoinWaitList }
-}, {
+const JoinWaitListStack = createStackNavigator(
+  {
+    JoinWaitListScreen: {screen: JoinWaitList},
+  },
+  {
     headerMode: 'none',
-    navigationOptions: {
-    }
-  })
-// JpinWaitList stack
-const AppOnBoardingStack = createStackNavigator({
-  AppOnBoardingScreen: { screen: AppOnBoarding }
-}, {
-    headerMode: 'none',
-    navigationOptions: {
-    }
-  })
-
+    navigationOptions: {},
+  },
+);
 
 // Manifest of possible screens
-const PrimaryNav = createStackNavigator({
-  appOnBoardingStack: { screen: AppOnBoardingStack },
-  loginStack: { screen: LoginStack },
-  forgotPasswordStack: { screen: ForgotPasswordStack },
-  registerStack: { screen: RegisterStack },
-  joinWaitListStack: { screen: JoinWaitListStack },
-  drawerStack: { screen: Drawer },
-
-}, {
+const PrimaryNav = createStackNavigator(
+  {
+    loginStack: {screen: LoginStack},
+    forgotPasswordStack: {screen: ForgotPasswordStack},
+    registerStack: {screen: RegisterStack},
+    joinWaitListStack: {screen: JoinWaitListStack},
+    returnInPersonStack: {screen: ReturnInPersonStack},
+    pickupCrockeryStack: {screen: PickupCrockeryStack},
+    drawerStack: {screen: Drawer},
+  },
+  {
     // Default config for all screens
     headerMode: 'none',
     title: 'Main',
-    initialRouteName: 'appOnBoardingStack'
-  })
+    initialRouteName: 'loginStack',
+  },
+);
 
 export default PrimaryNav;
-
-
-

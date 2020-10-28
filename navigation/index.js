@@ -1,11 +1,13 @@
 
 import { createStackNavigator } from 'react-navigation-stack';
-import Login from 'modules/accounts/Login';
-import ForgotPassword from 'modules/accounts/ForgotPassword';
-import JoinWaitList from 'modules/accounts/JoinWaitList';
-import Register from 'modules/accounts/Register';
 import Drawer from './Drawer';
-import { createAppContainer } from 'react-navigation';
+import {
+  Login,
+  Register,
+  ForgotPassword,
+  JoinWaitList,
+  AppOnBoarding
+} from 'modules/accounts'
 
 // login stack
 const LoginStack = createStackNavigator({
@@ -42,11 +44,19 @@ const JoinWaitListStack = createStackNavigator({
     navigationOptions: {
     }
   })
-
+// JpinWaitList stack
+const AppOnBoardingStack = createStackNavigator({
+  AppOnBoardingScreen: { screen: AppOnBoarding }
+}, {
+    headerMode: 'none',
+    navigationOptions: {
+    }
+  })
 
 
 // Manifest of possible screens
 const PrimaryNav = createStackNavigator({
+  appOnBoardingStack: { screen: AppOnBoardingStack },
   loginStack: { screen: LoginStack },
   forgotPasswordStack: { screen: ForgotPasswordStack },
   registerStack: { screen: RegisterStack },
@@ -57,7 +67,7 @@ const PrimaryNav = createStackNavigator({
     // Default config for all screens
     headerMode: 'none',
     title: 'Main',
-    initialRouteName: 'loginStack'
+    initialRouteName: 'appOnBoardingStack'
   })
 
 export default PrimaryNav;

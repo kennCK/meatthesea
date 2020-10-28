@@ -379,15 +379,6 @@ class Login extends Component {
               placeholder={'Email'}
             />
 
-            {/* <TextInput
-              {...Style.textPlaceHolder}
-              style={[BasicStyles.formControl, BasicStyles.textWhite]}
-              onChangeText={(password) => this.setState({ password })}
-              value={this.state.password}
-              placeholder={'password'}
-              secureTextEntry={true}
-            /> */}
-
             <PasswordWithIcon {...Style.textPlaceHolder} placeholder={'Password'} style={[Style.textInput, BasicStyles.textWhite, { marginTop: 10 }]} onTyping={(input) => this.setState({
               password: input
             })} />

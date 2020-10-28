@@ -15,7 +15,7 @@ class OrderTile extends Component {
           <FontAwesomeIcon
             icon={faCircle}
             size={12}
-            style={{color: '#FF0045', paddingRight: 20}}
+            style={{color: '#FF0045', paddingRight: 25}}
           />
         )}
         <Text style={styles.OrderNumberStyle}>

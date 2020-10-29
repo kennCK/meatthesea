@@ -11,6 +11,7 @@ import ReturnInPersonStack from 'modules/returnInPerson/ReturnInPersonDrawer';
 import PickupCrockeryStack from 'modules/pickupCrockery/PickupCrockeryDrawer';
 import PendingPickUpStack from 'modules/orders/PendingPickup'
 import OrderHistoryStack from 'modules/orders/OrderHistory'
+import Homepage from 'modules/products/Welcome.js';
 // login stack
 const LoginStack = createStackNavigator(
   {
@@ -76,6 +77,7 @@ const PrimaryNav = createStackNavigator(
     pickupCrockeryStack: { screen: PickupCrockeryStack },
     pendingPickUpStack: { screen: PendingPickUpStack },
     orderHistoryStack: { screen: OrderHistoryStack },
+    homepageStack: { screen: Homepage },
     drawerStack: { screen: Drawer },
   },
   {

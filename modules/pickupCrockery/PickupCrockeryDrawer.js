@@ -46,15 +46,9 @@ const PickupCrockeryStack = createStackNavigator({
       title: 'PICK UP CROCKERY',
       headerLeft: <HeaderOptions navigationProps={navigation} />,
 
-      headerTintColor: 'black',
-      headerTitleContainerStyle: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 60,
-      },
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
+      headerTintColor: BasicStyles.headerTintColor,
+      headerTitleContainerStyle: BasicStyles.headerTitleContainerStyle,
+      headerTitleStyle: BasicStyles.headerTitleStyle,
     }),
   },
 });

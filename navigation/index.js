@@ -7,6 +7,7 @@ import Drawer from './Drawer';
 import {createAppContainer} from 'react-navigation';
 import ReturnInPersonStack from 'modules/returnInPerson/ReturnInPersonDrawer';
 import PickupCrockeryStack from 'modules/pickupCrockery/PickupCrockeryDrawer';
+import ScheduledPickupStack from 'modules/scheduledPickup/ScheduledPickupDrawer';
 // login stack
 const LoginStack = createStackNavigator(
   {
@@ -60,6 +61,7 @@ const PrimaryNav = createStackNavigator(
     joinWaitListStack: {screen: JoinWaitListStack},
     returnInPersonStack: {screen: ReturnInPersonStack},
     pickupCrockeryStack: {screen: PickupCrockeryStack},
+    scheduledPickupStack: {screen: ScheduledPickupStack},
     drawerStack: {screen: Drawer},
   },
   {

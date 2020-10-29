@@ -138,7 +138,7 @@ class Login extends Component {
 
   test = () => {
     if (config.TEST == true) {
-      this.props.navigation.navigate('drawerStack');
+      this.props.navigation.navigate('homepageStack');
       return true;
     }
   }
@@ -378,15 +378,6 @@ class Login extends Component {
               value={this.state.username}
               placeholder={'Email'}
             />
-
-            {/* <TextInput
-              {...Style.textPlaceHolder}
-              style={[BasicStyles.formControl, BasicStyles.textWhite]}
-              onChangeText={(password) => this.setState({ password })}
-              value={this.state.password}
-              placeholder={'password'}
-              secureTextEntry={true}
-            /> */}
 
             <PasswordWithIcon {...Style.textPlaceHolder} placeholder={'Password'} style={[Style.textInput, BasicStyles.textWhite, { marginTop: 10 }]} onTyping={(input) => this.setState({
               password: input

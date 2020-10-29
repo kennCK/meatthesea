@@ -48,14 +48,14 @@ class ForgotPassword extends Component {
     let parameter = {
       email: email
     }
-    Api.request(config.IS_DEV + '/accounts/request_reset', parameter, userInfo => {
-      this.setState({
-        successMessage: 'Successfully sent! Please check your e-mail address to continue.',
-        errorMessage: null
-      })
-    }, error => {
-      //
-    })
+    // Api.request(config.IS_DEV + '/accounts/request_reset', parameter, userInfo => {
+    //   this.setState({
+    //     successMessage: 'Successfully sent! Please check your e-mail address to continue.',
+    //     errorMessage: null
+    //   })
+    // }, error => {
+    //   //
+    // })
   }
 
   updateOtp = () => {
@@ -188,7 +188,7 @@ class ForgotPassword extends Component {
       <View style={Style.MainContainer}>
         <TextInput
           {...Style.textPlaceHolder}
-          style={Style.textInput}
+          style={[Style.textInput, { height: 50 }]}
           onChangeText={(email) => this.setState({ email })}
           value={this.state.email}
           placeholder={'Email Address'}
@@ -244,29 +244,25 @@ class ForgotPassword extends Component {
             )
           }
 
+
           <View style={Style.TextContainer}>
             {changeStep == 0 && (this._sendRequest())}
             {changeStep == 1 && (this._changePassword())}
             <View style={{
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
+              marginBottom: 30
             }}>
               <Text style={{
-                paddingTop: 10,
-                paddingBottom: 10,
                 color: Color.gray
-              }}>Have an account Already?</Text>
-            </View>
-            <TouchableHighlight
-              style={[BasicStyles.btn, {
-                backgroundColor: theme ? theme.secondary : Color.secondary
-              }]}
-              onPress={() => this.redirect('loginStack')}
-              underlayColor={Color.gray}>
-              <Text style={BasicStyles.textWhite}>
-                Login Now!
+              }}>Already have an account?
+              <Text
+                  onPress={() => this.redirect('loginStack')}
+                  style={[BasicStyles.textWhite, Style.fontWeight('700'), Style.fontSize(14)]}>
+                  {' '} Log in
               </Text>
-            </TouchableHighlight>
+              </Text>
+            </View>
           </View>
         </View>
         <OtpModal

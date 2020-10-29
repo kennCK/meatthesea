@@ -1,17 +1,22 @@
-import {createStackNavigator} from 'react-navigation-stack';
-import Login from 'modules/accounts/Login';
-import ForgotPassword from 'modules/accounts/ForgotPassword';
-import JoinWaitList from 'modules/accounts/JoinWaitList';
-import Register from 'modules/accounts/Register';
+import { createStackNavigator } from 'react-navigation-stack';
+import {
+  Login,
+  AppOnBoarding,
+  Register,
+  ForgotPassword,
+  JoinWaitList
+} from 'modules/accounts';
 import Drawer from './Drawer';
-import {createAppContainer} from 'react-navigation';
 import ReturnInPersonStack from 'modules/returnInPerson/ReturnInPersonDrawer';
 import PickupCrockeryStack from 'modules/pickupCrockery/PickupCrockeryDrawer';
 import ScheduledPickupStack from 'modules/scheduledPickup/ScheduledPickupDrawer';
+import PendingPickUpStack from 'modules/orders/PendingPickup'
+import OrderHistoryStack from 'modules/orders/OrderHistory'
+import Homepage from 'modules/products/Welcome.js';
 // login stack
 const LoginStack = createStackNavigator(
   {
-    loginScreen: {screen: Login},
+    loginScreen: { screen: Login },
   },
   {
     headerMode: 'none',
@@ -22,7 +27,7 @@ const LoginStack = createStackNavigator(
 // Forgot Password stack
 const ForgotPasswordStack = createStackNavigator(
   {
-    forgotPasswordScreen: {screen: ForgotPassword},
+    forgotPasswordScreen: { screen: ForgotPassword },
   },
   {
     headerMode: 'none',
@@ -33,7 +38,7 @@ const ForgotPasswordStack = createStackNavigator(
 // Register stack
 const RegisterStack = createStackNavigator(
   {
-    registerScreen: {screen: Register},
+    registerScreen: { screen: Register },
   },
   {
     headerMode: 'none',
@@ -44,7 +49,16 @@ const RegisterStack = createStackNavigator(
 // JpinWaitList stack
 const JoinWaitListStack = createStackNavigator(
   {
-    JoinWaitListScreen: {screen: JoinWaitList},
+    JoinWaitListScreen: { screen: JoinWaitList },
+  },
+  {
+    headerMode: 'none',
+    navigationOptions: {},
+  },
+);
+const AppOnBoardingStack = createStackNavigator(
+  {
+    AppOnBoardingScreen: { screen: AppOnBoarding },
   },
   {
     headerMode: 'none',
@@ -55,20 +69,24 @@ const JoinWaitListStack = createStackNavigator(
 // Manifest of possible screens
 const PrimaryNav = createStackNavigator(
   {
-    loginStack: {screen: LoginStack},
-    forgotPasswordStack: {screen: ForgotPasswordStack},
-    registerStack: {screen: RegisterStack},
-    joinWaitListStack: {screen: JoinWaitListStack},
-    returnInPersonStack: {screen: ReturnInPersonStack},
-    pickupCrockeryStack: {screen: PickupCrockeryStack},
-    scheduledPickupStack: {screen: ScheduledPickupStack},
-    drawerStack: {screen: Drawer},
+    loginStack: { screen: LoginStack },
+    forgotPasswordStack: { screen: ForgotPasswordStack },
+    registerStack: { screen: RegisterStack },
+    joinWaitListStack: { screen: JoinWaitListStack },
+    appOnBoardingStack: { screen: AppOnBoardingStack },
+    returnInPersonStack: { screen: ReturnInPersonStack },
+    pickupCrockeryStack: { screen: PickupCrockeryStack },
+    pendingPickUpStack: { screen: PendingPickUpStack },
+    orderHistoryStack: { screen: OrderHistoryStack },
+    homepageStack: { screen: Homepage },
+    drawerStack: { screen: Drawer },
+    scheduledPickupStack: {screen: ScheduledPickupStack}
   },
   {
     // Default config for all screens
     headerMode: 'none',
     title: 'Main',
-    initialRouteName: 'loginStack',
+    initialRouteName: 'appOnBoardingStack',
   },
 );
 

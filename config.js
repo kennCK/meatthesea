@@ -10,9 +10,9 @@ export default {
     API_KEY: 'AIzaSyAxT8ShiwiI7AUlmRdmDp5Wg_QtaGMpTjg',
   },
   PUSHER: {
-    appId: '1019305',
-    key: '92d03f6cdbc9b3e7467b',
-    secret: 'cc2d5c85ccbc23847c45',
+    appId: '1079335',
+    key: 'fcc878c9ae95355398a8',
+    secret: 'd5e212f122e005bd91ef',
     cluster: 'ap1',
     encrypted: true,
   },

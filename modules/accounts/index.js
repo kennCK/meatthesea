@@ -1,6 +1,13 @@
 import Login from './Login';
-import Welcome from './Welcome';
-export default {
+import AppOnBoarding from './AppOnBoarding';
+import Register from './Register';
+import ForgotPassword from './ForgotPassword';
+import JoinWaitList from './JoinWaitList';
+
+export  {
   Login,
-  Welcome
+  AppOnBoarding,
+  Register,
+  ForgotPassword,
+  JoinWaitList
 }

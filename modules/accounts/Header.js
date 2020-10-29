@@ -8,25 +8,28 @@ import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 export default class Header extends Component {
   render() {
     const mode = this.props.params
+    const lg = this.props.lg
     return (
       <View>
         {
           mode !== 'Register' &&
-          <View style={Style.LogoContainer}>
-            <Image source={require('assets/logo.png')} style={Style.LogoSize} />
+          <View style={lg ? Style.LogoContainerLg : Style.LogoContainer}>
+            <Image source={require('assets/logo.png')} style={lg ? Style.LogoSizeLg : Style.LogoSize} />
           </View>
         }
-        {mode !== 'JoinWaitList' ?
+        {mode !== 'JoinWaitList' && mode !== 'AppOnBoarding' &&
           <View style={{
             alignItems: 'center',
             justifyContent: 'center',
 
           }}>
             <FontAwesomeIcon icon={faUserCircle} size={mode !== 'Register' ? 45 : 90} style={[Style.headerIconStyle, {
-              color: Color.white
+              color: Color.tertiary
             }]} />
           </View>
-          :
+        }
+        {
+          mode === 'JoinWaitList' &&
           <View style={{
             alignItems: 'center',
             justifyContent: 'center',

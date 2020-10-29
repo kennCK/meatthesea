@@ -4,8 +4,12 @@ import { Dimensions } from 'react-native';
 const getWidth = () => {
   return Math.round(Dimensions.get('window').width);
 }
+const getHeight = () => {
+  return Math.round(Dimensions.get('window').height);
+}
 export default {
   getWidth,
+  getHeight,
   ScrollView: {
     padding: 10,
     backgroundColor: Color.primary,
@@ -22,9 +26,20 @@ export default {
     justifyContent: 'center',
     marginTop: 10
   },
+  LogoContainerLg: {
+    height: 250,
+    width: getWidth(),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10
+  },
   LogoSize: {
     height: 150,
     width: 150
+  },
+  LogoSizeLg: {
+    height: 250,
+    width: 250
   },
   TextContainer: {
     flex: 1,
@@ -33,7 +48,7 @@ export default {
 
   },
   messageContainer: {
-    height: 50,
+    minHeight: 50,
     width: getWidth() - 40,
     alignItems: 'center',
     justifyContent: 'center',
@@ -60,10 +75,15 @@ export default {
     justifyContent: 'center',
     borderRadius: 5
   },
-
+  btnSm: {
+    height: 35
+  },
+  btnLight: {
+    backgroundColor: Color.lightGray
+  },
   btnWhite: {
     height: 50,
-    backgroundColor: Color.lightGray,
+    backgroundColor: Color.tertiary,
     width: getWidth() - 100,
     marginBottom: 20,
     alignItems: 'center',
@@ -84,6 +104,11 @@ export default {
   fontSize: size => {
     return { fontSize: size }
   },
+  fontAlign: pos => {
+    return {
+      textAlign: pos
+    }
+  },
   textPlaceHolder: {
     placeholderTextColor: Color.gray
   },
@@ -95,7 +120,7 @@ export default {
     alignSelf: 'flex-end',
   },
   bottomTextContainer: {
-    width: getWidth() - 100,
+    width: getWidth() - 90,
     marginBottom: 50
   },
 }

@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, Text} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {createStackNavigator} from 'react-navigation-stack';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faChevronLeft} from '@fortawesome/free-solid-svg-icons';
-import Notifications from 'modules/notification';
+import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import {Color, BasicStyles} from 'common';
 import {connect} from 'react-redux';
+import PickupCrockery from 'modules/pickupCrockery';
 
 class HeaderOptions extends Component {
   constructor(props) {
@@ -20,29 +20,11 @@ class HeaderOptions extends Component {
         <TouchableOpacity onPress={this.back.bind(this)}>
           {/*Donute Button Image */}
           <FontAwesomeIcon
-            icon={faChevronLeft}
+            icon={faArrowLeft}
             size={BasicStyles.iconSize}
-            style={BasicStyles.iconStyle}
+            style={styles.iconStyle}
           />
         </TouchableOpacity>
-      </View>
-    );
-  }
-}
-
-class HeaderRight extends Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    const {notifications} = this.props.state;
-    return (
-      <View style={{flexDirection: 'row'}}>
-        <View>
-          {notifications.unread > 0 && (
-            <Text style={BasicStyles.badge}>{notifications.unread}</Text>
-          )}
-        </View>
       </View>
     );
   }
@@ -57,28 +39,34 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-let HeaderRightWithRedux = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(HeaderRight);
-
-const NotificationStack = createStackNavigator({
-  notificationScreen: {
-    screen: Notifications,
+const PickupCrockeryStack = createStackNavigator({
+  pickupCrockeryScreen: {
+    screen: PickupCrockery,
     navigationOptions: ({navigation}) => ({
-      title: 'Notifications',
+      title: 'PICK UP CROCKERY',
       headerLeft: <HeaderOptions navigationProps={navigation} />,
-      headerRight: <HeaderRightWithRedux navigationProps={navigation} />,
-      drawerLabel: 'Notifications',
-      headerStyle: {
-        backgroundColor: Color.primary,
+
+      headerTintColor: 'black',
+      headerTitleContainerStyle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 60,
       },
-      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
     }),
+  },
+});
+
+const styles = StyleSheet.create({
+  iconStyle: {
+    paddingLeft: 20,
+    paddingRight: 20,
   },
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(NotificationStack);
+)(PickupCrockeryStack);

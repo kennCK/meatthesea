@@ -11,8 +11,12 @@ class Welcome extends Component{
   constructor(props){
     super(props);
     this.state = {
-      visibleModal : true
+      visibleModal : true,
+      redirects: ['accountStack', 'filterStack', 'orderSummaryStack']
     }
+  }
+  redirect(index){
+    this.props.navigation.navigate(this.state.redirects[index]);
   }
   render() {
     return (
@@ -69,11 +73,11 @@ class Welcome extends Component{
                 <FontAwesomeIcon icon={ faSearch } style={{color: Color.darkGray, marginLeft: 10}} size={BasicStyles.iconSize} />
               </TouchableOpacity>
               <TextInput style={[{height: 37, flex: 7, width: "100%"}]} placeholder={'Email'}/>
-              <TouchableOpacity style={[{flex: 0, borderLeftColor: Color.gray, borderLeftWidth: 1}]}>
+              <TouchableOpacity style={[{flex: 0, borderLeftColor: Color.gray, borderLeftWidth: 1}]} onPress={() => this.redirect(1)}>
                 <FontAwesomeIcon icon={ faSlidersH } style={{color: Color.darkGray, marginRight: 10, marginLeft: 10}} size={BasicStyles.iconSize} />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={[{flex: 0}]}>
+            <TouchableOpacity style={[{flex: 0}]} onPress={() => this.redirect(0)}>
               <FontAwesomeIcon icon={ faUserCircle } style={{color: Color.primary}} size={BasicStyles.iconSize} />
             </TouchableOpacity>
           </View>
@@ -88,7 +92,7 @@ class Welcome extends Component{
               </TouchableOpacity>
             </ScrollView>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}}>
+              <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}} onPress={() => this.redirect(2)}>
               <View style={[{width: "100%", flexDirection: 'row', alignItems: 'center'}]}>
                 <FontAwesomeIcon icon={ faShoppingBasket } style={{color: Color.darkGray}} size={30} />
                 <Text style={Style.bottomMenuText}>Basket</Text>

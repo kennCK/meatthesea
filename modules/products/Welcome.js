@@ -6,6 +6,7 @@ import Modal from "react-native-modal";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTimes, faEdit, faUserCircle, faSearch, faSlidersH, faShoppingBasket, faHandHolding } from '@fortawesome/free-solid-svg-icons';
 import Products from './components/';
+import Menu from './components/menu.js';
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component{
   constructor(props){
@@ -18,6 +19,14 @@ class Welcome extends Component{
   redirect(index){
     this.props.navigation.navigate(this.state.redirects[index]);
   }
+  changeMenu(index){
+    this.setState({visibleModal: false})
+    if(index == 2){
+      this.props.navigation.navigate('appOnBoardingStack');
+    }else{
+      this.refs.prods.changeMenu(index)
+    }
+  }
   render() {
     return (
       <View style={Style.MainContainer}>
@@ -27,7 +36,7 @@ class Welcome extends Component{
                   marginRight: 200
                 }}>
                   <TouchableOpacity
-              style={[{ marginTop: 40 }]} onPress={() => {this.setState({visibleModal: false})}}>
+              style={[{ marginTop: 40 }]} onPress={() => this.changeMenu(2)}>
             <FontAwesomeIcon icon={ faTimes } style={{
                       color: Color.gray
                     }} size={BasicStyles.iconSize} />
@@ -35,26 +44,26 @@ class Welcome extends Component{
                 </View>
         <View style={Style.circle}>
           <View style={Style.LogoContainer}>
-            <Image source={require('assets/logo.png')} style={Style.LogoSize}/>
+            <Image source={require('assets/groceries.png')} style={Style.LogoSize}/>
           </View>
           <View style={Style.TextContainer}>
             <Text style={[Style.textSecondary]}>Products from our deli store right at your finger tips</Text>
           </View>
           <TouchableOpacity
-              style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]}>
+              style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]} onPress={() => this.changeMenu(0)}>
             <Text style={[Style.textPrimary]}>GO TO GROCERIES</Text>
           </TouchableOpacity>
         </View>
           
         <View style={Style.circle}>
           <View style={Style.LogoContainer}>
-            <Image source={require('assets/logo.png')} style={Style.LogoSize}/>
+            <Image source={require('assets/restaurants.png')} style={Style.LogoSize}/>
           </View>
           <View style={Style.TextContainer}>
             <Text style={[Style.textSecondary]}>Meals from our kitchen straight to your dinner table</Text>
           </View>
           <TouchableHighlight
-              style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]}>
+              style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]} onPress={() => this.changeMenu(1)}>
             <Text style={[Style.textPrimary]}>GO TO RESTAURANTS</Text>
           </TouchableHighlight>  
         </View>
@@ -81,7 +90,8 @@ class Welcome extends Component{
               <FontAwesomeIcon icon={ faUserCircle } style={{color: Color.primary}} size={BasicStyles.iconSize} />
             </TouchableOpacity>
           </View>
-          <Products />
+          <Products ref="prods"/>
+          {/* <Menu /> */}
           <View style={{ height: 50, flexDirection: 'row', }}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}}>

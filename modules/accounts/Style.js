@@ -4,8 +4,12 @@ import { Dimensions } from 'react-native';
 const getWidth = () => {
   return Math.round(Dimensions.get('window').width);
 }
+const getHeight = () => {
+  return Math.round(Dimensions.get('window').height);
+}
 export default {
   getWidth,
+  getHeight,
   ScrollView: {
     padding: 10,
     backgroundColor: Color.primary,
@@ -74,7 +78,7 @@ export default {
   btnSm: {
     height: 35
   },
-  btnLight:{
+  btnLight: {
     backgroundColor: Color.lightGray
   },
   btnWhite: {
@@ -99,6 +103,11 @@ export default {
   },
   fontSize: size => {
     return { fontSize: size }
+  },
+  fontAlign: pos => {
+    return {
+      textAlign: pos
+    }
   },
   textPlaceHolder: {
     placeholderTextColor: Color.gray

@@ -32,25 +32,25 @@ class AppOnBoarding extends Component {
     }
 
     submit() {
-        const { location } = this.state;
+        // const { location } = this.state;
         if (this.validate() == false) {
             return
         }
-        this.setState({ isLoading: true })
-        Api.request(Routes.accountCreate, parameter, response => {
-            this.setState({ isLoading: false })
-            // if (response.error !== null) {
+        // this.setState({ isLoading: true })
+        // Api.request(Routes.accountCreate, parameter, response => {
+        //     this.setState({ isLoading: false })
+        //     // if (response.error !== null) {
 
-            // }
-        }, error => {
-            this.setState({ isResponseError: true })
-        })
+        //     // }
+        // }, error => {
+        //     this.setState({ isResponseError: true })
+        // })
     }
 
     validate() {
         const { location } = this.state;
         if (!location) {
-            this.setState({ errorMessage: 'Please fill in all required fields.' })
+            this.setState({ errorMessage: 'Please select your location.' })
             return false
         }
     }

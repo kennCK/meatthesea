@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { BasicStyles } from 'common';
-import PendingPickupScreen from './PendingPickupScreen';
+import OrderHistoryScreen from './OrderHistoryScreen';
 import { connect } from 'react-redux';
 
 class HeaderOptions extends Component {
@@ -57,10 +57,10 @@ let Header = connect(
 )(HeaderOptions);
 
 const StackNavigator = createStackNavigator({
-    pendingPickupScreen: {
-        screen: PendingPickupScreen,
+    orderHistoryScreen: {
+        screen: OrderHistoryScreen,
         navigationOptions: ({ navigation }) => ({
-            title: 'Pending Pickup',
+            title: 'Order History',
             headerLeft: () => <Header navigationProps={navigation} />,
             headerTintColor: 'black',
             headerTitleContainerStyle: {
@@ -75,7 +75,7 @@ const StackNavigator = createStackNavigator({
     },
 }, {
         title: 'Main',
-        initialRouteName: 'pendingPickupScreen',
+        initialRouteName: 'orderHistoryScreen',
     });
 
 export default StackNavigator;

@@ -1,19 +1,16 @@
 import { createStackNavigator } from 'react-navigation-stack';
-// import {
-//   Login,
-//   AppOnBoarding,
-//   Register,
-//   ForgotPassword,
-//   JoinWaitList
-// } from 'modules/accounts';
-import Login from 'modules/accounts/Login';
-import ForgotPassword from 'modules/accounts/ForgotPassword';
-import JoinWaitList from 'modules/accounts/JoinWaitList';
-import Register from 'modules/accounts/Register';
-import AppOnBoarding from 'modules/accounts/AppOnBoarding';
+import {
+  Login,
+  AppOnBoarding,
+  Register,
+  ForgotPassword,
+  JoinWaitList
+} from 'modules/accounts';
 import Drawer from './Drawer';
 import ReturnInPersonStack from 'modules/returnInPerson/ReturnInPersonDrawer';
 import PickupCrockeryStack from 'modules/pickupCrockery/PickupCrockeryDrawer';
+import PendingPickUpStack from 'modules/orders/PendingPickup'
+import OrderHistoryStack from 'modules/orders/OrderHistory'
 // login stack
 const LoginStack = createStackNavigator(
   {
@@ -77,6 +74,8 @@ const PrimaryNav = createStackNavigator(
     appOnBoardingStack: { screen: AppOnBoardingStack },
     returnInPersonStack: { screen: ReturnInPersonStack },
     pickupCrockeryStack: { screen: PickupCrockeryStack },
+    pendingPickUpStack: { screen: PendingPickUpStack },
+    orderHistoryStack: { screen: OrderHistoryStack },
     drawerStack: { screen: Drawer },
   },
   {

@@ -5,7 +5,7 @@ import { BasicStyles, Color } from 'common';
 import Modal from "react-native-modal";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTimes, faEdit, faUserCircle, faSearch, faSlidersH, faShoppingBasket, faHandHolding } from '@fortawesome/free-solid-svg-icons';
-import Products from './components/';
+import {Products, Menu} from './components/';
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component{
   constructor(props){
@@ -78,6 +78,8 @@ class Welcome extends Component{
             </TouchableOpacity>
           </View>
           <Products />
+          <Menu />
+
           <View style={{ height: 50, flexDirection: 'row', }}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}}>

@@ -78,6 +78,9 @@ const PrimaryNav = createStackNavigator(
     pickupCrockeryStack: { screen: PickupCrockeryStack },
     pendingPickUpStack: { screen: PendingPickUpStack },
     orderHistoryStack: { screen: OrderHistoryStack },
+    accountStack: { screen: OrderHistoryStack },
+    filterStack: { screen: OrderHistoryStack },
+    orderSummaryStack: { screen: OrderHistoryStack },
     homepageStack: { screen: Homepage },
     drawerStack: { screen: Drawer },
     scheduledPickupStack: {screen: ScheduledPickupStack}

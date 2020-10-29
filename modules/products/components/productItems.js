@@ -9,8 +9,8 @@ class ProductItems extends Component {
     let { name, imageURL } = this.props
     return (
       <View style={Style.productContainer}>
-            <Image source={imageURL} style={Style.productImage}/>
-            <Text style={Style.productName}>{name}</Text>
+        <Image source={imageURL} style={Style.productImage}/>
+        <Text style={Style.productName}>{name}</Text>
       </View>
     );
   }

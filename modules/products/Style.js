@@ -111,7 +111,6 @@ export default {
   },
   bottomMenuText: {
     textAlign: 'center',
-    flex: 3,
-    fontSize: 20,
+    flex: 1
   }
 }

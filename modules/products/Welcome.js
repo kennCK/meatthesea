@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import Style from './Style.js';
-import { View, Text, Image, TouchableHighlight, TouchableOpacity, TextInput} from 'react-native';
+import { View, Text, Image, TouchableHighlight, TouchableOpacity, TextInput, ScrollView, Dimensions} from 'react-native';
 import { BasicStyles, Color } from 'common';
 import Modal from "react-native-modal";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTimes, faEdit, faUserCircle, faSearch, faSlidersH, faShoppingBasket, faHandHolding } from '@fortawesome/free-solid-svg-icons';
 import Products from './components/';
+const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component{
   constructor(props){
     super(props);
@@ -77,20 +78,24 @@ class Welcome extends Component{
             </TouchableOpacity>
           </View>
           <Products />
-          <View style={[{width: "100%", flexDirection: 'row', alignItems: 'center'}]}>
-            <TouchableOpacity style={Style.bottomMenu}>
-            <View style={[{width: "100%", flexDirection: 'row', alignItems: 'center'}]}>
-              <FontAwesomeIcon icon={ faHandHolding } style={{color: Color.darkGray}} size={30} />
-              <Text style={Style.bottomMenuText}>Pick up crocery</Text>
+          <View style={{ height: 50, flexDirection: 'row', }}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}}>
+              <View style={[{width: "100%", flexDirection: 'row', alignItems: 'center'}]}>
+                <FontAwesomeIcon icon={ faHandHolding } style={{color: Color.darkGray}} size={30} />
+                <Text style={Style.bottomMenuText}>Pick up groceries</Text>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={Style.bottomMenu}>
-            <View style={[{width: "100%", flexDirection: 'row', alignItems: 'center'}]}>
-              <FontAwesomeIcon icon={ faShoppingBasket } style={{color: Color.darkGray}} size={30} />
-              <Text style={Style.bottomMenuText}>Basket</Text>
+              </TouchableOpacity>
+            </ScrollView>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}}>
+              <View style={[{width: "100%", flexDirection: 'row', alignItems: 'center'}]}>
+                <FontAwesomeIcon icon={ faShoppingBasket } style={{color: Color.darkGray}} size={30} />
+                <Text style={Style.bottomMenuText}>Basket</Text>
               </View>
-            </TouchableOpacity>
-          </View>
+              </TouchableOpacity>
+            </ScrollView>
+        </View>
         </View>
       </View>
     );

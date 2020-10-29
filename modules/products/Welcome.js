@@ -25,7 +25,7 @@ class Welcome extends Component{
                   <TouchableOpacity
               style={[{ marginTop: 40 }]} onPress={() => {this.setState({visibleModal: false})}}>
             <FontAwesomeIcon icon={ faTimes } style={{
-                      color: Color.white
+                      color: Color.gray
                     }} size={BasicStyles.iconSize} />
           </TouchableOpacity>
                 </View>

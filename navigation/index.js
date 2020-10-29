@@ -9,6 +9,7 @@ import {
 import Drawer from './Drawer';
 import ReturnInPersonStack from 'modules/returnInPerson/ReturnInPersonDrawer';
 import PickupCrockeryStack from 'modules/pickupCrockery/PickupCrockeryDrawer';
+import ScheduledPickupStack from 'modules/scheduledPickup/ScheduledPickupDrawer';
 import PendingPickUpStack from 'modules/orders/PendingPickup'
 import OrderHistoryStack from 'modules/orders/OrderHistory'
 import Homepage from 'modules/products/Welcome.js';
@@ -79,6 +80,7 @@ const PrimaryNav = createStackNavigator(
     orderHistoryStack: { screen: OrderHistoryStack },
     homepageStack: { screen: Homepage },
     drawerStack: { screen: Drawer },
+    scheduledPickupStack: {screen: ScheduledPickupStack}
   },
   {
     // Default config for all screens

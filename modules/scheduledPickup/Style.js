@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 1,
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 0.1,
   },
   OrderNumberStyle: {
     fontSize: 20,

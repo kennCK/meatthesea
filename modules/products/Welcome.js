@@ -13,7 +13,7 @@ class Welcome extends Component{
     super(props);
     this.state = {
       visibleModal : true,
-      redirects: ['accountStack', 'filterStack', 'orderSummaryStack']
+      redirects: ['accountStack', 'filterStack', 'orderSummaryStack', 'pickupCrockeryStack', 'deliveryDetailsStack']
     }
   }
   redirect(index){
@@ -50,7 +50,7 @@ class Welcome extends Component{
             <Text style={[Style.textSecondary]}>Products from our deli store right at your finger tips</Text>
           </View>
           <TouchableOpacity
-              style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]} onPress={() => this.changeMenu(0)}>
+              style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]} onPress={() => this.changeMenu(1)}>
             <Text style={[Style.textPrimary]}>GO TO GROCERIES</Text>
           </TouchableOpacity>
         </View>
@@ -63,7 +63,7 @@ class Welcome extends Component{
             <Text style={[Style.textSecondary]}>Meals from our kitchen straight to your dinner table</Text>
           </View>
           <TouchableHighlight
-              style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]} onPress={() => this.changeMenu(1)}>
+              style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]} onPress={() => this.changeMenu(0)}>
             <Text style={[Style.textPrimary]}>GO TO RESTAURANTS</Text>
           </TouchableHighlight>  
         </View>
@@ -72,7 +72,7 @@ class Welcome extends Component{
           <View style={Style.delivery}>
             <Text style={[{ fontSize: 18, flex: 1 }]}>Deliver to:  </Text>
             <Text style={[Style.textPrimary, { flex: 3, fontSize: 18 }]}>1a, Centre Stage Tower 1</Text>
-            <TouchableOpacity style={[{flex: 0}]}>
+            <TouchableOpacity style={[{flex: 0}]} onPress={() => this.redirect(4)}>
               <FontAwesomeIcon icon={ faEdit } style={{color: Color.darkGray}} size={BasicStyles.iconSize} />
             </TouchableOpacity>
           </View>
@@ -94,10 +94,10 @@ class Welcome extends Component{
           {/* <Menu /> */}
           <View style={{ height: 50, flexDirection: 'row', }}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}}>
+              <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}} onPress={() => this.redirect(3)}>
               <View style={[{width: "100%", flexDirection: 'row', alignItems: 'center'}]}>
                 <FontAwesomeIcon icon={ faHandHolding } style={{color: Color.darkGray}} size={30} />
-                <Text style={Style.bottomMenuText}>Pick up groceries</Text>
+                <Text style={Style.bottomMenuText}>Pick up crockeries</Text>
               </View>
               </TouchableOpacity>
             </ScrollView>

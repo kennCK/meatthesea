@@ -10,7 +10,11 @@ class AddressCard extends Component {
 
   render() {
     return (
-      <View style={styles.AddressCardContainer}>
+      <TouchableOpacity
+        style={styles.AddressCardContainer}
+        onPress={() => {
+          this.props.onSelect(this.props.id);
+        }}>
         <View
           style={[
             {
@@ -23,14 +27,16 @@ class AddressCard extends Component {
               justifyContent: 'center',
             },
           ]}>
-          <View
-            style={{
-              height: 12,
-              width: 12,
-              borderRadius: 6,
-              backgroundColor: '#2C80BF',
-            }}
-          />
+          {this.props.selectedTile && (
+            <View
+              style={{
+                height: 12,
+                width: 12,
+                borderRadius: 6,
+                backgroundColor: '#2C80BF',
+              }}
+            />
+          )}
         </View>
         <View style={styles.AddressTextContainer}>
           <Text style={styles.AddressTypeTextStyle}>
@@ -45,7 +51,7 @@ class AddressCard extends Component {
             style={{color: '#2C80BF'}}
           />
         </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

@@ -37,7 +37,7 @@ export default class LocationInput extends React.Component {
     render() {
 
         let { modalVisible } = this.state
-        let { selected, placeholder, iconHeight=15, style, iconStyle = {
+        let { selected, placeholder, iconHeight = 15, style, iconStyle = {
             position: 'absolute',
             right: 10,
             top: 12

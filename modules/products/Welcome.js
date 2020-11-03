@@ -16,8 +16,12 @@ class Welcome extends Component{
       visibleModal : true,
       redirects: ['accountStack', 'filterStack', 'orderSummaryStack', 'pickupCrockeryStack', 'deliveryDetailsStack'],
       deliveryModal : false,
-      menu: 0
+      menu: 0,
+      selectedMenu: null
     }
+  }
+  changeSelectedMenu(data){
+    this.setState({selectedMenu: data})
   }
   redirect(index){
     this.props.navigation.navigate(this.state.redirects[index]);
@@ -88,7 +92,7 @@ class Welcome extends Component{
               <TouchableOpacity style={[{flex: 1}]}>
                 <FontAwesomeIcon icon={ faSearch } style={{color: Color.darkGray, marginLeft: 10}} size={BasicStyles.iconSize} />
               </TouchableOpacity>
-              <TextInput style={[{height: 37, flex: 7, width: "100%"}]} placeholder={'Email'}/>
+              <TextInput style={[{height: 37, flex: 7, width: "100%"}]} placeholder={'Search'}/>
               <TouchableOpacity style={[{flex: 0, borderLeftColor: Color.gray, borderLeftWidth: 1}]} onPress={() => this.redirect(1)}>
                 <FontAwesomeIcon icon={ faSlidersH } style={{color: Color.darkGray, marginRight: 10, marginLeft: 10}} size={BasicStyles.iconSize} />
               </TouchableOpacity>
@@ -97,9 +101,15 @@ class Welcome extends Component{
               <FontAwesomeIcon icon={ faUserCircle } style={{color: Color.primary}} size={BasicStyles.iconSize} />
             </TouchableOpacity>
           </View>
-          <Products state={this.state.menu} click={(index)=> this.changeMenu(index)}/>
-          {/* <Menu /> */}
-          <View style={{ height: 50, flexDirection: 'row', }}>
+          {
+            this.state.selectedMenu == null &&
+            <Products state={this.state.menu} click={(index)=> this.changeMenu(index)} choose={(data) => this.changeSelectedMenu(data)}/>
+          }
+          {
+            this.state.selectedMenu != null &&
+            <Menu menu={this.state.selectedMenu} press={(data) => this.changeSelectedMenu(data)}/>
+          }
+          <View style={{ height: 50, flexDirection: 'row'}}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}} onPress={() => this.redirect(3)}>
               <View style={[{width: "100%", flexDirection: 'row', alignItems: 'center'}]}>

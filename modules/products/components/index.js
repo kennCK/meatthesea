@@ -7,6 +7,11 @@ class Products extends Component {
   constructor(props) {
     super(props);
   }
+
+  testing(data){
+    console.log(data);
+  }
+
   render() {
     let menu = [{
       title: 'RESTAURANT MENU'
@@ -21,9 +26,15 @@ class Products extends Component {
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/res.png')}/>
               <View style={Style.imageRow}>
-                <ProductItem name="Bites" imageURL={require('assets/products/res-bites.png')}/>
-                <ProductItem name="Snacks" imageURL={require('assets/products/res-snack.png')}/>
-                <ProductItem name="Deep fried snacks" imageURL={require('assets/products/res-fried.png')}/>
+                <TouchableOpacity onPress={() => this.props.choose('bites')}>
+                  <ProductItem name="Bites" imageURL={require('assets/products/res-bites.png')}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.choose('snacks')}>
+                  <ProductItem name="Snacks" imageURL={require('assets/products/res-snack.png')}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.choose('fried')}>
+                  <ProductItem name="Deep fried snacks" imageURL={require('assets/products/res-fried.png')}/> 
+                </TouchableOpacity>
               </View>
               <View style={Style.imageRow}>
                 <ProductItem name="Salads / soups" imageURL={require('assets/products/res-salad.png')}/>

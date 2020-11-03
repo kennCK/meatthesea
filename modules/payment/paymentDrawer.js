@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import {Color, BasicStyles} from 'common';
 import {connect} from 'react-redux';
-import PickupCrockery from 'modules/pickupCrockery';
+import Payment from './index.js';
 
 class HeaderOptions extends Component {
   constructor(props) {
@@ -39,11 +39,11 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const PickupCrockeryStack = createStackNavigator({
-  pickupCrockeryScreen: {
-    screen: PickupCrockery,
+const PaymentStack = createStackNavigator({
+  paymentScreen: {
+    screen: Payment,
     navigationOptions: ({navigation}) => ({
-      title: 'PICK UP CROCKERY',
+      title: 'PAYMENT',
       headerLeft: <HeaderOptions navigationProps={navigation} />,
 
       headerTintColor: BasicStyles.headerTintColor,
@@ -63,4 +63,4 @@ const styles = StyleSheet.create({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(PickupCrockeryStack);
+)(PaymentStack);

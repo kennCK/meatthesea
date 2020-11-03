@@ -138,7 +138,7 @@ class Login extends Component {
 
   test = () => {
     if (config.TEST == true) {
-      this.props.navigation.navigate('orderHistoryStack');
+      this.props.navigation.navigate('homepageStack');
       return true;
     }
   }

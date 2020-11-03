@@ -9,8 +9,13 @@ import {
 import Drawer from './Drawer';
 import ReturnInPersonStack from 'modules/returnInPerson/ReturnInPersonDrawer';
 import PickupCrockeryStack from 'modules/pickupCrockery/PickupCrockeryDrawer';
+import ScheduledPickupStack from 'modules/scheduledPickup/ScheduledPickupDrawer';
 import PendingPickUpStack from 'modules/orders/PendingPickup'
 import OrderHistoryStack from 'modules/orders/OrderHistory'
+import Homepage from 'modules/products/Welcome.js';
+import TermsAndConditionStack from 'modules/termsAndCondition/termsAndConditionDrawer';
+import FilterStack from 'modules/filter/filterDrawer';
+import PaymentStack from 'modules/payment/paymentDrawer';
 // login stack
 const LoginStack = createStackNavigator(
   {
@@ -76,7 +81,15 @@ const PrimaryNav = createStackNavigator(
     pickupCrockeryStack: { screen: PickupCrockeryStack },
     pendingPickUpStack: { screen: PendingPickUpStack },
     orderHistoryStack: { screen: OrderHistoryStack },
+    accountStack: { screen: OrderHistoryStack },
+    filterStack: { screen: OrderHistoryStack },
+    orderSummaryStack: { screen: OrderHistoryStack },
+    homepageStack: { screen: Homepage },
     drawerStack: { screen: Drawer },
+    scheduledPickupStack: {screen: ScheduledPickupStack},
+    termsAndConditionStack: {screen: TermsAndConditionStack},
+    filterStack: {screen: FilterStack},
+    paymentStack: {screen: PaymentStack}    
   },
   {
     // Default config for all screens

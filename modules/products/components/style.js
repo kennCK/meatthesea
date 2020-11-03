@@ -59,5 +59,17 @@ export default {
   },
   hideScroll: {
     visibility: 'hidden'
+  },
+  modal: {
+    backgroundColor: Color.primary,
+    alignItems: 'center',
+    margin: 0,
+    height: '100%'
+  },
+  modalBox: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%'
   }
 }

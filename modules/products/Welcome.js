@@ -6,6 +6,7 @@ import Modal from "react-native-modal";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTimes, faEdit, faUserCircle, faSearch, faSlidersH, faShoppingBasket, faHandHolding } from '@fortawesome/free-solid-svg-icons';
 import Products from './components/';
+import DeliveryDetails from './components/deliveryDetails'
 import Menu from './components/menu.js';
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component{
@@ -13,18 +14,23 @@ class Welcome extends Component{
     super(props);
     this.state = {
       visibleModal : true,
-      redirects: ['accountStack', 'filterStack', 'orderSummaryStack', 'pickupCrockeryStack', 'deliveryDetailsStack']
+      redirects: ['accountStack', 'filterStack', 'orderSummaryStack', 'pickupCrockeryStack', 'deliveryDetailsStack'],
+      deliveryModal : false,
+      menu: 0
     }
   }
   redirect(index){
     this.props.navigation.navigate(this.state.redirects[index]);
+  }
+  deliveryModal(){
+    this.setState({deliveryModal: (this.state.deliveryModal)?false:true})
   }
   changeMenu(index){
     this.setState({visibleModal: false})
     if(index == 2){
       this.props.navigation.navigate('appOnBoardingStack');
     }else{
-      this.refs.prods.changeMenu(index)
+      this.setState({menu: index});
     }
   }
   render() {
@@ -68,12 +74,13 @@ class Welcome extends Component{
           </TouchableHighlight>  
         </View>
         </Modal>
+        <DeliveryDetails state={this.state.deliveryModal} click={() => this.deliveryModal()} />
         <View>
           <View style={Style.delivery}>
             <Text style={[{ fontSize: 18, flex: 1 }]}>Deliver to:  </Text>
             <Text style={[Style.textPrimary, { flex: 3, fontSize: 18 }]}>1a, Centre Stage Tower 1</Text>
-            <TouchableOpacity style={[{flex: 0}]} onPress={() => this.redirect(4)}>
-              <FontAwesomeIcon icon={ faEdit } style={{color: Color.darkGray}} size={BasicStyles.iconSize} />
+            <TouchableOpacity style={[{flex: 0}]} onPress={() => this.deliveryModal()} >
+              <FontAwesomeIcon icon={ faEdit } style={{color: Color.darkGray}} size={BasicStyles.iconSize}/>
             </TouchableOpacity>
           </View>
           <View style={Style.delivery}>
@@ -90,7 +97,7 @@ class Welcome extends Component{
               <FontAwesomeIcon icon={ faUserCircle } style={{color: Color.primary}} size={BasicStyles.iconSize} />
             </TouchableOpacity>
           </View>
-          <Products ref="prods"/>
+          <Products state={this.state.menu} click={(index)=> this.changeMenu(index)}/>
           {/* <Menu /> */}
           <View style={{ height: 50, flexDirection: 'row', }}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

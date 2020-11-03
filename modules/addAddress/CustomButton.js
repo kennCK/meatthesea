@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import styles from './Styles';
 
 class CustomButton extends Component {
   constructor(props) {
@@ -20,20 +21,5 @@ class CustomButton extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  CustomButtonContainer: {
-    height: 50,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  ButtonTextContainer: {},
-  ButtonTextStyle: {
-    textAlign: 'center',
-    fontSize: 15,
-    color: 'white',
-  },
-});
 
 export default CustomButton;

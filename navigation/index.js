@@ -98,7 +98,7 @@ const PrimaryNav = createStackNavigator(
     // Default config for all screens
     headerMode: 'none',
     title: 'Main',
-    initialRouteName: 'accountStack',
+    initialRouteName: 'appOnBoardingStack',
   },
 );
 

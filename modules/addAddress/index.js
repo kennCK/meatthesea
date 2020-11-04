@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View} from 'react-native';
 import GooglePlacesAutoCompleteWithMap from 'components/Location/GooglePlacesAutoCompleteWithMap.js';
-
+import styles from './Styles';
 class AddAddress extends Component {
   constructor(props) {
     super(props);
@@ -23,12 +23,5 @@ class AddAddress extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  AddAddressContainer: {
-    justifyContent: 'flex-start',
-    height: '100%',
-  },
-});
 
 export default AddAddress;

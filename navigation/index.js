@@ -16,6 +16,8 @@ import Homepage from 'modules/products/Welcome.js';
 import TermsAndConditionStack from 'modules/termsAndCondition/termsAndConditionDrawer';
 import FilterStack from 'modules/filter/filterDrawer';
 import PaymentStack from 'modules/payment/paymentDrawer';
+import AccountStack from 'modules/user/account'
+import ProfileStack from 'modules/user/profile'
 // login stack
 const LoginStack = createStackNavigator(
   {
@@ -81,7 +83,6 @@ const PrimaryNav = createStackNavigator(
     pickupCrockeryStack: { screen: PickupCrockeryStack },
     pendingPickUpStack: { screen: PendingPickUpStack },
     orderHistoryStack: { screen: OrderHistoryStack },
-    accountStack: { screen: OrderHistoryStack },
     filterStack: { screen: OrderHistoryStack },
     orderSummaryStack: { screen: OrderHistoryStack },
     homepageStack: { screen: Homepage },
@@ -89,7 +90,9 @@ const PrimaryNav = createStackNavigator(
     scheduledPickupStack: {screen: ScheduledPickupStack},
     termsAndConditionStack: {screen: TermsAndConditionStack},
     filterStack: {screen: FilterStack},
-    paymentStack: {screen: PaymentStack}
+    paymentStack: {screen: PaymentStack},
+    accountStack: { screen: AccountStack },
+    profileStack: { screen: ProfileStack },
   },
   {
     // Default config for all screens

@@ -9,6 +9,7 @@ export default {
   secondary: secondary,
   white: '#ffffff',
   gray: '#cccccc',
+  accentGray: '#e1e1e147',
   lightGray: '#eeeeee',
   darkGray: '#555555',
   normalGray: '#999',
@@ -16,13 +17,13 @@ export default {
   success: '#4BB543',
   goldenYellow: '#FFDF00',
   tertiary: tertiary,
-  setPrimary(color){
+  setPrimary(color) {
     this.primary = color
   },
-  setSecondary(color){
+  setSecondary(color) {
     this.secondary = color
   },
-  setTertiary(color){
+  setTertiary(color) {
     this.tertiary = color
   }
 }

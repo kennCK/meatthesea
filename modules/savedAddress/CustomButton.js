@@ -10,6 +10,9 @@ class CustomButton extends Component {
   render() {
     return (
       <TouchableOpacity
+        onPress={() => {
+          this.props.onPress();
+        }}
         style={[
           styles.CustomButtonContainer,
           {backgroundColor: this.props.buttonColor},

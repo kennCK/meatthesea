@@ -45,7 +45,13 @@ class SavedAddress extends Component {
           })}
         </View>
         <View style={styles.ButtonContainer}>
-          <CustomButton buttonColor="#0064B1" buttonText="+ ADD ADDRESS" />
+          <CustomButton
+            buttonColor="#0064B1"
+            buttonText="+ ADD ADDRESS"
+            onPress={() => {
+              this.props.navigation.navigate('addAddressStack');
+            }}
+          />
         </View>
       </View>
     );

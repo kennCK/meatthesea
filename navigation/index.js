@@ -15,6 +15,7 @@ import OrderHistoryStack from 'modules/orders/OrderHistory';
 import Homepage from 'modules/products/Welcome.js';
 import SavedAddressStack from 'modules/savedAddress/SavedAddressDrawer.js';
 import SettingsStack from 'modules/settings/SettingsDrawer.js';
+import AddAddressStack from 'modules/addAddress/AddAddressDrawer.js';
 // login stack
 const LoginStack = createStackNavigator(
   {
@@ -85,6 +86,7 @@ const PrimaryNav = createStackNavigator(
     scheduledPickupStack: {screen: ScheduledPickupStack},
     savedAddressStack: {screen: SavedAddressStack},
     settingsStack: {screen: SettingsStack},
+    addAddressStack: {screen: AddAddressStack},
   },
   {
     // Default config for all screens

@@ -6,13 +6,12 @@ import Pagination from 'components/Pagination/Dynamic.js';
 class Products extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      activeIndex : 0
-    };
   }
-  changeMenu(index){
-    this.setState({activeIndex: index});
+
+  testing(data){
+    console.log(data);
   }
+
   render() {
     let menu = [{
       title: 'RESTAURANT MENU'
@@ -21,15 +20,21 @@ class Products extends Component {
     }]
     return (
       <View style={[{flex: 1}]}>
-        <Pagination menu={menu} activeIndex={this.state.activeIndex} onChange={(index) => this.changeMenu(index)}/>
-        { this.state.activeIndex == 0 && 
-          <ScrollView style={this.state.activeIndex == 0 ? Style.showScroll: Style.hideScroll} showsVerticalScrollIndicator={false}>
+        <Pagination menu={menu} activeIndex={this.props.state} onChange={(index) => this.props.click(index)}/>
+        { this.props.state == 0 && 
+          <ScrollView style={this.props.state == 0 ? Style.showScroll: Style.hideScroll} showsVerticalScrollIndicator={false}>
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/res.png')}/>
               <View style={Style.imageRow}>
-                <ProductItem name="Bites" imageURL={require('assets/products/res-bites.png')}/>
-                <ProductItem name="Snacks" imageURL={require('assets/products/res-snack.png')}/>
-                <ProductItem name="Deep fried snacks" imageURL={require('assets/products/res-fried.png')}/>
+                <TouchableOpacity onPress={() => this.props.choose('bites')}>
+                  <ProductItem name="Bites" imageURL={require('assets/products/res-bites.png')}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.choose('snacks')}>
+                  <ProductItem name="Snacks" imageURL={require('assets/products/res-snack.png')}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.choose('fried')}>
+                  <ProductItem name="Deep fried snacks" imageURL={require('assets/products/res-fried.png')}/> 
+                </TouchableOpacity>
               </View>
               <View style={Style.imageRow}>
                 <ProductItem name="Salads / soups" imageURL={require('assets/products/res-salad.png')}/>
@@ -44,8 +49,8 @@ class Products extends Component {
             </View>
           </ScrollView>
         }
-        {this.state.activeIndex == 1 && 
-          <ScrollView style={this.state.activeIndex == 1? Style.showScroll: Style.hideScroll} showsVerticalScrollIndicator={false}>
+        {this.props.state == 1 && 
+          <ScrollView style={this.props.state == 1? Style.showScroll: Style.hideScroll} showsVerticalScrollIndicator={false}>
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/deli.png')}/>
               <View style={Style.imageRow}>

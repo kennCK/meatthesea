@@ -6,6 +6,7 @@ import Modal from "react-native-modal";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTimes, faEdit, faUserCircle, faSearch, faSlidersH, faShoppingBasket, faHandHolding } from '@fortawesome/free-solid-svg-icons';
 import Products from './components/';
+import DeliveryDetails from './components/deliveryDetails'
 import Menu from './components/menu.js';
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component{
@@ -13,18 +14,27 @@ class Welcome extends Component{
     super(props);
     this.state = {
       visibleModal : true,
-      redirects: ['accountStack', 'filterStack', 'orderSummaryStack', 'pickupCrockeryStack', 'deliveryDetailsStack']
+      redirects: ['accountStack', 'filterStack', 'orderSummaryStack', 'pickupCrockeryStack', 'deliveryDetailsStack'],
+      deliveryModal : false,
+      menu: 0,
+      selectedMenu: null
     }
+  }
+  changeSelectedMenu(data){
+    this.setState({selectedMenu: data})
   }
   redirect(index){
     this.props.navigation.navigate(this.state.redirects[index]);
+  }
+  deliveryModal(){
+    this.setState({deliveryModal: (this.state.deliveryModal)?false:true})
   }
   changeMenu(index){
     this.setState({visibleModal: false})
     if(index == 2){
       this.props.navigation.navigate('appOnBoardingStack');
     }else{
-      this.refs.prods.changeMenu(index)
+      this.setState({menu: index});
     }
   }
   render() {
@@ -68,12 +78,13 @@ class Welcome extends Component{
           </TouchableHighlight>  
         </View>
         </Modal>
+        <DeliveryDetails state={this.state.deliveryModal} click={() => this.deliveryModal()} />
         <View>
           <View style={Style.delivery}>
             <Text style={[{ fontSize: 18, flex: 1 }]}>Deliver to:  </Text>
             <Text style={[Style.textPrimary, { flex: 3, fontSize: 18 }]}>1a, Centre Stage Tower 1</Text>
-            <TouchableOpacity style={[{flex: 0}]} onPress={() => this.redirect(4)}>
-              <FontAwesomeIcon icon={ faEdit } style={{color: Color.darkGray}} size={BasicStyles.iconSize} />
+            <TouchableOpacity style={[{flex: 0}]} onPress={() => this.deliveryModal()} >
+              <FontAwesomeIcon icon={ faEdit } style={{color: Color.darkGray}} size={BasicStyles.iconSize}/>
             </TouchableOpacity>
           </View>
           <View style={Style.delivery}>
@@ -81,7 +92,7 @@ class Welcome extends Component{
               <TouchableOpacity style={[{flex: 1}]}>
                 <FontAwesomeIcon icon={ faSearch } style={{color: Color.darkGray, marginLeft: 10}} size={BasicStyles.iconSize} />
               </TouchableOpacity>
-              <TextInput style={[{height: 37, flex: 7, width: "100%"}]} placeholder={'Email'}/>
+              <TextInput style={[{height: 37, flex: 7, width: "100%"}]} placeholder={'Search'}/>
               <TouchableOpacity style={[{flex: 0, borderLeftColor: Color.gray, borderLeftWidth: 1}]} onPress={() => this.redirect(1)}>
                 <FontAwesomeIcon icon={ faSlidersH } style={{color: Color.darkGray, marginRight: 10, marginLeft: 10}} size={BasicStyles.iconSize} />
               </TouchableOpacity>
@@ -90,9 +101,15 @@ class Welcome extends Component{
               <FontAwesomeIcon icon={ faUserCircle } style={{color: Color.primary}} size={BasicStyles.iconSize} />
             </TouchableOpacity>
           </View>
-          <Products ref="prods"/>
-          {/* <Menu /> */}
-          <View style={{ height: 50, flexDirection: 'row', }}>
+          {
+            this.state.selectedMenu == null &&
+            <Products state={this.state.menu} click={(index)=> this.changeMenu(index)} choose={(data) => this.changeSelectedMenu(data)}/>
+          }
+          {
+            this.state.selectedMenu != null &&
+            <Menu menu={this.state.selectedMenu} press={(data) => this.changeSelectedMenu(data)}/>
+          }
+          <View style={{ height: 50, flexDirection: 'row'}}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}} onPress={() => this.redirect(3)}>
               <View style={[{width: "100%", flexDirection: 'row', alignItems: 'center'}]}>

@@ -89,7 +89,7 @@ const PrimaryNav = createStackNavigator(
     scheduledPickupStack: {screen: ScheduledPickupStack},
     termsAndConditionStack: {screen: TermsAndConditionStack},
     filterStack: {screen: FilterStack},
-    paymentStack: {screen: PaymentStack}    
+    paymentStack: {screen: PaymentStack}
   },
   {
     // Default config for all screens

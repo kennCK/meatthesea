@@ -4,7 +4,6 @@ import { BasicStyles, Color } from 'common';
 import {faPlus, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
-import { color } from 'react-native-reanimated';
  
 var radio_props = [
   {label: 'MasterCard ending 1234', value: 0 },

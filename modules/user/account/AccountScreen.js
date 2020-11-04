@@ -24,7 +24,7 @@ class AccountScreen extends Component {
             {
                 title: 'Order History',
                 icon: faShoppingBag,
-                route: ''
+                route: 'orderHistoryStack'
             },
             {
                 title: 'Profile',
@@ -49,7 +49,7 @@ class AccountScreen extends Component {
             {
                 title: 'Terms & conditions/Privacy policy',
                 icon: faInfoCircle,
-                route: ''
+                route: 'termsAndConditionStack'
             },
         ]
         return (

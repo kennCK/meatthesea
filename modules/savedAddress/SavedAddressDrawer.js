@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import {Color, BasicStyles} from 'common';
 import {connect} from 'react-redux';
-import AddAddress from 'modules/addAddress';
+import SavedAddress from 'modules/savedAddress';
 
 class HeaderOptions extends Component {
   constructor(props) {
@@ -39,9 +39,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const AddAddressStack = createStackNavigator({
-  addAddressScreen: {
-    screen: AddAddress,
+const SavedAddressStack = createStackNavigator({
+  savedAddressScreen: {
+    screen: SavedAddress,
     navigationOptions: ({navigation}) => ({
       title: 'SAVED ADDRESSES',
       headerLeft: <HeaderOptions navigationProps={navigation} />,
@@ -63,4 +63,4 @@ const styles = StyleSheet.create({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(AddAddressStack);
+)(SavedAddressStack);

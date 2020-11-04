@@ -15,7 +15,7 @@ const dummyData = [
     address: '2b, Centre Stage Tower 2',
   },
 ];
-class AddAddress extends Component {
+class SavedAddress extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +29,7 @@ class AddAddress extends Component {
 
   render() {
     return (
-      <View style={styles.AddAddressContainer}>
+      <View style={styles.SavedAddressContainer}>
         <View>
           {dummyData.map((data, index) => {
             return (
@@ -53,12 +53,11 @@ class AddAddress extends Component {
 }
 
 const styles = StyleSheet.create({
-  AddAddressContainer: {
+  SavedAddressContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
     flex: 1,
   },
-  AddressCardContainer: {},
   ButtonContainer: {
     position: 'absolute',
     bottom: 10,
@@ -70,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddAddress;
+export default SavedAddress;

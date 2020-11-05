@@ -59,5 +59,38 @@ export default {
   },
   hideScroll: {
     visibility: 'hidden'
+  },
+  modal: {
+    backgroundColor: Color.primary,
+    alignItems: 'center',
+    margin: 0,
+    height: '100%'
+  },
+  modalBox: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%'
+  },
+  menuButton: {
+    marginTop: 10,
+    marginBottom: 10,
+    marginRight: 5,
+    marginLeft: 5,
+    paddingTop:5,
+    paddingBottom:5,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderWidth: 1,
+    borderColor: Color.primary,
+    borderRadius: 20
+  },
+  menuContainer: {
+    width: (width/2),
+    padding: 15,
+  },
+  menuImage: {
+    width: (width/2)-30,
+    height: (width/2)-30
   }
 }

@@ -13,9 +13,15 @@ import ScheduledPickupStack from 'modules/scheduledPickup/ScheduledPickupDrawer'
 import PendingPickUpStack from 'modules/orders/PendingPickup';
 import OrderHistoryStack from 'modules/orders/OrderHistory';
 import Homepage from 'modules/products/Welcome.js';
+import TermsAndConditionStack from 'modules/termsAndCondition/termsAndConditionDrawer';
+import FilterStack from 'modules/filter/filterDrawer';
+import PaymentStack from 'modules/payment/paymentDrawer';
+import AccountStack from 'modules/user/account';
+import ProfileStack from 'modules/user/profile';
 import SavedAddressStack from 'modules/savedAddress/SavedAddressDrawer.js';
 import SettingsStack from 'modules/settings/SettingsDrawer.js';
 import AddAddressStack from 'modules/addAddress/AddAddressDrawer.js';
+
 // login stack
 const LoginStack = createStackNavigator(
   {
@@ -81,9 +87,16 @@ const PrimaryNav = createStackNavigator(
     pickupCrockeryStack: {screen: PickupCrockeryStack},
     pendingPickUpStack: {screen: PendingPickUpStack},
     orderHistoryStack: {screen: OrderHistoryStack},
+    filterStack: {screen: OrderHistoryStack},
+    orderSummaryStack: {screen: OrderHistoryStack},
     homepageStack: {screen: Homepage},
     drawerStack: {screen: Drawer},
     scheduledPickupStack: {screen: ScheduledPickupStack},
+    termsAndConditionStack: {screen: TermsAndConditionStack},
+    filterStack: {screen: FilterStack},
+    paymentStack: {screen: PaymentStack},
+    accountStack: {screen: AccountStack},
+    profileStack: {screen: ProfileStack},
     savedAddressStack: {screen: SavedAddressStack},
     settingsStack: {screen: SettingsStack},
     addAddressStack: {screen: AddAddressStack},

@@ -81,7 +81,9 @@ export default {
     backgroundColor: Color.white
   },
   modal: {
-    alignItems: 'center'
+    backgroundColor: Color.lightGray,
+    alignItems: 'center',
+    margin: 0
   },
   close: {
     paddingRight: 10

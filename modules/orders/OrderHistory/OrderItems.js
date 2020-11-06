@@ -4,7 +4,7 @@ import styles from '../Style';
 import { BasicStyles } from 'common';
 import Style from 'modules/accounts/Style';
 import { Color } from 'common';
-import Separator from './Separator'
+import Separator from '../components/Separator'
 
 export default class OrderItems extends Component {
     render() {

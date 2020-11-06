@@ -18,6 +18,8 @@ import FilterStack from 'modules/filter/filterDrawer';
 import PaymentStack from 'modules/payment/paymentDrawer';
 import AccountStack from 'modules/user/account'
 import ProfileStack from 'modules/user/profile'
+import OrderSummaryStack from 'modules/orders/OrderSummary'
+import RequestPickupStack from 'modules/orders/RequestPickup'
 // login stack
 const LoginStack = createStackNavigator(
   {
@@ -84,15 +86,16 @@ const PrimaryNav = createStackNavigator(
     pendingPickUpStack: { screen: PendingPickUpStack },
     orderHistoryStack: { screen: OrderHistoryStack },
     filterStack: { screen: OrderHistoryStack },
-    orderSummaryStack: { screen: OrderHistoryStack },
+    orderSummaryStack: { screen: OrderSummaryStack },
     homepageStack: { screen: Homepage },
     drawerStack: { screen: Drawer },
-    scheduledPickupStack: {screen: ScheduledPickupStack},
-    termsAndConditionStack: {screen: TermsAndConditionStack},
-    filterStack: {screen: FilterStack},
-    paymentStack: {screen: PaymentStack},
+    scheduledPickupStack: { screen: ScheduledPickupStack },
+    termsAndConditionStack: { screen: TermsAndConditionStack },
+    filterStack: { screen: FilterStack },
+    paymentStack: { screen: PaymentStack },
     accountStack: { screen: AccountStack },
     profileStack: { screen: ProfileStack },
+    requestPickupStack: { screen: RequestPickupStack },
   },
   {
     // Default config for all screens

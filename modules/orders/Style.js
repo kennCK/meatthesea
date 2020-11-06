@@ -17,6 +17,13 @@ const styles = StyleSheet.create({
         elevation: 10,
 
     },
+    HeaderContainer: {
+        justifyContent: 'flex-start',
+        padding: 20,
+        // height: 55,
+        backgroundColor:Color.white,
+  
+    },
     BottomContainer: {
         elevation: 10,
         width: Style.getWidth(),
@@ -69,6 +76,13 @@ const styles = StyleSheet.create({
         marginLeft:15,
         color: Color.darkGray,
     },
+    TipButton :{
+        backgroundColor:Color.secondary,
+        width:20,
+        height:20,
+        borderRadius:50,
+    }
+    
 });
 
 export default styles;

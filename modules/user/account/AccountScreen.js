@@ -4,7 +4,7 @@ import styles from '../Style';
 import {BasicStyles} from 'common';
 import Style from 'modules/accounts/Style';
 import {Color} from 'common';
-import Separator from 'modules/orders/OrderHistory/Separator';
+import Separator from 'modules/orders/components/Separator';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
   faUserCircle,

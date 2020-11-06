@@ -1,4 +1,4 @@
-import {createStackNavigator} from 'react-navigation-stack';
+import { createStackNavigator } from 'react-navigation-stack';
 import {
   Login,
   AppOnBoarding,
@@ -16,8 +16,10 @@ import Homepage from 'modules/products/Welcome.js';
 import TermsAndConditionStack from 'modules/termsAndCondition/termsAndConditionDrawer';
 import FilterStack from 'modules/filter/filterDrawer';
 import PaymentStack from 'modules/payment/paymentDrawer';
-import AccountStack from 'modules/user/account';
-import ProfileStack from 'modules/user/profile';
+import AccountStack from 'modules/user/account'
+import ProfileStack from 'modules/user/profile'
+import OrderSummaryStack from 'modules/orders/OrderSummary'
+import RequestPickupStack from 'modules/orders/RequestPickup'
 import SavedAddressStack from 'modules/savedAddress/SavedAddressDrawer.js';
 import SettingsStack from 'modules/settings/SettingsDrawer.js';
 import AddAddressStack from 'modules/addAddress/AddAddressDrawer.js';
@@ -25,7 +27,7 @@ import AddAddressStack from 'modules/addAddress/AddAddressDrawer.js';
 // login stack
 const LoginStack = createStackNavigator(
   {
-    loginScreen: {screen: Login},
+    loginScreen: { screen: Login },
   },
   {
     headerMode: 'none',
@@ -36,7 +38,7 @@ const LoginStack = createStackNavigator(
 // Forgot Password stack
 const ForgotPasswordStack = createStackNavigator(
   {
-    forgotPasswordScreen: {screen: ForgotPassword},
+    forgotPasswordScreen: { screen: ForgotPassword },
   },
   {
     headerMode: 'none',
@@ -47,7 +49,7 @@ const ForgotPasswordStack = createStackNavigator(
 // Register stack
 const RegisterStack = createStackNavigator(
   {
-    registerScreen: {screen: Register},
+    registerScreen: { screen: Register },
   },
   {
     headerMode: 'none',
@@ -58,7 +60,7 @@ const RegisterStack = createStackNavigator(
 // JpinWaitList stack
 const JoinWaitListStack = createStackNavigator(
   {
-    JoinWaitListScreen: {screen: JoinWaitList},
+    JoinWaitListScreen: { screen: JoinWaitList },
   },
   {
     headerMode: 'none',
@@ -67,7 +69,7 @@ const JoinWaitListStack = createStackNavigator(
 );
 const AppOnBoardingStack = createStackNavigator(
   {
-    AppOnBoardingScreen: {screen: AppOnBoarding},
+    AppOnBoardingScreen: { screen: AppOnBoarding },
   },
   {
     headerMode: 'none',
@@ -78,28 +80,29 @@ const AppOnBoardingStack = createStackNavigator(
 // Manifest of possible screens
 const PrimaryNav = createStackNavigator(
   {
-    loginStack: {screen: LoginStack},
-    forgotPasswordStack: {screen: ForgotPasswordStack},
-    registerStack: {screen: RegisterStack},
-    joinWaitListStack: {screen: JoinWaitListStack},
-    appOnBoardingStack: {screen: AppOnBoardingStack},
-    returnInPersonStack: {screen: ReturnInPersonStack},
-    pickupCrockeryStack: {screen: PickupCrockeryStack},
-    pendingPickUpStack: {screen: PendingPickUpStack},
-    orderHistoryStack: {screen: OrderHistoryStack},
-    filterStack: {screen: OrderHistoryStack},
-    orderSummaryStack: {screen: OrderHistoryStack},
-    homepageStack: {screen: Homepage},
-    drawerStack: {screen: Drawer},
-    scheduledPickupStack: {screen: ScheduledPickupStack},
-    termsAndConditionStack: {screen: TermsAndConditionStack},
-    filterStack: {screen: FilterStack},
-    paymentStack: {screen: PaymentStack},
-    accountStack: {screen: AccountStack},
-    profileStack: {screen: ProfileStack},
-    savedAddressStack: {screen: SavedAddressStack},
-    settingsStack: {screen: SettingsStack},
-    addAddressStack: {screen: AddAddressStack},
+    loginStack: { screen: LoginStack },
+    forgotPasswordStack: { screen: ForgotPasswordStack },
+    registerStack: { screen: RegisterStack },
+    joinWaitListStack: { screen: JoinWaitListStack },
+    appOnBoardingStack: { screen: AppOnBoardingStack },
+    returnInPersonStack: { screen: ReturnInPersonStack },
+    pickupCrockeryStack: { screen: PickupCrockeryStack },
+    pendingPickUpStack: { screen: PendingPickUpStack },
+    orderHistoryStack: { screen: OrderHistoryStack },
+    filterStack: { screen: OrderHistoryStack },
+    orderSummaryStack: { screen: OrderSummaryStack },
+    homepageStack: { screen: Homepage },
+    drawerStack: { screen: Drawer },
+    scheduledPickupStack: { screen: ScheduledPickupStack },
+    termsAndConditionStack: { screen: TermsAndConditionStack },
+    filterStack: { screen: FilterStack },
+    paymentStack: { screen: PaymentStack },
+    accountStack: { screen: AccountStack },
+    profileStack: { screen: ProfileStack },
+    savedAddressStack: { screen: SavedAddressStack },
+    settingsStack: { screen: SettingsStack },
+    addAddressStack: { screen: AddAddressStack },
+    requestPickupStack: { screen: RequestPickupStack },
   },
   {
     // Default config for all screens

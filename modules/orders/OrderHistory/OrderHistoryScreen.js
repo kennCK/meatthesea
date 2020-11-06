@@ -5,14 +5,13 @@ import { BasicStyles } from 'common';
 import Style from 'modules/accounts/Style';
 import { Color } from 'common';
 import OrderItems from './OrderItems';
-import Separator from './Separator';
-import DeliveryDetails from './DeliveryDetails';
-import DummyData from "./DummyData";
+import Separator from '../components/Separator';
+import DeliveryDetails from '../components/DeliveryDetails';
+import { OrderDetails, dummyData , deliveryDetails } from "../DummyData";
 
 class OrderHistoryScreen extends Component {
     redirect = (route) => {
         this.props.navigation.navigate(route);
-        console.log(route)
     }
     render() {
 
@@ -27,17 +26,17 @@ class OrderHistoryScreen extends Component {
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={[styles.OrderHistoryListContainer]}>
                     <View >
                         {
-                            DummyData.map((data, idx) => {
+                            dummyData.map((data, idx) => {
                                 return <OrderItems key={idx} data={data} />
                             })
                         }
                     </View>
-                    <DeliveryDetails />
+                    <DeliveryDetails {...{ OrderDetails , deliveryDetails }} />
                 </ScrollView>
                 <Separator />
                 <View style={styles.MainContainer}>
                     <TouchableHighlight
-                        style={[BasicStyles.btn, Style.btnPrimary , {borderRadius:0 , width:Style.getWidth()-30}]}
+                        style={[BasicStyles.btn, Style.btnPrimary, { borderRadius: 0, width: Style.getWidth() - 30 }]}
                         underlayColor={Color.gray}>
                         <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(18)]}>
                             RATE ORDER

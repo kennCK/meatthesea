@@ -53,6 +53,7 @@ class Login extends Component {
     if (initialNotification) {
       this.setState({ notifications: [initialNotification, ...this.state.notifications] });
     }
+    this.retrieveCustomer()
   }
 
   retrieveSystemNotification = () => {
@@ -73,6 +74,15 @@ class Login extends Component {
       } else {
         setSystemNotification(null)
       }
+    }, error => {
+      console.log('error', error)
+    });
+  }
+
+
+  retrieveCustomer = () => {
+    Api.getRequest(Routes.customerRetrieve + '?limit=' + 30, response => {
+      console.log('response', response)
     }, error => {
       console.log('error', error)
     });

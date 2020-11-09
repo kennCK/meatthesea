@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import Data from 'services/Data';
-import { Helper, Color } from 'common';
+import {Helper, Color} from 'common';
 
 const types = {
   LOGOUT: 'LOGOUT',
@@ -9,50 +9,56 @@ const types = {
   SET_NOTIFICATIONS: 'SET_NOTIFICATIONS',
   UPDATE_NOTIFICATIONS: 'UPDATE_NOTIFICATIONS',
   SET_THEME: 'SET_THEME',
-  nav: null
-}
+  nav: null,
+  SET_LOCATION: 'SET_LOCATION',
+};
 
 export const actions = {
   login: (user, token) => {
-    return { type: types.LOGIN, user, token };
+    return {type: types.LOGIN, user, token};
   },
   logout() {
-    return { type: types.LOGOUT };
+    return {type: types.LOGOUT};
   },
-  updateUser: (user) => {
-    return { type: types.UPDATE_USER, user };
+  updateUser: user => {
+    return {type: types.UPDATE_USER, user};
   },
-  setNotifications(unread, notifications){
-    return { type: types.SET_NOTIFICATIONS, unread, notifications };
-  }, 
-  updateNotifications(unread, notification){
-    return { type: types.UPDATE_NOTIFICATIONS, unread, notification };
+  setNotifications(unread, notifications) {
+    return {type: types.SET_NOTIFICATIONS, unread, notifications};
   },
-  setTheme(theme){
-    return { type: types.SET_THEME, theme };
-  }
+  updateNotifications(unread, notification) {
+    return {type: types.UPDATE_NOTIFICATIONS, unread, notification};
+  },
+  setTheme(theme) {
+    return {type: types.SET_THEME, theme};
+  },
+  setLocation(location) {
+    return {type: types.SET_LOCATION, location};
+  },
 };
 
 const initialState = {
   token: null,
   user: null,
   notifications: null,
-  theme: null
-}
+  theme: null,
+  location: null,
+};
 
 storeData = async (key, value) => {
   try {
-    await AsyncStorage.setItem(`${Helper.APP_NAME}${key}`, value)
+    await AsyncStorage.setItem(`${Helper.APP_NAME}${key}`, value);
   } catch (e) {
     // saving error
   }
-}
+};
 
 const reducer = (state = initialState, action) => {
-  const { type, user, token } = action;
-  const { unread } = action;
-  const { notification } = action;
-  const { theme } = action;
+  const {type, user, token} = action;
+  const {unread} = action;
+  const {notification} = action;
+  const {theme} = action;
+  const {location} = action;
 
   switch (type) {
     case types.LOGOUT:
@@ -61,60 +67,65 @@ const reducer = (state = initialState, action) => {
     case types.LOGIN:
       storeData('token', token);
       console.log('LOGIN', true);
-      Data.setToken(token)
-      return { ...state, user, token };
+      Data.setToken(token);
+      return {...state, user, token};
     case types.UPDATE_USER:
       return {
         ...state,
-        user
-      }
+        user,
+      };
     case types.SET_NOTIFICATIONS:
       let notifications = {
         unread,
-        notifications: action.notifications
-      }
+        notifications: action.notifications,
+      };
       console.log('notifications', true);
       return {
         ...state,
-        notifications
-      }
+        notifications,
+      };
     case types.UPDATE_NOTIFICATIONS:
-      let updatedNotifications = null
-      if(state.notifications == null){
-        let temp = []
-        temp.push(notification)
+      let updatedNotifications = null;
+      if (state.notifications == null) {
+        let temp = [];
+        temp.push(notification);
         updatedNotifications = {
           unread,
-          notifications: temp
-        }
-      }else{
-        let oldNotif = state.notifications
-        if(oldNotif.notifications == null){
-          let temp = []
-          temp.push(notification)
+          notifications: temp,
+        };
+      } else {
+        let oldNotif = state.notifications;
+        if (oldNotif.notifications == null) {
+          let temp = [];
+          temp.push(notification);
           updatedNotifications = {
             unread,
-            notifications: temp
-          }
-        }else{
-          if(parseInt(notification.id) != parseInt(oldNotif.notifications[oldNotif.notifications.length - 1].id)){
-            oldNotif.notifications.unshift(notification)
+            notifications: temp,
+          };
+        } else {
+          if (
+            parseInt(notification.id) !=
+            parseInt(
+              oldNotif.notifications[oldNotif.notifications.length - 1].id,
+            )
+          ) {
+            oldNotif.notifications.unshift(notification);
             updatedNotifications = {
               unread: oldNotif.unread + unread,
-              notifications: oldNotif.notifications
-            }
-          }else{
+              notifications: oldNotif.notifications,
+            };
+          } else {
             updatedNotifications = {
               unread: oldNotif.unread + unread,
-              notifications: oldNotif.notifications
-            }
+              notifications: oldNotif.notifications,
+            };
           }
         }
       }
       return {
         ...state,
-        notifications: updatedNotifications
-      }
+        notifications: updatedNotifications,
+      };
     case types.SET_THEME:
       console.log('theme', theme);
       storeData('primary', theme.primary);
@@ -123,12 +134,18 @@ const reducer = (state = initialState, action) => {
       Color.setPrimary(theme.primary);
       Color.setSecondary(theme.secondary);
       Color.setTertiary(theme.tertiary);
-      return{
+      return {
         ...state,
-        theme
-      }
+        theme,
+      };
+    case types.SET_LOCATION:
+      console.log('LOCATION', location);
+      return {
+        ...state,
+        location,
+      };
     default:
       return {...state, nav: state.nav};
   }
-}
+};
 export default reducer;

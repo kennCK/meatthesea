@@ -3,13 +3,31 @@ import { View, Text, Image, ScrollView, TouchableHighlight } from 'react-native'
 import styles from '../Style';
 import { BasicStyles } from 'common';
 import Style from 'modules/accounts/Style';
-import { Color } from 'common';
+import { Color, Routes } from 'common';
 import OrderItems from './OrderItems';
 import Separator from '../components/Separator';
 import DeliveryDetails from '../components/DeliveryDetails';
-import { OrderDetails, dummyData , deliveryDetails } from "../DummyData";
+import { OrderDetails, dummyData as orders, deliveryDetails } from "../DummyData";
+import Api from 'services/api/index.js';
+
 
 class OrderHistoryScreen extends Component {
+    state = {
+        deliveryDetails: {},
+        orderDetails: {},
+        orders: [],
+        id: 1
+    }
+    componentDidMount() {
+        Api.get(Routes.ordersRetrieveByCustomer(this.state.id), response => {
+            let { Orders } = response.data;
+            Orders.map(order=>{
+                console.log(order)
+            })
+        }, error => {
+            console.log('error', error)
+        });
+    }
     redirect = (route) => {
         this.props.navigation.navigate(route);
     }
@@ -26,12 +44,12 @@ class OrderHistoryScreen extends Component {
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={[styles.OrderHistoryListContainer]}>
                     <View >
                         {
-                            dummyData.map((data, idx) => {
+                            orders.map((data, idx) => {
                                 return <OrderItems key={idx} data={data} />
                             })
                         }
                     </View>
-                    <DeliveryDetails {...{ OrderDetails , deliveryDetails }} />
+                    <DeliveryDetails {...{ OrderDetails, deliveryDetails }} />
                 </ScrollView>
                 <Separator />
                 <View style={styles.MainContainer}>

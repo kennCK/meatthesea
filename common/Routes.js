@@ -48,7 +48,6 @@ export default {
   orderItemsDeleteByOrderItemId: (orderId, orderItemId) => `/api​/orders​/${orderId}​/items​/${orderItemId}`,
 
   // Orders
-
   ordersRetrieve: apiUrl + '​/api​/orders',
   ordersAdd: '/api​/orders',
   ordersCount: '/api​/orders​/count',
@@ -66,8 +65,6 @@ export default {
   productAttribuesDelete: id => apiUrl + `/api​/productattributes​/${id}`,
 
   // ProductCategoryMappings
-
-
   productMappingRetrieve: apiUrl + '​/api​/product_category_mappings',
   productMappingCount: apiUrl + '​/api​/product_category_mappings​/count',
   productMappingRetrieveById: id => apiUrl + `/api​/product_category_mappings/${id}`,

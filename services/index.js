@@ -1,4 +1,4 @@
-import Api from 'services/api/index.js';
+import Api from './apiv2/index.js';
 import Currency from 'services/Currency.js';
 export default {
   Api,

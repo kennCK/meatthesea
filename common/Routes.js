@@ -1,120 +1,116 @@
 import config from 'src/config';
 const url = config.IS_DEV;
-let apiUrl = url + '/';
+let apiUrl = url + '/api/';
 export default {
-
   // Categories
-  categoriesRetrieve: apiUrl + '​/api​/categories',
-  categoriesAdd: apiUrl + '​/api​/categories',
-  categoriesCount: apiUrl + '​/api​/categories​/count',
-  categoriesRetrieveById: id => apiUrl + `/api​/categories​/${id}`,
-  categoriesUpdateById: id => apiUrl + `/api​/categories​/${id}`,
-  categoriesDeleteById: id => apiUrl + `/api​/categories​/${id}`,
+  categoriesRetrieve: apiUrl + 'categories',
+  categoriesAdd: apiUrl + 'categories',
+  categoriesCount: apiUrl + 'categories​/count',
+  categoriesRetrieveById: id => apiUrl + `categories​/${id}`,
+  categoriesUpdateById: id => apiUrl + `categories​/${id}`,
+  categoriesDeleteById: id => apiUrl + `categories​/${id}`,
   
   // CustomerRoles
-  customerRolesRetrieve: apiUrl + '​/api​/customer_roles',
+  customerRolesRetrieve: apiUrl + 'customer_roles',
 
   // Customers
-  customerRetrieve: apiUrl + '​/api​/customers',
-  customerAdd: apiUrl + '​/api​/customers',
-  customerRetrieveById: id => apiUrl + `/api​/customers​/${id}`,
-  customerUpdateById: id => apiUrl + `/api​/customers​/${id}`,
-  customerDeleteById: id => apiUrl + `/api​/customers​/${id}`,
-  customerRetrieveCount: apiUrl + '​/api​/customers​/count',
-  customerSearch: apiUrl + '​/api​/customers​/search',
+  customerRetrieve: apiUrl + 'customers',
+  customerAdd: apiUrl + 'customers',
+  customerRetrieveById: id => apiUrl + `customers​/${id}`,
+  customerUpdateById: id => apiUrl + `customers​/${id}`,
+  customerDeleteById: id => apiUrl + `customers​/${id}`,
+  customerRetrieveCount: apiUrl + 'customers​/count',
+  customerSearch: apiUrl + 'customers​/search',
 
   // Languages
-  languageRetrieve: apiUrl + '​/api​/languages',
+  languageRetrieve: apiUrl + 'languages',
 
   // Manufacturers
-  manufacturerRetrieve: apiUrl + '​/api​/manufacturers',
-  manufacturerAdd: apiUrl + '​/api​/manufacturers',
-  manufacturerCount: apiUrl + '​/api​/manufacturers/count',
-  manufacturerRetrieveById: id => apiUrl + `/api​/manufacturers​/${id}`,
-  manufacturerUpdateById: id => apiUrl + `/api​/manufacturers​/${id}`,
-  manufacturerDeleteById: id => apiUrl + `/api​/manufacturers​/${id}`,
+  manufacturerRetrieve: apiUrl + 'manufacturers',
+  manufacturerAdd: apiUrl + 'manufacturers',
+  manufacturerCount: apiUrl + 'manufacturers/count',
+  manufacturerRetrieveById: id => apiUrl + `manufacturers​/${id}`,
+  manufacturerUpdateById: id => apiUrl + `manufacturers​/${id}`,
+  manufacturerDeleteById: id => apiUrl + `manufacturers​/${id}`,
   // NewsLetterSubscription
-  newsLetterSubscriptionRetrieve: apiUrl + '​/api​/news_letter_subscriptions',
-  newsLetterSubscriptionDeactivate: email => apiUrl + `/api​/news_letter_subscriptions​/${email}​/deactivate`,
+  newsLetterSubscriptionRetrieve: apiUrl + 'news_letter_subscriptions',
+  newsLetterSubscriptionDeactivate: email => apiUrl + `news_letter_subscriptions​/${email}​/deactivate`,
 
   // OrderItems
 
-  orderItemsRetrieve: orderId => apiUrl + `/api​/orders​/${orderId}​/items`,
-  orderItemsAdd: orderId => `/api​/orders​/${orderId}​/items`,
-  orderItemsDeleteByOrderId: orderId => apiUrl + `/api​/orders​/${orderId}​/items`,
-  orderItemsCount: orderId => `/api​/orders​/${orderId}​/items​/count`,
-  orderItemsRetrieveWithDetails: (orderId, orderItemId) => apiUrl + `/api​/orders​/${orderId}​/items​/${orderItemId}`,
-  orderItemsUpdate: (orderId, orderItemId) => apiUrl + `/api​/orders​/${orderId}​/items​/${orderItemId}`,
-  orderItemsDeleteByOrderItemId: (orderId, orderItemId) => `/api​/orders​/${orderId}​/items​/${orderItemId}`,
+  orderItemsRetrieve: orderId => apiUrl + `orders​/${orderId}​/items`,
+  orderItemsAdd: orderId => `orders​/${orderId}​/items`,
+  orderItemsDeleteByOrderId: orderId => apiUrl + `orders​/${orderId}​/items`,
+  orderItemsCount: orderId => `orders​/${orderId}​/items​/count`,
+  orderItemsRetrieveWithDetails: (orderId, orderItemId) => apiUrl + `orders​/${orderId}​/items​/${orderItemId}`,
+  orderItemsUpdate: (orderId, orderItemId) => apiUrl + `orders​/${orderId}​/items​/${orderItemId}`,
+  orderItemsDeleteByOrderItemId: (orderId, orderItemId) => `orders​/${orderId}​/items​/${orderItemId}`,
 
   // Orders
-
-  ordersRetrieve: apiUrl + '​/api​/orders',
-  ordersAdd: '/api​/orders',
-  ordersCount: '/api​/orders​/count',
-  ordersRetrieveById: id => apiUrl + `/api​/orders​/${id}`,
-  ordersDeleteById: id => apiUrl + `/api​/orders​/${id}`,
-  ordersUpdateById: id => apiUrl + `/api​/orders​/${id}`,
-  ordersRetrieveByCustomer: customer_id => apiUrl + `/api​/orders​/customer​/${customer_id}`,
+  ordersRetrieve: apiUrl + "orders",
+  ordersAdd: 'orders',
+  ordersCount: 'orders​/count',
+  ordersRetrieveById: id => apiUrl + `orders​/${id}`,
+  ordersDeleteById: id => apiUrl + `orders​/${id}`,
+  ordersUpdateById: id => apiUrl + `orders​/${id}`,
+  ordersRetrieveByCustomer: customer_id => apiUrl + `orders​/customer​/${customer_id}`,
 
   // ProductAttributes
-  productAttribuesRetrieve: apiUrl + '​/api​/productattributes',
-  productAttribuesAdd: apiUrl + '​/api​/productattributes',
-  productAttribuesCount: apiUrl + '​/api​/productattributes/count',
-  productAttribuesRetrieveById: id => `/api​/productattributes​/${id}`,
-  productAttribuesUpdate: id => apiUrl + `/api​/productattributes​/${id}`,
-  productAttribuesDelete: id => apiUrl + `/api​/productattributes​/${id}`,
+  productAttribuesRetrieve: apiUrl + 'productattributes',
+  productAttribuesAdd: apiUrl + 'productattributes',
+  productAttribuesCount: apiUrl + 'productattributes/count',
+  productAttribuesRetrieveById: id => `productattributes​/${id}`,
+  productAttribuesUpdate: id => apiUrl + `productattributes​/${id}`,
+  productAttribuesDelete: id => apiUrl + `productattributes​/${id}`,
 
   // ProductCategoryMappings
-
-
-  productMappingRetrieve: apiUrl + '​/api​/product_category_mappings',
-  productMappingCount: apiUrl + '​/api​/product_category_mappings​/count',
-  productMappingRetrieveById: id => apiUrl + `/api​/product_category_mappings/${id}`,
-  productMappingUpdate: id => apiUrl + `/api​/product_category_mappings/${id}`,
-  productMappingDelete: id => apiUrl + `/api​/product_category_mappings/${id}`,
+  productMappingRetrieve: apiUrl + 'product_category_mappings',
+  productMappingCount: apiUrl + 'product_category_mappings​/count',
+  productMappingRetrieveById: id => apiUrl + `product_category_mappings/${id}`,
+  productMappingUpdate: id => apiUrl + `product_category_mappings/${id}`,
+  productMappingDelete: id => apiUrl + `product_category_mappings/${id}`,
 
   // ProductManufacturerMappings
-  productManufacturerMappingsRetrieve: apiUrl + '​/api​/product_manufacturer_mappings',
-  productManufacturerMappingsAdd: apiUrl + '​/api​/product_manufacturer_mappings',
-  productManufacturerMappingsCount: apiUrl + '​/api​/product_manufacturer_mappings/count',
-  productManufacturerMappingsRetrieveById: id => `/api​/product_manufacturer_mappings/${id}`,
-  productManufacturerMappingsUpdate: id => `/api​/product_manufacturer_mappings/${id}`,
-  productManufacturerMappingsDelete: id => `/api​/product_manufacturer_mappings/${id}`,
+  productManufacturerMappingsRetrieve: apiUrl + 'product_manufacturer_mappings',
+  productManufacturerMappingsAdd: apiUrl + 'product_manufacturer_mappings',
+  productManufacturerMappingsCount: apiUrl + 'product_manufacturer_mappings/count',
+  productManufacturerMappingsRetrieveById: id => `product_manufacturer_mappings/${id}`,
+  productManufacturerMappingsUpdate: id => `product_manufacturer_mappings/${id}`,
+  productManufacturerMappingsDelete: id => `product_manufacturer_mappings/${id}`,
 
   // Products
-  productsRetrieve: apiUrl + '​/api​/products',
-  productsAdd: apiUrl + '​/api​/products',
-  productsCount: apiUrl + '​/api​/products​/count',
-  productsRetrieveById: id => apiUrl + `/api​/products​/${id}`,
-  productsUpdateById: id => apiUrl + `/api​/products​/${id}`,
-  productsDeleteById: id => apiUrl + `/api​/products​/${id}`,
+  productsRetrieve: apiUrl + 'products',
+  productsAdd: apiUrl + 'products',
+  productsCount: apiUrl + 'products​/count',
+  productsRetrieveById: id => apiUrl + `products​/${id}`,
+  productsUpdateById: id => apiUrl + `products​/${id}`,
+  productsDeleteById: id => apiUrl + `products​/${id}`,
   
   // ProductSpecificationAttributes
-  productSpecificationAttributesRetrieve: apiUrl + '​/api​/productspecificationattributes',
-  productSpecificationAttributesAdd: apiUrl + '​/api​/productspecificationattributes',
-  productSpecificationAttributesCount: apiUrl + '​/api​/productspecificationattributes/count',
-  productSpecificationAttributesRetrieveById: id => `/api​/productspecificationattributes/${id}`,
-  productSpecificationAttributesUpdate: id => `/api​/productspecificationattributes/${id}`,
-  productSpecificationAttributesDelete: id => `/api​/productspecificationattributes/${id}`,
+  productSpecificationAttributesRetrieve: apiUrl + 'productspecificationattributes',
+  productSpecificationAttributesAdd: apiUrl + 'productspecificationattributes',
+  productSpecificationAttributesCount: apiUrl + 'productspecificationattributes/count',
+  productSpecificationAttributesRetrieveById: id => `productspecificationattributes/${id}`,
+  productSpecificationAttributesUpdate: id => `productspecificationattributes/${id}`,
+  productSpecificationAttributesDelete: id => `productspecificationattributes/${id}`,
 
   // ShoppingCartItems
-  shoppingCartItemsRetrieve: '/api​/shopping_cart_items',
-  shoppingCartItemsAdd: '/api​/shopping_cart_items',
-  shoppingCartItemsRetrieveByCustomer: customerId => `/api​/shopping_cart_items/${customerId}`,
-  shoppingCartItemsUpdate: id => apiUrl + `/api​/shopping_cart_items​/${id}`,
-  shoppingCartItemsDelete: id => apiUrl + `/api​/shopping_cart_items​/${id}`,
+  shoppingCartItemsRetrieve: 'shopping_cart_items',
+  shoppingCartItemsAdd: 'shopping_cart_items',
+  shoppingCartItemsRetrieveByCustomer: customerId => `shopping_cart_items/${customerId}`,
+  shoppingCartItemsUpdate: id => apiUrl + `shopping_cart_items​/${id}`,
+  shoppingCartItemsDelete: id => apiUrl + `shopping_cart_items​/${id}`,
 
   // SpecificationAttributes
-  specificationAttributesRetrieve: apiUrl + '​/api​/specificationattributes',
-  specificationAttributesAdd: apiUrl + '​/api​/specificationattributes',
-  specificationAttributesCount: apiUrl + '​/api​/specificationattributes/count',
-  specificationAttributesRetrieveById: id => `/api​/specificationattributes/${id}`,
-  specificationAttributesUpdate: id => `/api​/specificationattributes/${id}`,
-  specificationAttributesDelete: id => `/api​/specificationattributes/${id}`,
+  specificationAttributesRetrieve: apiUrl + 'specificationattributes',
+  specificationAttributesAdd: apiUrl + 'specificationattributes',
+  specificationAttributesCount: apiUrl + 'specificationattributes/count',
+  specificationAttributesRetrieveById: id => `specificationattributes/${id}`,
+  specificationAttributesUpdate: id => `specificationattributes/${id}`,
+  specificationAttributesDelete: id => `specificationattributes/${id}`,
 
   // Store
-  storeRetrieveCurrent: apiUrl + '​/api​/current_store',
-  storeRetrieveAll: apiUrl + '​/api​/stores',
-  getAccessToken: apiUrl + '​/api​/getaccesstoken'
+  storeRetrieveCurrent: apiUrl + 'current_store',
+  storeRetrieveAll: apiUrl + 'stores',
+  getAccessToken: apiUrl + 'getaccesstoken'
 }

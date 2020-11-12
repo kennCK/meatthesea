@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { View, TextInput, Image, TouchableHighlight, Text, ScrollView } from 'react-native';
 import Style from './Style.js';
 import { Spinner } from 'components';
-import Api from 'services/api/index.js';
+import Api from 'services/apiv2/index.js';
 import { Routes, Color, Helper, BasicStyles } from 'common';
 import CustomError from 'components/Modal/Error.js';
 import Header from './Header';

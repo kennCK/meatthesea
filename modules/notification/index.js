@@ -6,7 +6,7 @@ import { Routes, Color, Helper, BasicStyles } from 'common';
 import { Spinner } from 'components';
 import { connect } from 'react-redux';
 import { Empty } from 'components';
-import Api from 'services/api/index.js';
+import Api from 'services/apiv2/index.js';
 import { Dimensions } from 'react-native';
 const height = Math.round(Dimensions.get('window').height);
 class Notifications extends Component{

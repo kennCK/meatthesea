@@ -1,4 +1,4 @@
-import Api from 'services/api/index.js';
+import Api from 'services/apiv2/index.js';
 import Config from 'src/config.js';
 import { Routes } from 'common';
 export default {

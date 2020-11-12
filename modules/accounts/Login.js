@@ -7,7 +7,7 @@ import Style from './Style.js';
 import { Spinner } from 'components';
 import PasswordWithIcon from './components/Password.js';
 import CustomError from 'components/Modal/Error.js';
-import Api from 'services/api/index.js';
+import Api from 'services/apiv2/index.js';
 import CommonRequest from 'services/CommonRequest.js';
 import { Routes, Color, Helper, BasicStyles } from 'common';
 import Header from './Header';

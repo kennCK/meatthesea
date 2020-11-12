@@ -16,7 +16,7 @@ import moment from 'moment';
 import Style from './Style.js';
 import { Spinner } from 'components';
 import CustomError from 'components/Modal/Error.js';
-import Api from 'services/api/index.js';
+import Api from 'services/apiv2/index.js';
 import { Routes, Color, Helper, BasicStyles } from 'common';
 import PasswordWithIcon from 'components/InputField/Password.js';
 import Header from '../basics/Header'

@@ -12,7 +12,7 @@ const Api = {
     const fetchOptions = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json', 
         'Authorization': 'bearer ' + config.authorization
       },
       body: JSON.stringify(body)
@@ -20,7 +20,7 @@ const Api = {
     fetch(Routes.auth, fetchOptions).then((response) => response.json()).then((json) => {
       callback(json);
     }).catch((error) => {
-      if (errorCallback) {
+      if(errorCallback){
         errorCallback(error)
       }
     })
@@ -31,7 +31,7 @@ const Api = {
     const fetchOptions = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json', 
         'Authorization': 'bearer ' + config.authorization
       },
       body: JSON.stringify(body)
@@ -39,7 +39,7 @@ const Api = {
     fetch(Routes.authUser + '?token=' + token, fetchOptions).then((response) => response.json()).then((json) => {
       callback(json);
     }).catch((error) => {
-      if (errorCallback) {
+      if(errorCallback){
         errorCallback(error)
       }
     })
@@ -49,7 +49,7 @@ const Api = {
     const fetchOptions = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json', 
         'Authorization': 'bearer ' + config.authorization
       },
       body: JSON.stringify(parameter)
@@ -57,28 +57,24 @@ const Api = {
     fetch(route, fetchOptions).then(response => response.json()).then(json => {
       callback(json)
     }).catch(error => {
-      if (errorCallback) {
+      if(errorCallback){
         errorCallback(error)
       }
     })
   },
-
   getRequest: (route, callback, errorCallback = null) => {
-    console.log(route )
-
     // const apiRoute = Data.token ? route + '?token=' + Data.token : route;
     const fetchOptions = {
       method: 'GET',
       headers: {
-        'Content-Type': '*/*',
-        'Authorization': 'bearer ' + config.authorization,
-        'Accept': '*/*'
+        'Content-Type': 'application/json', 
+        'Authorization': 'bearer ' + config.authorization
       }
     }
     fetch(route, fetchOptions).then(response => response.json()).then(json => {
       callback(json)
     }).catch(error => {
-      if (errorCallback) {
+      if(errorCallback){
         errorCallback(error)
       }
     })
@@ -95,15 +91,15 @@ const Api = {
         Accept: 'application/json', 'Content-Type': 'multipart/form-data'
       }
     })
-      .then(response => {
-        callback(response)
-      })
-      .catch(function (error) {
-        console.info(error.config)
-        if (errorCallback) {
-          errorCallback(error)
-        }
-      });
+    .then(response => {
+      callback(response)
+    })
+    .catch(function (error) {
+      console.info(error.config)
+      if(errorCallback){
+        errorCallback(error)
+      }
+    });
   },
   uploadByFetch: (route, parameter, callback, errorCallback = null) => {
     const apiRoute = Data.token ? route + '?token=' + Data.token : route;
@@ -114,17 +110,17 @@ const Api = {
         'Content-Type': 'multipart/form-data'
       }
     })
-      .then(response => response.json())
-      .then(response => {
-        console.log('success upload')
-        callback(response)
-      })
-      .catch(error => {
-        console.log('error upload')
-        if (errorCallback) {
-          errorCallback(error)
-        }
-      });
+    .then(response => response.json())
+    .then(response => {
+      console.log('success upload')
+      callback(response)
+    })
+    .catch(error => {
+      console.log('error upload')
+      if(errorCallback){
+        errorCallback(error)
+      }
+    });
   }
 };
 

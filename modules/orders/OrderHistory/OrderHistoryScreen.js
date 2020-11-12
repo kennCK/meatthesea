@@ -8,7 +8,6 @@ import OrderItems from './OrderItems';
 import Separator from '../components/Separator';
 import DeliveryDetails from '../components/DeliveryDetails';
 import { OrderDetails, dummyData as orders, deliveryDetails } from "../DummyData";
-import Api from 'api';
 
 
 class OrderHistoryScreen extends Component {
@@ -20,16 +19,7 @@ class OrderHistoryScreen extends Component {
     }
     componentDidMount() {
         
-        let route =Routes.ordersRetrieve+'?Limit=10&Page=1'.toString();
-        Api.getRequest(route, response => {
-            // let { Orders } = response.data;
-            // Orders.map(order=>{
-            //     console.log(order)
-            // })
-            console.info(response)
-        }, error => {
-            console.warn('api err', error)
-        });
+      
     }
     redirect = (route) => {
         this.props.navigation.navigate(route);

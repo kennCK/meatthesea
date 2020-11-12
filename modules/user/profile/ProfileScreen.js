@@ -6,33 +6,48 @@ import { faUser, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import ProfileListItem from '../ListItemWithIcon'
 class ProfileScreen extends Component {
     state = {
-        firstname: 'John',
-        lastname: 'Doe',
-        email: 'johndoe@gmail.com'
+        firstname: '',
+        lastname: '',
+        email: '',
+        id: '',
+        phone_number: ''
     }
     redirect = (route) => {
         this.props.navigation.navigate(route);
-        console.log(route)
+    }
+
+    componentDidMount() {
+        const { params } = this.props.navigation.state
+        if (params.user) {
+            let { customer_guid, first_name, email, last_name } = params.user
+            this.setState({
+                firstname: first_name,
+                lastname: last_name,
+                email: email,
+                id: customer_guid,
+                phone_number: params.user.billing_address.phone_number
+            })
+        }
     }
     render() {
-        const { firstname,lastname, email } = this.state;
+        const { firstname, lastname, email, phone_number } = this.state;
+        console.log({ firstname, lastname, email, phone_number })
         const navigations = [
-
             {
-                title: `${firstname} ${lastname}`,
+                value: `${firstname} ${lastname}`,
                 icon: faUser,
             },
             {
-                title: email,
+                value: email,
                 icon: faEnvelope,
             },
             {
-                title: '+825 1234 5678',
+                value: phone_number,
                 icon: faPhoneAlt,
 
             },
             {
-                title: 'Change Password',
+                value: 'Change Password',
                 icon: faLock,
                 onPress: () => {
                     alert("test")
@@ -41,10 +56,10 @@ class ProfileScreen extends Component {
         ]
         return (
             <View style={{ flex: 1, backgroundColor: Color.white }} >
-                {navigations.map(({ title, icon, onPress }) => (
+                {navigations.map(({ value, icon, onPress }, id) => (
                     <ProfileListItem {...{
-                        title, icon, onPress
-                    }} key={title} />
+                        title: value, icon, onPress
+                    }} key={id} />
                 ))}
             </View>
 

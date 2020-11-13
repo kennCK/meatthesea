@@ -9,7 +9,7 @@ export default {
   categoriesRetrieveById: id => apiUrl + `categories​/${id}`,
   categoriesUpdateById: id => apiUrl + `categories​/${id}`,
   categoriesDeleteById: id => apiUrl + `categories​/${id}`,
-  
+
   // CustomerRoles
   customerRolesRetrieve: apiUrl + 'customer_roles',
 
@@ -34,7 +34,8 @@ export default {
   manufacturerDeleteById: id => apiUrl + `manufacturers​/${id}`,
   // NewsLetterSubscription
   newsLetterSubscriptionRetrieve: apiUrl + 'news_letter_subscriptions',
-  newsLetterSubscriptionDeactivate: email => apiUrl + `news_letter_subscriptions​/${email}​/deactivate`,
+  newsLetterSubscriptionDeactivate: email =>
+    apiUrl + `news_letter_subscriptions​/${email}​/deactivate`,
 
   // OrderItems
 
@@ -42,18 +43,22 @@ export default {
   orderItemsAdd: orderId => `orders​/${orderId}​/items`,
   orderItemsDeleteByOrderId: orderId => apiUrl + `orders​/${orderId}​/items`,
   orderItemsCount: orderId => `orders​/${orderId}​/items​/count`,
-  orderItemsRetrieveWithDetails: (orderId, orderItemId) => apiUrl + `orders​/${orderId}​/items​/${orderItemId}`,
-  orderItemsUpdate: (orderId, orderItemId) => apiUrl + `orders​/${orderId}​/items​/${orderItemId}`,
-  orderItemsDeleteByOrderItemId: (orderId, orderItemId) => `orders​/${orderId}​/items​/${orderItemId}`,
+  orderItemsRetrieveWithDetails: (orderId, orderItemId) =>
+    apiUrl + `orders​/${orderId}​/items​/${orderItemId}`,
+  orderItemsUpdate: (orderId, orderItemId) =>
+    apiUrl + `orders​/${orderId}​/items​/${orderItemId}`,
+  orderItemsDeleteByOrderItemId: (orderId, orderItemId) =>
+    `orders​/${orderId}​/items​/${orderItemId}`,
 
   // Orders
-  ordersRetrieve: apiUrl + "orders",
+  ordersRetrieve: apiUrl + 'orders',
   ordersAdd: 'orders',
   ordersCount: 'orders​/count',
   ordersRetrieveById: id => apiUrl + `orders​/${id}`,
   ordersDeleteById: id => apiUrl + `orders​/${id}`,
   ordersUpdateById: id => apiUrl + `orders​/${id}`,
-  ordersRetrieveByCustomer: customer_id => apiUrl + `orders​/customer​/${customer_id}`,
+  ordersRetrieveByCustomer: customer_id =>
+    apiUrl + `orders​/customer​/${customer_id}`,
 
   // ProductAttributes
   productAttribuesRetrieve: apiUrl + 'productattributes',
@@ -73,10 +78,14 @@ export default {
   // ProductManufacturerMappings
   productManufacturerMappingsRetrieve: apiUrl + 'product_manufacturer_mappings',
   productManufacturerMappingsAdd: apiUrl + 'product_manufacturer_mappings',
-  productManufacturerMappingsCount: apiUrl + 'product_manufacturer_mappings/count',
-  productManufacturerMappingsRetrieveById: id => `product_manufacturer_mappings/${id}`,
-  productManufacturerMappingsUpdate: id => `product_manufacturer_mappings/${id}`,
-  productManufacturerMappingsDelete: id => `product_manufacturer_mappings/${id}`,
+  productManufacturerMappingsCount:
+    apiUrl + 'product_manufacturer_mappings/count',
+  productManufacturerMappingsRetrieveById: id =>
+    `product_manufacturer_mappings/${id}`,
+  productManufacturerMappingsUpdate: id =>
+    `product_manufacturer_mappings/${id}`,
+  productManufacturerMappingsDelete: id =>
+    `product_manufacturer_mappings/${id}`,
 
   // Products
   productsRetrieve: apiUrl + 'products',
@@ -85,19 +94,25 @@ export default {
   productsRetrieveById: id => apiUrl + `products​/${id}`,
   productsUpdateById: id => apiUrl + `products​/${id}`,
   productsDeleteById: id => apiUrl + `products​/${id}`,
-  
+
   // ProductSpecificationAttributes
-  productSpecificationAttributesRetrieve: apiUrl + 'productspecificationattributes',
+  productSpecificationAttributesRetrieve:
+    apiUrl + 'productspecificationattributes',
   productSpecificationAttributesAdd: apiUrl + 'productspecificationattributes',
-  productSpecificationAttributesCount: apiUrl + 'productspecificationattributes/count',
-  productSpecificationAttributesRetrieveById: id => `productspecificationattributes/${id}`,
-  productSpecificationAttributesUpdate: id => `productspecificationattributes/${id}`,
-  productSpecificationAttributesDelete: id => `productspecificationattributes/${id}`,
+  productSpecificationAttributesCount:
+    apiUrl + 'productspecificationattributes/count',
+  productSpecificationAttributesRetrieveById: id =>
+    `productspecificationattributes/${id}`,
+  productSpecificationAttributesUpdate: id =>
+    `productspecificationattributes/${id}`,
+  productSpecificationAttributesDelete: id =>
+    `productspecificationattributes/${id}`,
 
   // ShoppingCartItems
   shoppingCartItemsRetrieve: 'shopping_cart_items',
   shoppingCartItemsAdd: 'shopping_cart_items',
-  shoppingCartItemsRetrieveByCustomer: customerId => `shopping_cart_items/${customerId}`,
+  shoppingCartItemsRetrieveByCustomer: customerId =>
+    `shopping_cart_items/${customerId}`,
   shoppingCartItemsUpdate: id => apiUrl + `shopping_cart_items​/${id}`,
   shoppingCartItemsDelete: id => apiUrl + `shopping_cart_items​/${id}`,
 
@@ -112,5 +127,5 @@ export default {
   // Store
   storeRetrieveCurrent: apiUrl + 'current_store',
   storeRetrieveAll: apiUrl + 'stores',
-  getAccessToken: apiUrl + 'getaccesstoken'
-}
+  getAccessToken: apiUrl + 'getaccesstoken',
+};

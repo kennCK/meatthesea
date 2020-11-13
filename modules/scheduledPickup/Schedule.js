@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import styles from 'modules/scheduledPickup/Style.js';
 class Schedule extends Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <View style={styles.ScheduleContainer}>
@@ -10,7 +13,14 @@ class Schedule extends Component {
           {/*props here */}
           <Text style={styles.LocationTypeStyle}>home</Text>
           {/*props here */}
-          <Text style={styles.LocationStyle}>1a, Centre Stage Tower 1</Text>
+          <View style={styles.LocationContainer}>
+            <Text
+              style={styles.LocationStyle}
+              numberOfLines={3}
+              ellipsizeMode="tail">
+              {this.props.address}
+            </Text>
+          </View>
         </View>
         <View style={styles.PickupConfirmedContainer}>
           <Text style={styles.PickupStatusStyle}>Pick-up confirmed</Text>

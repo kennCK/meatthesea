@@ -3,15 +3,27 @@ import { View, Image, ScrollView, TouchableOpacity, TouchableHighlight, Text} fr
 import Style from './style.js';
 import ProductItem from './productItems.js';
 import Pagination from 'components/Pagination/Dynamic.js';
+import Api from 'services/apiv2/index.js';
+import { Routes } from 'common';
 class Products extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      products: null
+    }
   }
-
-  testing(data){
-    console.log(data);
+  retrieveCategories = () => {
+    this.props.load(true);
+    Api.getRequest(Routes.productsRetrieve, response => {
+      this.setState({products: response.products})
+      this.props.load(false);
+    }, error => {
+      console.log(error);
+    });
   }
-
+  componentDidMount(){
+    this.retrieveCategories()
+  }
   render() {
     let menu = [{
       title: 'RESTAURANT MENU'
@@ -26,25 +38,13 @@ class Products extends Component {
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/res.png')}/>
               <View style={Style.imageRow}>
-                <TouchableOpacity onPress={() => this.props.choose('bites')}>
-                  <ProductItem name="Bites" imageURL={require('assets/products/res-bites.png')}/>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.props.choose('snacks')}>
-                  <ProductItem name="Snacks" imageURL={require('assets/products/res-snack.png')}/>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.props.choose('fried')}>
-                  <ProductItem name="Deep fried snacks" imageURL={require('assets/products/res-fried.png')}/> 
-                </TouchableOpacity>
-              </View>
-              <View style={Style.imageRow}>
-                <ProductItem name="Salads / soups" imageURL={require('assets/products/res-salad.png')}/>
-                <ProductItem name="Main Courses" imageURL={require('assets/products/res-main.png')}/>
-                <ProductItem name="Pastas"  imageURL={require('assets/products/res-pasta.png')}/>
-              </View>
-              <View style={Style.imageRow}>
-                <ProductItem name="Sides" imageURL={require('assets/products/res-sides.png')}/>
-                <ProductItem name="Steaks" imageURL={require('assets/products/res-steak.png')}/>
-                <ProductItem name="Deserts" imageURL={require('assets/products/res-dessert.png')}/>
+              { this.state.products != null &&
+                this.state.products.map((data, idx) => {
+                  return <TouchableOpacity onPress={() => this.props.choose('bites')}>
+                            <ProductItem name={data.name} imageURL={require('assets/products/res-bites.png')}/>
+                          </TouchableOpacity>
+                })
+              }
               </View>
             </View>
           </ScrollView>

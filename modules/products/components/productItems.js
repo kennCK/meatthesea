@@ -7,9 +7,10 @@ class ProductItems extends Component {
   }
   render() {
     let { name, imageURL } = this.props
+    let Image_Http_URL ={ uri: imageURL}; 
     return (
       <View style={Style.productContainer}>
-        <Image source={imageURL} style={Style.productImage}/>
+        <Image source={Image_Http_URL} style={Style.productImage}/>
         <Text style={Style.productName}>{name}</Text>
       </View>
     );

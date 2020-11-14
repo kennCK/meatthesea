@@ -94,6 +94,7 @@ const StackNavigator = createStackNavigator({
             },
         }),
     },
+
     addAddressScreen: {
         screen: AddAddress,
         navigationOptions: ({ navigation }) => ({
@@ -110,6 +111,7 @@ const StackNavigator = createStackNavigator({
             },
         }),
     },
+    
     settingsScreen: {
         screen: Settings,
         navigationOptions: ({ navigation }) => ({

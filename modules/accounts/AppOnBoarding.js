@@ -20,11 +20,19 @@ class AppOnBoarding extends Component {
             error: 0,
             errorMessage: null,
             isResponseError: false,
-            location: ''
+            location: '',
+            stores: []
         };
     }
 
     componentDidMount() {
+        Api.getRequest(Routes.storeRetrieveAll,
+            response => {
+                this.setState({ stores: response.stores })
+            },
+            error => {
+                console.warn(error)
+            })
     }
 
     redirect = (route) => {
@@ -76,14 +84,26 @@ class AppOnBoarding extends Component {
                             </View>
                         )
                     }
+
                     <View style={[Style.TextContainer, { marginTop: errorMessage != null ? 20 : 50 }]}>
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
+                            <Text style={{
+                                color: Color.gray
+                            }}>Deliver to:
+                            </Text>
+                        </View>
                         <LocationWithIcon {...{
                             style: { height: 50, marginTop: 15 },
                             selected: this.state.location,
                             placeholder: "Current location",
-                            iconHeight:20,
-                            onSelect: (selected) => {
-                                this.setState({ location: selected })
+                            iconHeight: 20,
+                            stores: this.state.stores,
+                            onSelect: (selectedItem) => {
+                                this.props.setLocation(selectedItem.id)
+                                this.setState({ location: selectedItem.name })
                             }
                         }} />
                         <TouchableHighlight
@@ -94,16 +114,7 @@ class AppOnBoarding extends Component {
                                 BROWSE AS GUEST
                         </Text>
                         </TouchableHighlight>
-                        <View style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginBottom: 30
-                        }}>
-                            <Text style={{
-                                color: Color.gray
-                            }}>*Sign up is required to place orders.
-                            </Text>
-                        </View>
+
                         <View style={{ marginTop: 70 }}>
                             <TouchableHighlight
                                 style={[Style.btnWhite, Style.btnSm, Style.btnLight]}
@@ -139,8 +150,8 @@ const mapStateToProps = state => ({ state: state });
 const mapDispatchToProps = dispatch => {
     const { actions } = require('@redux');
     return {
-        login: (user, token) => dispatch(actions.login(user, token)),
-        logout: () => dispatch(actions.logout())
+        setLocation: (location) => dispatch(actions.setLocation(location)),
+
     };
 };
 

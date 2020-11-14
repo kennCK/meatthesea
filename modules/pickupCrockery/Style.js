@@ -1,8 +1,9 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 
 const styles = StyleSheet.create({
   MainContainer: {
     justifyContent: 'flex-start',
+    height: '100%',
   },
   OrderContainer: {
     width: '100%',

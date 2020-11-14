@@ -82,7 +82,8 @@ class Login extends Component {
 
   retrieveCustomer = () => {
     Api.getRequest(Routes.customerRetrieve + '?limit=' + 30, response => {
-      console.log('response', response)
+      // console.log('response', response)
+      return
     }, error => {
       console.log('error', error)
     });

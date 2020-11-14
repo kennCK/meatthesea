@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableHighlight, TouchableWithoutFeedback, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import { Color } from 'common';
 import Style from '../Style';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCircle as faCircleSolid } from '@fortawesome/free-solid-svg-icons';
+import { RadioButton, RadioButtonInput } from 'react-native-simple-radio-button';
 
 const styles = StyleSheet.create({
     container: {
@@ -20,6 +21,10 @@ const styles = StyleSheet.create({
 })
 
 const FlatListItem = ({ callback, item, selected }) => {
+    const [active, setActive] = useState(item.name == selected);
+    useEffect(() => {
+        setActive(item.name == selected)
+    }, [selected])
     return (
         <View>
             <TouchableWithoutFeedback
@@ -29,7 +34,7 @@ const FlatListItem = ({ callback, item, selected }) => {
             >
                 <View>
                     <Text style={styles.item}>
-                        {item}
+                        {item.name}
                     </Text>
                     <TouchableHighlight
                         style={{
@@ -39,7 +44,19 @@ const FlatListItem = ({ callback, item, selected }) => {
                         }}
                         disabled
                     >
-                        <FontAwesomeIcon color={Color.primary} icon={item === selected ? faCircleSolid : faCircle} size={15} />
+                        {/* <FontAwesomeIcon color={Color.primary} icon={item.name == selected ? faCircleSolid : faCircle} size={15} /> */}
+                        <RadioButton labelHorizontal={true} >
+                            <RadioButtonInput
+                                obj={{ value: selected }}
+                                disabled
+                                isSelected={active}
+                                onPress={() => {
+                                    
+                                }}
+                                buttonSize={8}
+                                buttonWrapStyle={{ marginRight: 10 }}
+                            />
+                        </RadioButton>
                     </TouchableHighlight>
                 </View>
             </TouchableWithoutFeedback>

@@ -1,37 +1,48 @@
-import React, {Component} from 'react';
-import {Text, View, StyleSheet, Dimensions} from 'react-native';
+import React, { Component } from 'react';
+import { Text, View, StyleSheet, Dimensions } from 'react-native';
 
 import AddressCard from './AddressCard';
 import CustomButton from './CustomButton';
 const width = Math.round(Dimensions.get('window').width);
 
-const dummyData = [
-  {
-    addressType: 'home',
-    address: '1a, Centre Stage Tower 1',
-  },
-  {
-    addressType: 'office',
-    address: '2b, Centre Stage Tower 2',
-  },
-];
+
 class SavedAddress extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedTile: 0,
+      addresses: []
     };
   }
 
-  selectHandler = index => {
-    this.setState({selectedTile: index});
-  };
+  componentDidMount() {
+    const { params } = this.props.navigation.state
+    if (params.user) {
+      let { addresses } = params.user
+      if (addresses) {
+        addresses.map(address => {
+          this.setState({
+            addresses: [...this.state.addresses, {
+              addressType: address.company,
+              address: address.address1 ? address.address1 : address.address2
+            }]
+          })
+        });
 
+      }
+    }
+  }
+  selectHandler = index => {
+    this.setState({ selectedTile: index });
+  };
+  redirect = route => {
+    this.props.navigation.navigate(route);
+  };
   render() {
     return (
       <View style={styles.SavedAddressContainer}>
         <View>
-          {dummyData.map((data, index) => {
+          {this.state.addresses.map((data, index) => {
             return (
               <AddressCard
                 key={index}
@@ -49,7 +60,7 @@ class SavedAddress extends Component {
             buttonColor="#0064B1"
             buttonText="+ ADD ADDRESS"
             onPress={() => {
-              this.props.navigation.navigate('addAddressStack');
+              this.redirect('addAddressScreen');
             }}
           />
         </View>

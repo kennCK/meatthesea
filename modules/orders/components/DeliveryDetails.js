@@ -21,9 +21,6 @@ export default class DeliveryDetails extends Component {
         this.setState({ tip: mode == 1 ? ++tip : --tip })
     }
     render() {
-        let radio_props = [
-            { value: 0 }
-        ];
         let { OrderDetails, deliveryDetails, isSummary = false } = this.props
         let { tip } = this.state
         return (

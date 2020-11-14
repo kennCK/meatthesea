@@ -37,7 +37,7 @@ export default class LocationInput extends React.Component {
     render() {
 
         let { modalVisible } = this.state
-        let { selected, placeholder, iconHeight = 15, style, iconStyle = {
+        let { stores, selected, placeholder, iconHeight = 15, style, iconStyle = {
             position: 'absolute',
             right: 10,
             top: 12
@@ -72,7 +72,7 @@ export default class LocationInput extends React.Component {
                     </TouchableWithoutFeedback>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <LocationsList {...{ callback: this.callback, selected }} />
+                            <LocationsList {...{ callback: this.callback, selected, stores }} />
                         </View>
                     </View>
                 </Modal>

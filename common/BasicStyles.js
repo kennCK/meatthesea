@@ -1,6 +1,7 @@
 import Color from './Color';
 import {Dimensions} from 'react-native';
 const width = Math.round(Dimensions.get('window').width);
+const fontSize = 12;
 export default {
   formControl: {
     height: 50,
@@ -102,7 +103,7 @@ export default {
     paddingRight: 20,
   },
   normalText: {
-    fontSize: 12,
+    fontSize: fontSize,
     color: Color.gray,
     paddingTop: 2,
     paddingBottom: 2,
@@ -110,7 +111,7 @@ export default {
     paddingRight: 20,
   },
   normalFontSize: {
-    fontSize: 12,
+    fontSize: fontSize,
   },
   Separator: {
     height: 0.5,
@@ -141,5 +142,5 @@ export default {
   headerTitleStyle: {
     fontWeight: 'bold',
   },
-  standardFontSize: 11
+  standardFontSize: fontSize
 };

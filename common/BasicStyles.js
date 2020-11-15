@@ -141,4 +141,5 @@ export default {
   headerTitleStyle: {
     fontWeight: 'bold',
   },
+  standardFontSize: 11
 };

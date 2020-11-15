@@ -8,6 +8,7 @@ import { faTimes, faEdit, faUserCircle, faSearch, faSlidersH, faShoppingBasket, 
 import Products from './components/';
 import DeliveryDetails from './components/deliveryDetails'
 import Menu from './components/menu.js';
+import { Spinner } from 'components';
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component{
   constructor(props){
@@ -17,8 +18,13 @@ class Welcome extends Component{
       redirects: ['accountStack', 'filterStack', 'orderSummaryStack', 'pickupCrockeryStack', 'deliveryDetailsStack'],
       deliveryModal : false,
       menu: 0,
-      selectedMenu: null
+      selectedMenu: null,
+      prods: null,
+      isLoading: false
     }
+  }
+  isLoading(data){
+    this.setState({isLoading: data});
   }
   changeSelectedMenu(data){
     this.setState({selectedMenu: data})
@@ -103,7 +109,7 @@ class Welcome extends Component{
           </View>
           {
             this.state.selectedMenu == null &&
-            <Products state={this.state.menu} click={(index)=> this.changeMenu(index)} choose={(data) => this.changeSelectedMenu(data)}/>
+            <Products state={this.state.menu} click={(index)=> this.changeMenu(index)} choose={(data) => this.changeSelectedMenu(data)} load={(data) => this.isLoading(data)}/>
           }
           {
             this.state.selectedMenu != null &&
@@ -128,6 +134,7 @@ class Welcome extends Component{
             </ScrollView>
         </View>
         </View>
+        {this.state.isLoading ? <Spinner mode="overlay"/> : null }
       </View>
     );
   }

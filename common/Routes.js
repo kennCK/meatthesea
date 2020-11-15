@@ -9,6 +9,8 @@ export default {
   categoriesRetrieveById: id => apiUrl + 'categories' + id,
   categoriesUpdateById: id => apiUrl + 'categories/' + id,
   categoriesDeleteById: id => apiUrl + 'categories/' + id,
+  restaurantCategoriesRetrieve: apiUrl + 'get_restaurant_categories',
+  deliCategoriesRetrieve: apiUrl + 'get_deli_shop_categories',
 
   // CustomerRoles
   customerRolesRetrieve: apiUrl + 'customer_roles',

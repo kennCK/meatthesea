@@ -34,8 +34,9 @@ const styles = StyleSheet.create({
     width: '65%',
   },
   PickupRequestContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     paddingTop: '18%',
+    width: 250,
   },
   PickupStatusStyle: {
     fontSize: 18,
@@ -53,6 +54,10 @@ const styles = StyleSheet.create({
   LocationStyle: {
     fontSize: 18,
   },
+  LocationContainer: {
+    width: '100%',
+    paddingLeft: 25,
+  },
   PickupInstructionsStyle: {
     paddingVertical: '30%',
     fontSize: 18,
@@ -62,7 +67,7 @@ const styles = StyleSheet.create({
   },
   PickupConfirmedContainer: {
     width: '75%',
-    paddingTop: '27%',
+    paddingTop: '20%',
     alignItems: 'center',
   },
   PickupCompleteContainer: {

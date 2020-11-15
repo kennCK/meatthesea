@@ -1,12 +1,39 @@
 import React, {Component} from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import { BasicStyles, Color } from 'common';
+import Api from 'services/apiv2/index.js';
+import { Routes } from 'common';
+import { Spinner } from 'components';
 
 class Filter extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      restaurant: null,
+      deli: null,
+      isLoading: false
+    }
   }
-
+  retrieveRestaurant = () => {
+    this.setState({isLoading: true})
+    Api.getRequest(Routes.restaurantCategoriesRetrieve + "?storeId=" + 1, response => {
+      this.setState({restaurant: response.categories, isLoading: false})
+    }, error => {
+      console.log(error);
+    });
+  }
+  retrieveDeli = () => {
+    this.setState({isLoading: true})
+    Api.getRequest(Routes.deliCategoriesRetrieve + "?storeId=" + 1, response => {
+      this.setState({deli: response.categories, isLoading: false})
+    }, error => {
+      console.log(error);
+    });
+  }
+  componentDidMount(){
+    this.retrieveRestaurant()
+    this.retrieveDeli()
+  }
   render() {
     return (
       <View>
@@ -15,100 +42,28 @@ class Filter extends Component {
             <Text style={[BasicStyles.headerTitleStyle, {fontSize:20}]}>Meals from our kitchen</Text>
           </View>
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20, paddingTop: 0}]}>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Bites</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Snacks</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Deep fried snacks</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Salads / soups</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Main Courses</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Pastas</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Sides</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Steaks</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Desserts</Text>
-            </TouchableOpacity>
+          { this.state.restaurant != null &&
+                this.state.restaurant.map((data, idx) => {
+                  return <TouchableOpacity style={[{ marginTop: 15 }]} key={idx}>
+                  <Text>{data.name}</Text>
+                </TouchableOpacity>
+                })
+              }
           </View>
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20}]}>
             <Text style={[BasicStyles.headerTitleStyle, {fontSize:20}]}>Meals from our kitchen</Text>
           </View>
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20, paddingTop: 0}]}>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Alcoholic drinks</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Beef / Steak</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Bread</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Candy & Cookies</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Cheese</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Cold Cuts</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Deli / Antipasti / Tapas</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Desserts</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Dry Goods</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Dutch food</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Fish & Seafood</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Frozen</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Fruits and vegetables</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Lamb</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Non alcoholic drinks</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Pork</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Sauces</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Sausage</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Turkey</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[{ marginTop: 15 }]}>
-              <Text>Vegetarian "meats"</Text>
-            </TouchableOpacity>
+          { this.state.deli != null &&
+                this.state.deli.map((data, idx) => {
+                  return <TouchableOpacity style={[{ marginTop: 15 }]} key={idx}>
+                  <Text>{data.name}</Text>
+                </TouchableOpacity>
+                })
+              }
           </View>
         </ScrollView>
+        {this.state.isLoading ? <Spinner mode="overlay"/> : null }
       </View>
     );
   }

@@ -9,16 +9,49 @@ import {
 } from 'react-native';
 import Style from './style.js';
 import ProductItem from './productItems.js';
+<<<<<<< HEAD
 import Pagination from 'components/Pagination';
+=======
+import Pagination from 'components/Pagination/Dynamic.js';
+import Api from 'services/apiv2/index.js';
+import { Routes } from 'common';
+>>>>>>> 678e6246e1ec504f40ce546596ce8dd65bb36d8d
 class Products extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      restaurant: null,
+      deli: null
+    }
   }
+<<<<<<< HEAD
 
   testing(data) {
     console.log(data);
+=======
+  retrieveRestaurant = () => {
+    this.props.load(true);
+    Api.getRequest(Routes.restaurantCategoriesRetrieve + "?storeId=" + 1, response => {
+      this.setState({restaurant: response.categories})
+      this.props.load(false);
+    }, error => {
+      console.log(error);
+    });
   }
-
+  retrieveDeli = () => {
+    this.props.load(true);
+    Api.getRequest(Routes.deliCategoriesRetrieve + "?storeId=" + 1, response => {
+      this.setState({deli: response.categories})
+      this.props.load(false);
+    }, error => {
+      console.log(error);
+    });
+  }
+  componentDidMount(){
+    this.retrieveRestaurant()
+    this.retrieveDeli()
+>>>>>>> 678e6246e1ec504f40ce546596ce8dd65bb36d8d
+  }
   render() {
     let menu = [
       {
@@ -42,6 +75,7 @@ class Products extends Component {
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/res.png')} />
               <View style={Style.imageRow}>
+<<<<<<< HEAD
                 <TouchableOpacity onPress={() => this.props.choose('bites')}>
                   <ProductItem
                     name="Bites"
@@ -88,6 +122,15 @@ class Products extends Component {
                   name="Deserts"
                   imageURL={require('assets/products/res-dessert.png')}
                 />
+=======
+              { this.state.restaurant != null &&
+                this.state.restaurant.map((data, idx) => {
+                  return <TouchableOpacity onPress={() => this.props.choose(data.name)} key={idx}>
+                            <ProductItem name={data.name} imageURL={data.image.src}/>
+                          </TouchableOpacity>
+                })
+              }
+>>>>>>> 678e6246e1ec504f40ce546596ce8dd65bb36d8d
               </View>
             </View>
           </ScrollView>
@@ -99,6 +142,7 @@ class Products extends Component {
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/deli.png')} />
               <View style={Style.imageRow}>
+<<<<<<< HEAD
                 <ProductItem
                   name="Alcoholic drinks"
                   imageURL={require('assets/products/deli-alcohol.png')}
@@ -201,6 +245,15 @@ class Products extends Component {
                   name="Vegetarian 'meats'"
                   imageURL={require('assets/products/deli-veg.png')}
                 />
+=======
+              { this.state.deli != null &&
+                this.state.deli.map((data, idx) => {
+                  return <TouchableOpacity onPress={() => this.props.choose(data.name)} key={idx}>
+                            <ProductItem name={data.name} imageURL={data.image.src}/>
+                          </TouchableOpacity>
+                })
+              }
+>>>>>>> 678e6246e1ec504f40ce546596ce8dd65bb36d8d
               </View>
             </View>
           </ScrollView>

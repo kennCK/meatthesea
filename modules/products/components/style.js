@@ -11,7 +11,8 @@ export default {
     width: '100%',
     paddingTop: 5,
     paddingBottom: 5,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
   productImage: {
     width: (width/3)-20,

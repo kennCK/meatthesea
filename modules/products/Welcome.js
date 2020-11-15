@@ -25,6 +25,7 @@ import {
 import Products from './components/';
 import DeliveryDetails from './components/deliveryDetails';
 import Menu from './components/menu.js';
+import { Spinner } from 'components';
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component {
   constructor(props) {
@@ -41,10 +42,22 @@ class Welcome extends Component {
       deliveryModal: false,
       menu: 0,
       selectedMenu: null,
+<<<<<<< HEAD
     };
   }
   changeSelectedMenu(data) {
     this.setState({selectedMenu: data});
+=======
+      prods: null,
+      isLoading: false
+    }
+  }
+  isLoading(data){
+    this.setState({isLoading: data});
+  }
+  changeSelectedMenu(data){
+    this.setState({selectedMenu: data})
+>>>>>>> 678e6246e1ec504f40ce546596ce8dd65bb36d8d
   }
   redirect(index) {
     this.props.navigation.navigate(this.state.redirects[index]);
@@ -183,6 +196,7 @@ class Welcome extends Component {
               />
             </TouchableOpacity>
           </View>
+<<<<<<< HEAD
           {this.state.selectedMenu == null && (
             <Products
               state={this.state.menu}
@@ -220,6 +234,23 @@ class Welcome extends Component {
                   />
                   <Text style={Style.bottomMenuText}>Pick up crockeries</Text>
                 </View>
+=======
+          {
+            this.state.selectedMenu == null &&
+            <Products state={this.state.menu} click={(index)=> this.changeMenu(index)} choose={(data) => this.changeSelectedMenu(data)} load={(data) => this.isLoading(data)}/>
+          }
+          {
+            this.state.selectedMenu != null &&
+            <Menu menu={this.state.selectedMenu} press={(data) => this.changeSelectedMenu(data)}/>
+          }
+          <View style={{ height: 50, flexDirection: 'row'}}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity style={{width: width / 2, borderWidth: 1, borderColor: Color.primary, justifyContent: 'center', alignItems: 'center'}} onPress={() => this.redirect(3)}>
+              <View style={[{width: "100%", flexDirection: 'row', alignItems: 'center'}]}>
+                <FontAwesomeIcon icon={ faHandHolding } style={{color: Color.darkGray}} size={30} />
+                <Text style={Style.bottomMenuText}>Pick up crockeries</Text>
+              </View>
+>>>>>>> 678e6246e1ec504f40ce546596ce8dd65bb36d8d
               </TouchableOpacity>
             </ScrollView>
             <ScrollView
@@ -251,6 +282,7 @@ class Welcome extends Component {
             </ScrollView>
           </View>
         </View>
+        {this.state.isLoading ? <Spinner mode="overlay"/> : null }
       </View>
     );
   }

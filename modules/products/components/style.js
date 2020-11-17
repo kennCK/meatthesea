@@ -1,4 +1,4 @@
-import { Color } from 'common';
+import { Color, BasicStyles } from 'common';
 import { Dimensions } from 'react-native';
 const width = Math.round(Dimensions.get('window').width);
 export default {
@@ -25,7 +25,7 @@ export default {
   productName: {
     textAlign: 'center',
     fontWeight: "bold",
-    fontSize: 18
+    fontSize: BasicStyles.standardFontSize
   },
   menuContainer: {
     flexDirection: 'row',

@@ -4,60 +4,109 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { BasicStyles, Color } from 'common';
 import Style from './style.js';
+import Api from 'services/apiv2/index.js';
+import {Routes} from 'common';
 
 class Menu extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      restaurant: null,
+      deli: null
+    };
+  }
+  retrieveRestaurant = () => {
+    this.props.load(true);
+    Api.getRequest(
+      Routes.restaurantCategoriesRetrieve + '?storeId=' + 1,
+      response => {
+        this.setState({restaurant: response.categories});
+        this.props.load(false);
+      },
+      error => {
+        console.log(error);
+      },
+    );
+  };
+  retrieveDeli = () => {
+    this.props.load(true);
+    Api.getRequest(
+      Routes.deliCategoriesRetrieve + '?storeId=' + 1,
+      response => {
+        this.setState({deli: response.categories});
+        this.props.load(false);
+      },
+      error => {
+        console.log(error);
+      },
+    );
+  };
+  componentDidMount() {
+    if(this.props.type == 0){
+      this.retrieveRestaurant();
+    }else{
+      this.retrieveDeli();
+    }
   }
   render() {
     return (
       <View style={{flex: 1}}>
         <View style={{ height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderWidth: 1,padding: 10, borderColor: Color.gray }} >
-          <TouchableOpacity onPress={() => this.props.press(null)} style={{position: 'absolute', left: 0}}>
+          <TouchableOpacity onPress={() => this.props.press(null, null)} style={{position: 'absolute', left: 0}}>
             <FontAwesomeIcon icon={faArrowLeft} size={BasicStyles.iconSize} style={[{paddingLeft: 20, paddingRight: 20}]}/>
           </TouchableOpacity>
-          <Text style={{fontWeight: 'bold'}}>RESTAURANT MENU</Text>
-        </View>
+            {this.props.type == 0 &&
+              <Text style={{fontWeight: 'bold'}}>RESTAURANT MENU</Text>
+            }
+            {this.props.type == 1 &&
+              <Text style={{fontWeight: 'bold'}}>DELI-STORE MENU</Text>
+            }
+          </View>
           <ScrollView showsHorizontalScrollIndicator={false}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              <TouchableOpacity style={Style.menuButton} onPress={() => this.props.press('bites')}>
-                <Text style={this.props.menu == 'bites'?{color: Color.primary}:{color: Color.black}}>Bites</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={Style.menuButton} onPress={() => this.props.press('snacks')}>
-                <Text style={this.props.menu == 'snacks'?{color: Color.primary}:{color: Color.black}}>Snacks</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={Style.menuButton} onPress={() => this.props.press('fried')}>
-                <Text style={this.props.menu == 'fried'?{color: Color.primary}:{color: Color.black}}>Deep fried snacks</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={Style.menuButton}>
-                <Text style={{color: Color.black}}>Salads / soups</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={Style.menuButton}>
-                <Text style={{color: Color.black}}>Main Courses</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={Style.menuButton}>
-                <Text style={{color: Color.black}}>Pastas</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={Style.menuButton}>
-                <Text style={{color: Color.black}}>Sides</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={Style.menuButton}>
-                <Text style={{color: Color.black}}>Steaks</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={Style.menuButton}>
-                <Text style={{color: Color.black}}>Desserts</Text>
-              </TouchableOpacity>
+              {this.state.restaurant != null &&
+                this.state.restaurant.map((data, idx) => {
+                  return (
+                    <TouchableOpacity
+                      style={Style.menuButton}
+                      onPress={() => this.props.press(data.id, this.props.type)}
+                      key={idx}>
+                      <Text style={this.props.menu == data.id?{color: Color.primary}:{color: Color.black}}>{data.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              {this.state.deli != null &&
+                this.state.deli.map((data, idx) => {
+                  return (
+                    <TouchableOpacity
+                      style={Style.menuButton}
+                      onPress={() => this.props.press(data.id, this.props.type)}
+                      key={idx}>
+                      <Text style={this.props.menu == data.id?{color: Color.primary}:{color: Color.black}}>{data.name}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
             </ScrollView>
-            {this.props.menu == 'bites' &&
+            <View style={{alignItems: 'center'}}>
+              <View style={Style.imageRow}>
+                {this.props.products != null &&
+                  this.props.products.map((data, idx) => {
+                    return (
+                        <TouchableOpacity key={idx}>
+                          <View style={Style.menuContainer}>
+                            <Image source={{uri: data.images[0].src}} style={Style.menuImage}/>
+                            <Text style={{fontWeight: 'bold'}}>HK$ {data.price}</Text>
+                            <Text>{data.name}</Text>
+                          </View>
+                        </TouchableOpacity>
+                    );
+                  })}
+              </View>
+            </View>
+            {/* {this.props.menu == 'bites' &&
               <View style={{alignItems: 'center'}}>
               <View style={Style.imageRow}>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/bites/1.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 80</Text>
-                    <Text>Homemade bitterballen with mu....</Text>
-                  </View>
-                </TouchableOpacity>
+                
                 <TouchableOpacity>
                   <View style={Style.menuContainer}>
                     <Image source={require('assets/products/bites/2.png')} style={Style.menuImage}/>
@@ -219,7 +268,7 @@ class Menu extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-            }
+            } */}
           </ScrollView>
       </View>
     );

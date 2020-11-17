@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Image, Text} from 'react-native';
 import Style from './style.js';
+import {BasicStyles} from 'common';
 class ProductItems extends Component {
   constructor(props) {
     super(props);

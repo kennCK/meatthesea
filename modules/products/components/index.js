@@ -77,7 +77,7 @@ class Products extends Component {
                   this.state.restaurant.map((data, idx) => {
                     return (
                       <TouchableOpacity
-                        onPress={() => this.props.choose(data.name)}
+                        onPress={() => this.props.choose(data.id, 0)}
                         key={idx}>
                         <ProductItem
                           name={data.name}
@@ -101,7 +101,7 @@ class Products extends Component {
                   this.state.deli.map((data, idx) => {
                     return (
                       <TouchableOpacity
-                        onPress={() => this.props.choose(data.name)}
+                        onPress={() => this.props.choose(data.id, 1)}
                         key={idx}>
                         <ProductItem
                           name={data.name}

@@ -26,6 +26,8 @@ import Products from './components/';
 import DeliveryDetails from './components/deliveryDetails';
 import Menu from './components/menu.js';
 import {Spinner} from 'components';
+import Api from 'services/apiv2/index.js';
+import {Routes} from 'common';
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component {
   constructor(props) {
@@ -42,15 +44,31 @@ class Welcome extends Component {
       deliveryModal: false,
       menu: 0,
       selectedMenu: null,
-      prods: null,
       isLoading: false,
+      type: null,
+      products: null
     };
   }
   isLoading(data) {
     this.setState({isLoading: data});
   }
-  changeSelectedMenu(data) {
-    this.setState({selectedMenu: data});
+  changeSelectedMenu(data, type) {
+    if(data == null){
+      this.setState({products: null})
+    }else{
+      this.isLoading(true);
+      Api.getRequest(
+        Routes.productsRetrieve + '?categoryid=' + data,
+        response => {
+          this.setState({products: response.products});
+          this.isLoading(false);
+        },
+        error => {
+          console.log(error);
+        },
+      );
+    }
+    this.setState({selectedMenu: data, type: type});
   }
   redirect(index) {
     this.props.navigation.navigate(this.state.redirects[index]);
@@ -136,8 +154,8 @@ class Welcome extends Component {
         />
         <View>
           <View style={Style.delivery}>
-            <Text style={[{fontSize: 18, flex: 1}]}>Deliver to: </Text>
-            <Text style={[Style.textPrimary, {flex: 3, fontSize: 18}]}>
+            <Text style={[{fontSize: BasicStyles.standardFontSize, flex: 1}]}>Deliver to: </Text>
+            <Text style={[Style.textPrimary, {flex: 3, fontSize: BasicStyles.standardFontSize}]}>
               1a, Centre Stage Tower 1
             </Text>
             <TouchableOpacity
@@ -193,14 +211,17 @@ class Welcome extends Component {
             <Products
               state={this.state.menu}
               click={index => this.changeMenu(index)}
-              choose={data => this.changeSelectedMenu(data)}
+              choose={(data, type) => this.changeSelectedMenu(data, type)}
               load={data => this.isLoading(data)}
             />
           )}
           {this.state.selectedMenu != null && (
             <Menu
+              products={this.state.products}
               menu={this.state.selectedMenu}
-              press={data => this.changeSelectedMenu(data)}
+              type={this.state.type}
+              press={(data, type) => this.changeSelectedMenu(data, type)}
+              load={data => this.isLoading(data)}
             />
           )}
           <View style={{height: 50, flexDirection: 'row'}}>

@@ -72,7 +72,10 @@ export default class LocationInput extends React.Component {
                     </TouchableWithoutFeedback>
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <LocationsList {...{ callback: this.callback, selected, stores }} />
+                            {
+                                stores.length > 0 ? <LocationsList {...{ callback: this.callback, selected, stores }} /> : <Text>No Locations available at the moment</Text>
+                            }
+
                         </View>
                     </View>
                 </Modal>

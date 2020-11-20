@@ -25,14 +25,46 @@ class AppOnBoarding extends Component {
         };
     }
 
+    getLocations() {
+
+    }
+
+    getData = async () => {
+        let checkToken = (_expiry) => {
+            if (_expiry < new Date().getTime() / 1000) {
+                this.props.logout();
+            } else {
+                this.props.navigation.navigate('homepageStack');
+            }
+        }
+
+        try {
+            const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
+            const token_expiration = await AsyncStorage.getItem(Helper.APP_NAME + 'token_expiration');
+            if (token != null) {
+                this.setState({ token });
+                setInterval(() => {
+                    checkToken(token_expiration)
+                }, 1000)
+            }
+        } catch (e) {
+            // error reading value
+        }
+    }
+
     componentDidMount() {
+        this.setState({ isLoading: true })
+        this.getData();
         Api.getRequest(Routes.storeRetrieveAll,
             response => {
+                this.setState({ isLoading: false })
                 this.setState({ stores: response.stores })
             },
             error => {
-                console.warn(error)
+                this.setState({ isLoading: false })
+                alert("Something went wrong")
             })
+
     }
 
     redirect = (route) => {
@@ -65,8 +97,10 @@ class AppOnBoarding extends Component {
 
     render() {
         const { isLoading, errorMessage, isResponseError } = this.state;
+
         return (
             <ScrollView style={Style.ScrollView}>
+                {isLoading ? <Spinner mode="overlay" /> : null}
 
                 <View style={Style.MainContainer}>
                     <Header params={"AppOnBoarding"} lg ></Header>
@@ -102,7 +136,7 @@ class AppOnBoarding extends Component {
                             iconHeight: 20,
                             stores: this.state.stores,
                             onSelect: (selectedItem) => {
-                                this.props.setLocation(selectedItem.id)
+                                this.props.setLocation(selectedItem)
                                 this.setState({ location: selectedItem.name })
                             }
                         }} />
@@ -136,7 +170,6 @@ class AppOnBoarding extends Component {
                     </View>
                 </View>
 
-                {isLoading ? <Spinner mode="overlay" /> : null}
                 {isResponseError ? <CustomError visible={isResponseError} onCLose={() => {
                     this.setState({ isResponseError: false, isLoading: false })
                 }} /> : null}
@@ -151,7 +184,7 @@ const mapDispatchToProps = dispatch => {
     const { actions } = require('@redux');
     return {
         setLocation: (location) => dispatch(actions.setLocation(location)),
-
+        logout: () => dispatch(actions.logout())
     };
 };
 

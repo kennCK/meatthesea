@@ -23,6 +23,7 @@ export default {
   customerDeleteById: id => apiUrl + 'customers/' + id,
   customerRetrieveCount: apiUrl + 'customers/count',
   customerSearch: apiUrl + 'customers/search',
+  customerLogin:apiUrl+'customerlogin',
 
   // Languages
   languageRetrieve: apiUrl + 'languages',

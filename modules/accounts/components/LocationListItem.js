@@ -51,7 +51,7 @@ const FlatListItem = ({ callback, item, selected }) => {
                                 disabled
                                 isSelected={active}
                                 onPress={() => {
-                                    
+
                                 }}
                                 buttonSize={8}
                                 buttonWrapStyle={{ marginRight: 10 }}

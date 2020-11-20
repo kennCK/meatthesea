@@ -1,4 +1,4 @@
-import {Routes} from 'common';
+import { Routes } from 'common';
 import Data from 'services/Data';
 import axios from 'axios';
 import config from 'src/config.js';
@@ -28,13 +28,14 @@ const Api = {
         }
       });
   },
-  getAuthUser: (token, callback, errorCallback = null) => {
+  getAuthUser: (token, callback, errorCallback = null ) => {
     const body = {};
     const fetchOptions = {
       method: 'POST',
       headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
-        Authorization: 'bearer ' + config.authorization,
+        'Authorization': 'bearer ' + config.authorization,
       },
       body: JSON.stringify(body),
     };
@@ -70,18 +71,42 @@ const Api = {
         }
       });
   },
-  getRequest: (route, callback, errorCallback = null) => {
+  getRequest: async(route, callback, errorCallback = null) => {
     // const apiRoute = Data.token ? route + '?token=' + Data.token : route;
+    let token =  config.authorization;
+    try {
+      const savedToken = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
+      if (savedToken) {
+        token = Data.token;
+      }
+    } catch (error) {
+      token =  config.authorization;
+    }
     const fetchOptions = {
+      // url: route,
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'bearer ' + config.authorization,
+        'Accept': 'application/json',
+        'Authorization': 'bearer ' +token,
       },
     };
     fetch(route, fetchOptions)
-      .then(response => response.json())
+      .then(response => {
+        console.log(response.status)
+        if (response.ok || response.status == 200) {
+          return response.json()
+        }
+        if (response.status >= 400 && response.status < 500) {
+          console.log('error status :', response.status)
+          errorCallback({
+            response,
+            message: "Request failed"
+          });
+        }
+      })
       .then(json => {
+        console.log("json->", json)
         callback(json);
       })
       .catch(error => {
@@ -89,24 +114,25 @@ const Api = {
           errorCallback(error);
         }
       });
+
   },
   upload: (route, parameter, callback, errorCallback = null) => {
     console.log('route', Data.token ? route + '?token=' + Data.token : route);
     const apiRoute = Data.token ? route + '?token=' + Data.token : route;
-    console.log({apiRoute, parameter});
+    console.log({ apiRoute, parameter });
     axios({
       url: apiRoute,
       method: 'POST',
       data: parameter,
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'multipart/form-data',
       },
     })
       .then(response => {
         callback(response);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.info(error.config);
         if (errorCallback) {
           errorCallback(error);
@@ -119,6 +145,7 @@ const Api = {
       method: 'POST',
       body: parameter,
       headers: {
+
         'Content-Type': 'multipart/form-data',
       },
     })

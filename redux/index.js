@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import Data from 'services/Data';
-import {Helper, Color} from 'common';
+import { Helper, Color } from 'common';
 
 const types = {
   LOGOUT: 'LOGOUT',
@@ -15,25 +15,25 @@ const types = {
 
 export const actions = {
   login: (user, token) => {
-    return {type: types.LOGIN, user, token};
+    return { type: types.LOGIN, user, token };
   },
   logout() {
-    return {type: types.LOGOUT};
+    return { type: types.LOGOUT };
   },
   updateUser: user => {
-    return {type: types.UPDATE_USER, user};
+    return { type: types.UPDATE_USER, user };
   },
   setNotifications(unread, notifications) {
-    return {type: types.SET_NOTIFICATIONS, unread, notifications};
+    return { type: types.SET_NOTIFICATIONS, unread, notifications };
   },
   updateNotifications(unread, notification) {
-    return {type: types.UPDATE_NOTIFICATIONS, unread, notification};
+    return { type: types.UPDATE_NOTIFICATIONS, unread, notification };
   },
   setTheme(theme) {
-    return {type: types.SET_THEME, theme};
+    return { type: types.SET_THEME, theme };
   },
   setLocation(location) {
-    return {type: types.SET_LOCATION, location};
+    return { type: types.SET_LOCATION, location };
   },
 };
 
@@ -54,21 +54,22 @@ storeData = async (key, value) => {
 };
 
 const reducer = (state = initialState, action) => {
-  const {type, user, token} = action;
-  const {unread} = action;
-  const {notification} = action;
-  const {theme} = action;
-  const {location} = action;
+  const { type, user, token } = action;
+  const { unread } = action;
+  const { notification } = action;
+  const { theme } = action;
+  const { location } = action;
 
   switch (type) {
     case types.LOGOUT:
       AsyncStorage.clear();
       return Object.assign({}, initialState);
     case types.LOGIN:
-      storeData('token', token);
-      console.log('LOGIN', true);
+      let { access_token, expires_in } = token;
+      storeData('token', access_token);
+      storeData('token_expiration', expires_in.toString());
       Data.setToken(token);
-      return {...state, user, token};
+      return { ...state, user, token };
     case types.UPDATE_USER:
       return {
         ...state,
@@ -145,7 +146,7 @@ const reducer = (state = initialState, action) => {
         location,
       };
     default:
-      return {...state, nav: state.nav};
+      return { ...state, nav: state.nav };
   }
 };
 export default reducer;

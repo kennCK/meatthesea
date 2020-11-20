@@ -7,7 +7,6 @@ import { Color } from 'common';
 import Separator from 'modules/orders/components/Separator';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import Api from 'api';
-
 import {
   faUserCircle,
   faShoppingBag,

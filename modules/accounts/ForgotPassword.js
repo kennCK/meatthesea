@@ -20,6 +20,7 @@ class ForgotPassword extends Component {
       token: null,
       errorMessage: null,
       changeStep: 0,
+      userID: null,
       password: null,
       confirmPassword: null,
       isOtpModal: false,
@@ -45,9 +46,25 @@ class ForgotPassword extends Component {
       this.setState({ errorMessage: 'You have entered an invalid email address.' })
       return false
     }
-    let parameter = {
-      email: email
-    }
+    Api.getRequest(
+      Routes.customerRetrieve + '?fields=email,id',
+      response => {
+        let ndx = 0
+        while(ndx < response.customers.length && email != response.customers[ndx].email){
+          ndx++
+        }
+        if(ndx < response.customers.length){
+          this.setState({ changeStep: 1, userID: response.customers[ndx].id})
+          return true
+        }else{
+          this.setState({ errorMessage: 'Email address not found!' })
+          return false
+        }
+      },
+      error => {
+        console.log(error);
+      },
+    );
     // Api.request(config.IS_DEV + '/accounts/request_reset', parameter, userInfo => {
     //   this.setState({
     //     successMessage: 'Successfully sent! Please check your e-mail address to continue.',
@@ -130,30 +147,49 @@ class ForgotPassword extends Component {
       return false
     }
     this.setState({ isLoading: true })
-    const { user } = this.props.state;
-    let parameter = {
-      username: user.username,
-      code: user.code,
-      password: this.state.password
+    let test = {
+      "customer":{
+        "password": password
+      }
     }
-    console.log('parameter', parameter);
-    this.setState({ isResponseError: false })
-    Api.request(Routes.accountUpdate, parameter, response => {
-      this.setState({ isLoading: false })
-      this.props.navigation.navigate('loginStack')
-    }, error => {
-      console.log(error)
-      this.setState({ isLoading: false })
-      this.setState({ isResponseError: true })
-    })
+    Api.putRequest(
+      Routes.customerUpdateById(this.state.userID), test,
+      response => {
+        this.setState({ isLoading: false })
+        this.props.navigation.navigate('loginStack')
+      },
+      error => {
+        console.log(error)
+        this.setState({ isLoading: false })
+        this.setState({ isResponseError: true })
+      },
+    );
+
+    // const { user } = this.props.state;
+    // let parameter = {
+    //   username: user.username,
+    //   code: user.code,
+    //   password: this.state.password
+    // }
+    // console.log('parameter', parameter);
+    // this.setState({ isResponseError: false })
+    // Api.request(Routes.accountUpdate, parameter, response => {
+    //   this.setState({ isLoading: false })
+    //   this.props.navigation.navigate('loginStack')
+    // }, error => {
+    //   console.log(error)
+    //   this.setState({ isLoading: false })
+    //   this.setState({ isResponseError: true })
+    // })
   }
 
   _changePassword = () => {
     const { theme } = this.props.state;
     return (
-      <View>
+      <View style={Style.MainContainer}>
         <TextInput
-          style={BasicStyles.formControl}
+          {...Style.textPlaceHolder}
+          style={[Style.textInput, { height: 50, color: Color.white }]}
           onChangeText={(password) => this.setState({ password })}
           value={this.state.password}
           placeholder={'New password'}
@@ -161,7 +197,8 @@ class ForgotPassword extends Component {
         />
 
         <TextInput
-          style={BasicStyles.formControl}
+          {...Style.textPlaceHolder}
+          style={[Style.textInput, { height: 50, color: Color.white }]}
           onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
           value={this.state.confirmPassword}
           placeholder={'Confirm new password'}
@@ -169,12 +206,10 @@ class ForgotPassword extends Component {
         />
 
         <TouchableHighlight
-          style={[BasicStyles.btn, {
-            backgroundColor: theme ? theme.primary : Color.primary
-          }]}
+          style={[BasicStyles.btn, Style.btnWhite]}
           onPress={() => this.resetPassword()}
           underlayColor={Color.gray}>
-          <Text style={BasicStyles.textWhite}>
+          <Text style={[Style.textPrimary, Style.fontWeight('bold')]}>
             Reset
           </Text>
         </TouchableHighlight>
@@ -188,7 +223,7 @@ class ForgotPassword extends Component {
       <View style={Style.MainContainer}>
         <TextInput
           {...Style.textPlaceHolder}
-          style={[Style.textInput, { height: 50 }]}
+          style={[Style.textInput, { height: 50, color: Color.white }]}
           onChangeText={(email) => this.setState({ email })}
           value={this.state.email}
           placeholder={'Email Address'}

@@ -81,6 +81,8 @@ export default {
     backgroundColor: Color.white
   },
   modal: {
+    height: '100%',
+    width: '100%',
     backgroundColor: Color.lightGray,
     alignItems: 'center',
     margin: 0

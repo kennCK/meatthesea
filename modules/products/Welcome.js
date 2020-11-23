@@ -95,16 +95,15 @@ class Welcome extends Component {
           }}>
           <View
             style={{
-              width: '30%',
-              marginRight: 200,
+              marginRight: -300,
             }}>
             <TouchableOpacity
-              style={[{marginTop: 40}]}
+              style={[{marginTop: 40, backgroundColor: Color.white, borderRadius: 10}]}
               onPress={() => this.changeMenu(2)}>
               <FontAwesomeIcon
                 icon={faTimes}
                 style={{
-                  color: Color.gray,
+                  color: Color.primary,
                 }}
                 size={BasicStyles.iconSize}
               />
@@ -239,7 +238,7 @@ class Welcome extends Component {
                 onPress={() => this.redirect(3)}>
                 <View
                   style={[
-                    {width: '100%', flexDirection: 'row', borderWidth: 1, alignItems: 'center', justifyContent: 'center', flex: 1},
+                    {width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1},
                   ]}>
                   <FontAwesomeIcon
                     icon={faHandHolding}
@@ -265,7 +264,7 @@ class Welcome extends Component {
                 }>
                 <View
                   style={[
-                    {width: '100%', flexDirection: 'row', borderWidth: 1, alignItems: 'center', justifyContent: 'center', flex: 1},
+                    {width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1},
                   ]}>
                   <FontAwesomeIcon
                     icon={faShoppingBasket}

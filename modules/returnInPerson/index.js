@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {SafeAreaView, View, Text} from 'react-native';
+import {SafeAreaView, View, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 
 import styles from './Style';
@@ -15,8 +15,6 @@ let dayOfWeek = [
 ];
 
 class ReturnInPerson extends Component {
-  componentDidMount() {}
-
   convertTo12Hour = time => {
     var ts = time;
     var H = +ts.substr(0, 2);
@@ -28,7 +26,6 @@ class ReturnInPerson extends Component {
 
   displaySchedule = () => {
     const schedule = this.props.state.location.store_schedules;
-
     return schedule.map(day => {
       let startTime = this.convertTo12Hour(day.start_time.substring(0, 5));
       let endTime = this.convertTo12Hour(day.end_time.substring(0, 5));
@@ -44,32 +41,33 @@ class ReturnInPerson extends Component {
   };
 
   render() {
-    console.log('LOCATION', this.props.state.location.store_schedules);
     return (
       <SafeAreaView>
         <View style={styles.MainContainer}>
-          <View style={styles.TopContainer}>
-            <View style={styles.TextContainer}>
-              <Text style={styles.DescriptionContainer}>
-                You are welcome to return the crockery in person at your local
-                Meat the Sea outlet.
-              </Text>
+          <ScrollView>
+            <View style={styles.TopContainer}>
+              <View style={styles.TextContainer}>
+                <Text style={styles.DescriptionContainer}>
+                  You are welcome to return the crockery in person at your local
+                  Meat the Sea outlet.
+                </Text>
+              </View>
+              <View style={styles.TextContainer}>
+                <Text style={styles.DescriptionContainer}>
+                  Just quote the order number to our colleague and you're good
+                  to go!
+                </Text>
+              </View>
             </View>
-            <View style={styles.TextContainer}>
-              <Text style={styles.DescriptionContainer}>
-                Just quote the order number to our colleague and you're good to
-                go!
-              </Text>
+            <View style={styles.BottomContainer}>
+              <View style={styles.SubtitleContainer}>
+                <Text style={styles.SubtitleTextStyle}>
+                  Meat the Sea - 88 Queen's Rd W opening hours
+                </Text>
+              </View>
+              {this.displaySchedule()}
             </View>
-          </View>
-          <View style={styles.BottomContainer}>
-            <View style={styles.SubtitleContainer}>
-              <Text style={styles.SubtitleTextStyle}>
-                Meat the Sea - 88 Queen's Rd W opening hours
-              </Text>
-            </View>
-            {this.displaySchedule()}
-          </View>
+          </ScrollView>
         </View>
       </SafeAreaView>
     );

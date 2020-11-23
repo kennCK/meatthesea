@@ -1,5 +1,5 @@
 import {Platform, StatusBar, StyleSheet} from 'react-native';
-
+import {BasicStyles} from 'common';
 const styles = StyleSheet.create({
   MainContainer: {
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   DescriptionContainer: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: BasicStyles.standardFontSize,
     color: '#0366B2',
   },
   SubtitleContainer: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   SubtitleTextStyle: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 21,
+    fontSize: BasicStyles.standardFontSize,
     color: '#0366B2',
   },
   ScheduleContainer: {
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   ScheduleText: {
-    fontSize: 18,
+    fontSize: BasicStyles.standardFontSize,
     fontWeight: 'bold',
   },
 });

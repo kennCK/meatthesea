@@ -239,7 +239,7 @@ class Welcome extends Component {
                 onPress={() => this.redirect(3)}>
                 <View
                   style={[
-                    {width: '100%', flexDirection: 'row', alignItems: 'center'},
+                    {width: '100%', flexDirection: 'row', borderWidth: 1, alignItems: 'center', justifyContent: 'center', flex: 1},
                   ]}>
                   <FontAwesomeIcon
                     icon={faHandHolding}
@@ -258,15 +258,14 @@ class Welcome extends Component {
                   width: width / 2,
                   borderWidth: 1,
                   borderColor: Color.primary,
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  alignItems: "center"
                 }}
                 onPress={() =>
                   this.props.navigation.navigate('returnInPersonStack')
                 }>
                 <View
                   style={[
-                    {width: '100%', flexDirection: 'row', alignItems: 'center'},
+                    {width: '100%', flexDirection: 'row', borderWidth: 1, alignItems: 'center', justifyContent: 'center', flex: 1},
                   ]}>
                   <FontAwesomeIcon
                     icon={faShoppingBasket}

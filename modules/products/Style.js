@@ -112,7 +112,6 @@ export default {
     borderColor: Color.primary
   },
   bottomMenuText: {
-    textAlign: 'center',
-    flex: 1
+    marginLeft: 10
   }
 }

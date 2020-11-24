@@ -14,8 +14,8 @@ class OrderHistoryScreen extends Component {
                     <Text style={[BasicStyles.titleText, { marginVertical: 15 }]}>
                         <FontAwesomeIcon style={{
                             marginTop: 14
-                        }} color={Color.primary} icon={icon} size={18} />
-                        <Text style={[BasicStyles.titleText, styles.ListItemText, Style.fontSize(18)]}>{"  "}{title}</Text>
+                        }} color={Color.primary} icon={icon} size={BasicStyles.standardFontSize} />
+                        <Text style={[BasicStyles.titleText, styles.ListItemText, Style.fontSize(BasicStyles.standardFontSize)]}>{"  "}{title}</Text>
                     </Text>
                 </View >
             </TouchableHighlight>

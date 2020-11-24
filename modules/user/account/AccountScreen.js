@@ -7,6 +7,7 @@ import { Color } from 'common';
 import Separator from 'modules/orders/components/Separator';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import Api from 'api';
+import { connect } from 'react-redux'
 import {
   faUserCircle,
   faShoppingBag,
@@ -22,6 +23,7 @@ class AccountScreen extends Component {
   };
 
   componentDidMount() {
+    console.log(this.props)
     let route = Routes.customerRetrieveById('1');
     Api.getRequest(route, response => {
       let customer = response.customers[0]
@@ -36,8 +38,15 @@ class AccountScreen extends Component {
     };
   }
   redirect = route => {
-    this.props.navigation.navigate(route, { user: this.state.user });
+    this.props.navigation.push(route, { user: this.state.user });
   };
+
+  logoutAction = ()=> {
+    //clear storage
+    this.props.logout();
+    this.props.navigation.navigate('loginStack');
+  }
+
   render() {
 
     const { first_name, last_name, email } = this.state.user;
@@ -84,14 +93,14 @@ class AccountScreen extends Component {
           <Text
             style={[
               { textTransform: 'uppercase' },
-              Style.fontSize(20),
+              Style.fontSize(BasicStyles.standardFontSize),
               Style.fontWeight('bold'),
             ]}>
             {`${first_name || ''} ${last_name || ''}`}
           </Text>
           <Text
             style={[
-              Style.fontSize(16),
+              Style.fontSize(BasicStyles.standardFontSize),
               Style.fontWeight('100'),
               { marginTop: 5 },
             ]}>
@@ -123,6 +132,7 @@ class AccountScreen extends Component {
           <Separator />
           <View style={{ marginVertical: 10 }} />
           <TouchableHighlight
+            onPress={this.logoutAction}
             style={[
               BasicStyles.btn,
               Style.btnPrimary,
@@ -133,7 +143,7 @@ class AccountScreen extends Component {
               style={[
                 { color: Color.tertiary },
                 Style.fontWeight('bold'),
-                Style.fontSize(18),
+                Style.fontSize(BasicStyles.standardFontSize),
               ]}>
               Logout
             </Text>
@@ -143,5 +153,16 @@ class AccountScreen extends Component {
     );
   }
 }
+const mapStateToProps = state => ({ state: state });
 
-export default AccountScreen;
+const mapDispatchToProps = dispatch => {
+  const { actions } = require('@redux');
+  return {
+    logout: () => dispatch(actions.logout()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AccountScreen);

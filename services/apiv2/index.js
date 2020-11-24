@@ -106,7 +106,6 @@ const Api = {
         }
       })
       .then(json => {
-        console.log("json->", json)
         callback(json);
       })
       .catch(error => {

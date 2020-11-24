@@ -32,7 +32,7 @@ class ForgotPassword extends Component {
   }
 
   redirect = (route) => {
-    this.props.navigation.navigate(route);
+    this.props.navigation.push(route);
   }
 
   requestReset = () => {
@@ -140,7 +140,7 @@ class ForgotPassword extends Component {
     this.setState({ isResponseError: false })
     Api.request(Routes.accountUpdate, parameter, response => {
       this.setState({ isLoading: false })
-      this.props.navigation.navigate('loginStack')
+      this.props.navigation.push('loginStack')
     }, error => {
       console.log(error)
       this.setState({ isLoading: false })

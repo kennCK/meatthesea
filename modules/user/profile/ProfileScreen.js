@@ -13,7 +13,7 @@ class ProfileScreen extends Component {
         phone_number: ''
     }
     redirect = (route) => {
-        this.props.navigation.navigate(route);
+        this.props.navigation.push(route);
     }
 
     componentDidMount() {

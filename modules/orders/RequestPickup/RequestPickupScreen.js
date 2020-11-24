@@ -16,7 +16,7 @@ class RequestPickup extends Component {
     }
 
     redirect = (route) => {
-        this.props.navigation.navigate(route);
+        this.props.navigation.push(route);
     }
 
     toggleSelect = (id) => {

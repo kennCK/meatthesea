@@ -34,7 +34,7 @@ class AppOnBoarding extends Component {
             if (_expiry < new Date().getTime() / 1000) {
                 this.props.logout();
             } else {
-                this.props.navigation.navigate('homepageStack');
+                this.props.navigation.push('homepageStack');
             }
         }
 
@@ -68,7 +68,7 @@ class AppOnBoarding extends Component {
     }
 
     redirect = (route) => {
-        this.props.navigation.navigate(route);
+        this.props.navigation.push(route);
     }
 
     submit() {

@@ -63,7 +63,7 @@ const StackNavigator = createStackNavigator({
     screen: Dashboard,
     navigationOptions: ({navigation}) => ({
       title: 'Dashboard',
-      headerLeft: <MenuDrawerStructure navigationProps={navigation} />,
+      // headerLeft: <MenuDrawerStructure navigationProps={navigation} />,
       headerRight: <OptionRight navigationProps={navigation} />,
       headerStyle: {
         backgroundColor: Color.white,

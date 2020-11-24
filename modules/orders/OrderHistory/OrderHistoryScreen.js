@@ -22,7 +22,7 @@ class OrderHistoryScreen extends Component {
       
     }
     redirect = (route) => {
-        this.props.navigation.navigate(route);
+        this.props.navigation.push(route);
     }
     render() {
 
@@ -30,7 +30,7 @@ class OrderHistoryScreen extends Component {
             <View style={{ flex: 1 }} >
                 <View style={styles.MainContainer}>
                     <View style={styles.TopContainer}>
-                        <Text style={[styles.DescriptionContainer]}>Order number 1234</Text>
+                        <Text style={[styles.DescriptionContainer , {fontSize:BasicStyles.standardFontSize+2}]}>Order number 1234</Text>
                     </View>
                     <Separator />
                 </View>
@@ -49,7 +49,7 @@ class OrderHistoryScreen extends Component {
                     <TouchableHighlight
                         style={[BasicStyles.btn, Style.btnPrimary, { borderRadius: 0, width: Style.getWidth() - 30 }]}
                         underlayColor={Color.gray}>
-                        <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(18)]}>
+                        <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(BasicStyles.standardFontSize)]}>
                             RATE ORDER
                         </Text>
                     </TouchableHighlight>

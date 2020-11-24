@@ -36,7 +36,7 @@ class SavedAddress extends Component {
     this.setState({ selectedTile: index });
   };
   redirect = route => {
-    this.props.navigation.navigate(route);
+    this.props.navigation.push(route);
   };
   render() {
     return (

@@ -34,7 +34,7 @@ export default class OrderItems extends Component {
                     Style.textPrimary,
                     Style.fontWeight('bold'),
                     Style.fontAlign('left'),
-                    Style.fontSize(16)]
+                    Style.fontSize(BasicStyles.standardFontSize)]
                 }>{header}</Text>
                 {
                     this.state.items.map((itemText, idx) => {
@@ -44,7 +44,7 @@ export default class OrderItems extends Component {
                                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                                         <Text style={[
                                             BasicStyles.titleText,
-                                            Style.fontSize(18),
+                                            Style.fontSize(BasicStyles.standardFontSize),
                                         ]}>
                                             <Text  >
                                                 <>
@@ -52,13 +52,13 @@ export default class OrderItems extends Component {
                                                         this.updateQuantity(idx, false)
                                                     }}>
                                                         <Text style={[
-                                                            Style.fontSize(18),
+                                                            Style.fontSize(BasicStyles.standardFontSize),
                                                             { marginHorizontal: 2 }
                                                         ]}>-</Text>
                                                     </TouchableOpacity>
                                                     <TouchableOpacity disabled>
                                                         <Text style={[
-                                                            Style.fontSize(18),
+                                                            Style.fontSize(BasicStyles.standardFontSize),
                                                             { marginHorizontal: 4 }
                                                         ]}>{itemText.quantity > 0 ? itemText.quantity : 0}</Text>
                                                     </TouchableOpacity>
@@ -66,7 +66,7 @@ export default class OrderItems extends Component {
                                                         this.updateQuantity(idx)
                                                     }}>
                                                         <Text style={[
-                                                            Style.fontSize(18),
+                                                            Style.fontSize(BasicStyles.standardFontSize),
                                                             { marginHorizontal: 2 }
                                                         ]}>+</Text>
                                                     </TouchableOpacity>
@@ -76,12 +76,13 @@ export default class OrderItems extends Component {
                                         <Text style={[
                                             { marginVertical: 2 },
                                             Style.fontWeight("700"),
-                                            Style.fontSize(18),
+                                            Style.fontSize(BasicStyles.standardFontSize),
                                         ]}>
                                             {itemText.item}
                                         </Text>
                                         <Text style={{
                                             position: 'absolute',
+                                            fontSize:BasicStyles.standardFontSize,
                                             right: 25,
                                             top: 5
                                         }}>{itemText.price}</Text>
@@ -95,7 +96,7 @@ export default class OrderItems extends Component {
                                                     <Text style={[
                                                         { marginVertical: 2, marginLeft: 10 },
                                                         BasicStyles.titleText,
-                                                        Style.fontSize(16),
+                                                        Style.fontSize(BasicStyles.standardFontSize),
                                                     ]}>
                                                         <FontAwesomeIcon icon={faTrash} color={Color.primary} />
                                                     </Text>
@@ -104,10 +105,11 @@ export default class OrderItems extends Component {
                                                             { color: Color.darkGray },
                                                             BasicStyles.titleText,
                                                             Style.fontWeight("100"),
-                                                            Style.fontSize(16)
+                                                            Style.fontSize(BasicStyles.standardFontSize)
                                                         ]}>{"\t"}
                                                         +{addOn.item}</Text>
                                                     <Text style={{
+                                                        fontSize:BasicStyles.standardFontSize,
                                                         position: 'absolute',
                                                         right: 25,
                                                         top: 5

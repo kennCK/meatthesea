@@ -1,4 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
+import {BasicStyles} from 'common';
 
 const styles = StyleSheet.create({
   MainContainer: {
@@ -16,13 +17,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7F7',
   },
   OrderNumberStyle: {
-    fontSize: 18,
+    fontSize: BasicStyles.standardFontSize,
   },
   OrderDateContainer: {
     marginLeft: 'auto',
   },
   OrderDateStyle: {
-    fontSize: 18,
+    fontSize: BasicStyles.standardFontSize,
   },
   TitleContainer: {
     flexDirection: 'row',
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     bottom: 3,
     color: 'white',
-    fontSize: 15,
+    fontSize: BasicStyles.standardFontSize,
     textAlign: 'center',
     alignSelf: 'center',
   },

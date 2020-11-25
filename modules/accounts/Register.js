@@ -16,7 +16,8 @@ class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fullname: '',
+      fName: '',
+      lName: '',
       email: '',
       password: '',
       location: '',
@@ -27,10 +28,46 @@ class Register extends Component {
       error: 0,
       errorMessage: null,
       isResponseError: false,
+      stores: []
     };
   }
 
+  getData = async () => {
+    let checkToken = (_expiry) => {
+        if (_expiry < new Date().getTime() / 1000) {
+            this.props.logout();
+        } else {
+            this.props.navigation.navigate('homepageStack');
+        }
+    }
+
+    try {
+        const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
+        const token_expiration = await AsyncStorage.getItem(Helper.APP_NAME + 'token_expiration');
+        if (token != null) {
+            this.setState({ token });
+            setInterval(() => {
+                checkToken(token_expiration)
+            }, 1000)
+        }
+    } catch (e) {
+        // error reading value
+    }
+}
+
   componentDidMount() {
+    this.setState({ isLoading: true })
+    this.getData();
+    Api.getRequest(Routes.storeRetrieveAll,
+        response => {
+            this.setState({ isLoading: false })
+            this.setState({ stores: response.stores })
+        },
+        error => {
+            this.setState({ isLoading: false })
+            alert("Something went wrong")
+        })
+
   }
 
   redirect = (route) => {
@@ -38,6 +75,36 @@ class Register extends Component {
   }
 
   submit() {
+    const {
+      fName,
+      lName,
+      email,
+      password
+    } = this.state;
+    let param = {
+      "customer":{
+        "first_name": fName,
+        "last_name": lName,
+        "email": email,
+        "password": password,
+        "role_ids": [3]
+      }
+    }
+    console.log(param)
+    Api.postRequest(
+      Routes.customerAdd, param,
+      response => {
+        this.setState({ isLoading: false })
+        this.props.navigation.navigate('loginStack')
+      },
+      error => {
+        console.log(error)
+        this.setState({ isLoading: false })
+        this.setState({ isResponseError: true })
+      },
+    );
+
+
     // const { username, email, password } = this.state;
     // if (this.validate() == false) {
     //   return
@@ -75,7 +142,8 @@ class Register extends Component {
 
   validate() {
     const {
-      fullname,
+      fName,
+      lName,
       email,
       password,
       location,
@@ -83,7 +151,8 @@ class Register extends Component {
       floorAndUnit
     } = this.state;
     if (username.length >= 6 &&
-      fullname != '' &&
+      fName != '' &&
+      lName != '' &&
       location != '' &&
       phoneNumber != '' &&
       floorAndUnit != '' &&
@@ -94,9 +163,6 @@ class Register extends Component {
       return true
     } else if (email !== '' && Helper.validateEmail(email) === false) {
       this.setState({ errorMessage: 'You have entered an invalid email address.' })
-      return false
-    } else if (fullname !== '' && fullname.length < 6) {
-      this.setState({ errorMessage: 'Username must be atleast 6 characters.' })
       return false
     } else if (password !== '' && password.length < 6) {
       this.setState({ errorMessage: 'Password must be atleast 6 characters.' })
@@ -135,9 +201,16 @@ class Register extends Component {
             <TextInput
               style={Style.textInput}
               {...Style.textPlaceHolder}
-              onChangeText={(fullname) => this.setState({ fullname })}
-              value={this.state.fullname}
-              placeholder={'Fullname'}
+              onChangeText={(fName) => this.setState({ fName })}
+              value={this.state.fName}
+              placeholder={'First name'}
+            />
+            <TextInput
+              style={Style.textInput}
+              {...Style.textPlaceHolder}
+              onChangeText={(lName) => this.setState({ lName })}
+              value={this.state.lName}
+              placeholder={'Last name'}
             />
             <TextInput
               style={Style.textInput}
@@ -163,10 +236,14 @@ class Register extends Component {
               placeholder={'Phone number'}
             />
             <LocationWithIcon {...{
+              style: { height: 50, marginTop: 15 },
               selected: this.state.location,
-              placeholder: "Select location",
-              onSelect: (selected) => {
-                this.setState({ location: selected })
+              placeholder: "Current location",
+              iconHeight: 20,
+              stores: this.state.stores,
+              onSelect: (selectedItem) => {
+                this.props.setLocation(selectedItem)
+                this.setState({ location: selectedItem.name })
               }
             }} />
             <TextInput

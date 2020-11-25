@@ -72,6 +72,7 @@ class Login extends Component {
   submit() {
     // this.test();
     const { email, password } = this.state;
+    console.log(email)
     const { login } = this.props;
     if ((email != null && email != '') && (password != null && password != '')) {
       this.setState({ isLoading: true, error: 0 });

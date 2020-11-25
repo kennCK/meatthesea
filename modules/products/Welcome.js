@@ -28,6 +28,7 @@ import Menu from './components/menu.js';
 import {Spinner} from 'components';
 import Api from 'services/apiv2/index.js';
 import {Routes} from 'common';
+import { connect } from 'react-redux';
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component {
   constructor(props) {
@@ -48,6 +49,9 @@ class Welcome extends Component {
       type: null,
       products: null
     };
+  }
+  componentDidMount(){
+    console.log(this.props.state)
   }
   isLoading(data) {
     this.setState({isLoading: data});
@@ -71,7 +75,7 @@ class Welcome extends Component {
     this.setState({selectedMenu: data, type: type});
   }
   redirect(index) {
-    this.props.navigation.navigate(this.state.redirects[index]);
+    this.props.navigation.push(this.state.redirects[index]);
   }
   deliveryModal() {
     this.setState({deliveryModal: this.state.deliveryModal ? false : true});
@@ -79,7 +83,7 @@ class Welcome extends Component {
   changeMenu(index) {
     this.setState({visibleModal: false});
     if (index == 2) {
-      this.props.navigation.navigate('appOnBoardingStack');
+      this.props.navigation.push('appOnBoardingStack');
     } else {
       this.setState({menu: index});
     }
@@ -259,9 +263,7 @@ class Welcome extends Component {
                   borderColor: Color.primary,
                   alignItems: "center"
                 }}
-                onPress={() =>
-                  this.props.navigation.navigate('returnInPersonStack')
-                }>
+                onPress={() => this.redirect(2)}>
                 <View
                   style={[
                     {width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1},
@@ -282,4 +284,13 @@ class Welcome extends Component {
     );
   }
 }
-export default Welcome;
+const mapStateToProps = (state) => ({
+  state
+})
+
+const mapDispatchToProps = {
+  
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Welcome)
+// export default Welcome;

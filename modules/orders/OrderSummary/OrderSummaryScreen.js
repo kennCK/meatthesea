@@ -23,7 +23,7 @@ class OrderSummaryScreen extends Component {
         mins: ''
     }
     redirect = (route) => {
-        this.props.navigation.navigate(route);
+        this.props.navigation.push(route);
     }
     toggleModal = () => {
         let { isVisible } = this.state;
@@ -54,7 +54,7 @@ class OrderSummaryScreen extends Component {
                                 width: Style.getWidth() - 100,
                                 alignItems: "center",
                             }}>
-                                <Text style={[Style.fontSize(20), { textAlign: 'center', color: Color.darkGray }]}>Available delivery slots from :</Text>
+                                <Text style={[Style.fontSize(BasicStyles.standardFontSize), { textAlign: 'center', color: Color.darkGray }]}>Available delivery slots from :</Text>
                                 <DatePicker
                                     mode='time'
                                     date={new Date()}
@@ -78,7 +78,7 @@ class OrderSummaryScreen extends Component {
                                             this.toggleModal()
                                         }}
                                     >
-                                        <Text style={[Style.fontSize(24), Style.fontWeight('bold')]}>GO</Text>
+                                        <Text style={[Style.fontSize(BasicStyles.standardFontSize), Style.fontWeight('bold')]}>GO</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -88,11 +88,11 @@ class OrderSummaryScreen extends Component {
                 <View style={styles.HeaderContainer}>
                     {/* */}
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                        <Text style={[Style.fontSize(18)]}>Delivery time : </Text>
+                        <Text style={[Style.fontSize(BasicStyles.standardFontSize)]}>Delivery time : </Text>
                         <View style={{ paddingHorizontal: 15 }}>
-                            <Text style={[Style.fontSize(18), Style.fontWeight('bold'), { color: Color.primary, borderBottomColor: Color.darkGray }]}>As soon as possible
+                            <Text style={[Style.fontSize(BasicStyles.standardFontSize), Style.fontWeight('bold'), { color: Color.primary, borderBottomColor: Color.darkGray }]}>As soon as possible
                                 <TouchableOpacity style={[{ flex: 0 }]} onPress={this.toggleModal} >
-                                    <FontAwesomeIcon icon={faEdit} style={{ color: Color.darkGray, marginRight: 10, marginLeft: 10 }} size={20} />
+                                    <FontAwesomeIcon icon={faEdit} style={{ color: Color.darkGray, marginRight: 10, marginLeft: 10 }} size={BasicStyles.standardFontSize} />
                                 </TouchableOpacity>
                             </Text>
                             <View
@@ -105,9 +105,9 @@ class OrderSummaryScreen extends Component {
                         </View>
                     </View>
                     <View style={[{ marginTop: 15 },]}>
-                        <Text style={[{ color: Color.darkGray }, Style.fontSize(18)]}>Current wait time: around 30 mins
+                        <Text style={[{ color: Color.darkGray }, Style.fontSize(BasicStyles.standardFontSize)]}>Current wait time: around 30 mins
                         <View style={{ marginTop: 10 }}>
-                                <FontAwesomeIcon style={{ marginLeft: 10 }} color={Color.darkGray} icon={faInfoCircle} size={15} />
+                                <FontAwesomeIcon style={{ marginLeft: 10 }} color={Color.darkGray} icon={faInfoCircle} size={BasicStyles.standardFontSize} />
                             </View>
                         </Text>
                     </View>
@@ -130,7 +130,7 @@ class OrderSummaryScreen extends Component {
                         onPress={() => { this.redirect('requestPickupStack') }}
                         style={[BasicStyles.btn, Style.btnPrimary, { borderRadius: 0, width: Style.getWidth() - 30 }]}
                         underlayColor={Color.gray}>
-                        <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(18)]}>
+                        <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(BasicStyles.standardFontSize)]}>
                             PLACE ORDER
                         </Text>
                     </TouchableHighlight>

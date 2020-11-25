@@ -17,20 +17,20 @@ class Slider extends Component {
   }
   navigateToScreen = (route) => {
     this.props.navigation.toggleDrawer();
-    // const navigateAction = NavigationActions.navigate({
+    // const navigateAction = NavigationActions.push({
     //   routeName: route
     // });
     // this.props.navigation.dispatch(navigateAction);
     // const { setActiveRoute } = this.props;
     // setActiveRoute(null)
 
-    const navigateAction = NavigationActions.navigate({
+    const navigateAction = NavigationActions.push({
       routeName: 'drawerStack',
       action: StackActions.reset({
         index: 0,
         key: null,
         actions: [
-            NavigationActions.navigate({routeName: route}),
+            NavigationActions.push({routeName: route}),
         ]
       })
     });
@@ -39,7 +39,7 @@ class Slider extends Component {
   }
 
   navigateToStack =(route) => {
-    const navigateAction = NavigationActions.navigate({
+    const navigateAction = NavigationActions.push({
       routeName: route
     });
     this.props.navigation.dispatch(navigateAction);
@@ -58,7 +58,7 @@ class Slider extends Component {
 
     logout();
     // setActiveRoute(null)
-    this.props.navigation.navigate('loginStack');
+    this.props.navigation.push('loginStack');
   }
 
   render () {
@@ -110,7 +110,7 @@ class Slider extends Component {
                 backgroundColor: theme ? theme.primary : Color.primary
               }]}>
                 <TouchableOpacity
-                  onPress={() => this.navigateToStack('loginStack')}>
+                  onPress={() => this.pushToStack('loginStack')}>
                   <Text style={{
                     color: Color.white,
                     paddingTop: 10,
@@ -129,7 +129,7 @@ class Slider extends Component {
                   paddingLeft: 15
                 }]} key={index}>
                   <TouchableOpacity
-                    onPress={() => this.navigateToScreen(item.route)}
+                    onPress={() => this.pushToScreen(item.route)}
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
@@ -152,7 +152,7 @@ class Slider extends Component {
                   paddingLeft: 15
                 }]} key={index}>
                   <TouchableOpacity
-                    onPress={() => this.navigateToScreen(item.route)}
+                    onPress={() => this.pushToScreen(item.route)}
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
@@ -178,7 +178,7 @@ class Slider extends Component {
                     flexDirection: 'row',
                     alignItems: 'center'
                   }]} key={index}>
-                    <Text style={styles.navItemStyle} onPress={() => this.navigateToScreen(item.route)}>
+                    <Text style={styles.navItemStyle} onPress={() => this.pushToScreen(item.route)}>
                       {item.title}
                     </Text>
                   </View>)

@@ -16,11 +16,11 @@ class NavigationDrawerStructureRight extends Component {
     }
   }
   goTo = (screen) => {
-    this.props.navigationProps.navigate(screen)
+    this.props.navigationProps.push(screen)
   }
 
   navigateToScreen = (route) => {
-    const navigateAction = NavigationActions.navigate({
+    const navigateAction = NavigationActions.push({
       routeName: route
     });
     this.props.navigationProps.dispatch(navigateAction);

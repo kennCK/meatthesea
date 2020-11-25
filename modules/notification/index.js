@@ -50,7 +50,7 @@ class Notifications extends Component{
     const reset = StackActions.reset({
       index: 0,
       key: null,
-      actions: [NavigationActions.navigate({
+      actions: [NavigationActions.push({
           routeName: 'declarationStack'
       })]
     });

@@ -33,13 +33,13 @@ class Login extends Component {
   }
 
   async componentDidMount() {
-    // console.log(this.props.state.token)
+    console.log(this.props.state.location)
     // await this.getData()
   }
 
   test = () => {
     if (config.TEST == true) {
-      this.props.navigation.navigate('homepageStack');
+      this.props.navigation.push('homepageStack');
       return true;
     }
   }
@@ -48,7 +48,7 @@ class Login extends Component {
       if (_expiry < new Date().getTime() / 1000) {
         this.props.logout();
       } else {
-        this.props.navigation.navigate('homepageStack');
+        this.props.navigation.push('homepageStack');
       }
     }
 
@@ -67,7 +67,7 @@ class Login extends Component {
   }
 
   redirect = (route) => {
-    this.props.navigation.navigate(route);
+    this.props.navigation.push(route);
   }
   submit() {
     // this.test();

@@ -4,7 +4,7 @@ import styles from '../Style';
 
 class PendingPickupScreen extends Component {
     redirect = (route) => {
-        this.props.navigation.navigate(route);
+        this.props.navigation.push(route);
         console.log(route)
     }
     render() {

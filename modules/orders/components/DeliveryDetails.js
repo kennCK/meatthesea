@@ -34,7 +34,7 @@ export default class DeliveryDetails extends Component {
                                     style={[
                                         { marginVertical: 2, marginLeft: 5, color: Color.black },
                                         BasicStyles.titleText,
-                                        Style.fontSize(18),
+                                        Style.fontSize(BasicStyles.standardFontSize),
                                         Style.fontWeight('bold')
                                     ]}>Add cultery</Text>
                                 <Text style={{
@@ -50,7 +50,7 @@ export default class DeliveryDetails extends Component {
                                                 let { value } = this.state
                                                 this.setState({ value: !value })
                                             }}
-                                            buttonSize={10}
+                                            buttonSize={5}
                                             buttonWrapStyle={{ marginRight: 10 }}
                                         />
                                     </RadioButton>
@@ -61,7 +61,7 @@ export default class DeliveryDetails extends Component {
                                     style={[
                                         { marginVertical: 2, marginLeft: 5, color: Color.black },
                                         BasicStyles.titleText,
-                                        Style.fontSize(18),
+                                        Style.fontSize(BasicStyles.standardFontSize),
                                         Style.fontWeight('bold')
                                     ]}>Contactless delivery</Text>
                                 <Text style={{
@@ -77,7 +77,7 @@ export default class DeliveryDetails extends Component {
                                                 let { value1 } = this.state
                                                 this.setState({ value1: !value1 })
                                             }}
-                                            buttonSize={10}
+                                            buttonSize={5}
                                             buttonWrapStyle={{ marginRight: 10 }}
                                         />
                                     </RadioButton>
@@ -93,12 +93,13 @@ export default class DeliveryDetails extends Component {
                             style={[
                                 { marginVertical: 2, marginLeft: 5, color: Color.darkGray },
                                 BasicStyles.titleText,
-                                Style.fontSize(16)
+                                Style.fontSize(BasicStyles.standardFontSize)
                             ]}>Subtotal</Text>
                         <Text style={{
                             position: 'absolute',
                             right: 25,
-                            top: 5
+                            top: 5,
+                            fontSize:BasicStyles.standardFontSize
                         }}>HK$ XX</Text>
                     </View>
                     {isSummary &&
@@ -108,11 +109,12 @@ export default class DeliveryDetails extends Component {
                                     { marginVertical: 2, marginLeft: 5, color: Color.primary },
                                     BasicStyles.titleText,
                                     Style.fontWeight('100'),
-                                    Style.fontSize(16)
+                                    Style.fontSize(BasicStyles.standardFontSize)
                                 ]}>Add tip</Text>
                             <Text style={{
                                 position: 'absolute',
                                 right: 25,
+                                fontSize:BasicStyles.standardFontSize,
                                 top: 5
                             }}>
                                 <>
@@ -125,7 +127,7 @@ export default class DeliveryDetails extends Component {
                                     </TouchableOpacity>
                                     <TouchableOpacity disabled>
                                         <Text style={[
-                                            Style.fontSize(18),
+                                            Style.fontSize(BasicStyles.standardFontSize),
                                             { marginHorizontal: 4 }
                                         ]}>{tip > 0 ? tip : 0}</Text>
                                     </TouchableOpacity>
@@ -145,11 +147,12 @@ export default class DeliveryDetails extends Component {
                                 { marginVertical: 2, marginLeft: 5, color: Color.black },
                                 BasicStyles.titleText,
                                 Style.fontWeight('bold'),
-                                Style.fontSize(16)
+                                Style.fontSize(BasicStyles.standardFontSize)
                             ]}>TOTAL</Text>
                         <Text style={{
                             position: 'absolute',
                             right: 25,
+                            fontSize:BasicStyles.standardFontSize,
                             top: 5
                         }}>HK$ XX</Text>
                     </View>
@@ -163,18 +166,19 @@ export default class DeliveryDetails extends Component {
                                     { marginVertical: 2, marginLeft: 5, color: Color.black },
                                     BasicStyles.titleText,
                                     Style.fontWeight('bold'),
-                                    Style.fontSize(16)
+                                    Style.fontSize(BasicStyles.standardFontSize)
                                 ]}>Delivery Details</Text>
                             {
                                 isSummary && <Text style={{
                                     position: 'absolute',
                                     right: 25,
+                                    fontSize:BasicStyles.standardFontSize,
                                     top: 5
                                 }}>
                                     <TouchableOpacity onPress={() => {
                                         this.props.redirect('accountStack')
                                     }}>
-                                        <FontAwesomeIcon icon={faEdit} style={{ color: Color.darkGray, }} size={20} />
+                                        <FontAwesomeIcon icon={faEdit} style={{ color: Color.darkGray, }} size={BasicStyles.standardFontSize} />
                                     </TouchableOpacity>
                                 </Text>
                             }
@@ -183,8 +187,8 @@ export default class DeliveryDetails extends Component {
                         {
                             deliveryDetails.map(detail => (
                                 <Text style={[BasicStyles.titleText, { marginTop: 10 }]} key={detail.title}>
-                                    <FontAwesomeIcon style={[styles.DeliveryDetailIcon,]} color={Color.primary} icon={detail.icon} size={16} />
-                                    <Text style={[BasicStyles.titleText, styles.DeliveryDetailText]}>{"  "}{detail.title}</Text>
+                                    <FontAwesomeIcon style={[styles.DeliveryDetailIcon,]} color={Color.primary} icon={detail.icon} size={BasicStyles.standardFontSize} />
+                                    <Text style={[BasicStyles.titleText, styles.DeliveryDetailText , {fontSize:BasicStyles.standardFontSize}]}>{"  "}{detail.title}</Text>
                                 </Text>
                             ))
                         }

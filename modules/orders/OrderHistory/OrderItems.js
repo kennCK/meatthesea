@@ -16,7 +16,7 @@ export default class OrderItems extends Component {
                     Style.textPrimary,
                     Style.fontWeight('bold'),
                     Style.fontAlign('left'),
-                    Style.fontSize(16)]
+                    Style.fontSize(BasicStyles.standardFontSize)]
                 }>{header}</Text>
                 {
                     items.map((itemText, idx) => {
@@ -27,7 +27,7 @@ export default class OrderItems extends Component {
                                         { marginVertical: 2 },
                                         BasicStyles.titleText,
                                         Style.fontWeight("700"),
-                                        Style.fontSize(16),
+                                        Style.fontSize(BasicStyles.standardFontSize),
 
                                     ]}>{itemText.item}
                                     </Text>
@@ -48,7 +48,7 @@ export default class OrderItems extends Component {
                                                         { marginVertical: 2, marginLeft: 5, color: Color.darkGray },
                                                         BasicStyles.titleText,
                                                         Style.fontWeight("100"),
-                                                        Style.fontSize(16)
+                                                        Style.fontSize(BasicStyles.standardFontSize)
                                                     ]}>+{addOn.item}</Text>
                                                 {addOn.price && <Text style={{
                                                     position: 'absolute',

@@ -1,4 +1,4 @@
-import { Color } from 'common';
+import { Color, BasicStyles } from 'common';
 import { Dimensions } from 'react-native';
 const width = Math.round(Dimensions.get('window').width);
 const height = Math.round(Dimensions.get('window').height);
@@ -96,7 +96,8 @@ export default {
     borderWidth: 1,
     padding: 10,
     borderColor: Color.gray,
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: Color.white
   },
   searchBar: {
     flex: 1, 
@@ -114,6 +115,7 @@ export default {
     borderColor: Color.primary
   },
   bottomMenuText: {
-    marginLeft: 10
+    marginLeft: 10,
+    fontSize: BasicStyles.standardFontSize
   }
 }

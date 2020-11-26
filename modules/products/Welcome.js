@@ -227,7 +227,7 @@ class Welcome extends Component {
               load={data => this.isLoading(data)}
             />
           )}
-          <View style={{height: 50, flexDirection: 'row'}}>
+          <View style={{height: 50, flexDirection: 'row', backgroundColor: Color.white}}>
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}>

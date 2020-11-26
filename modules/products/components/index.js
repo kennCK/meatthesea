@@ -3,15 +3,13 @@ import {
   View,
   Image,
   ScrollView,
-  TouchableOpacity,
-  TouchableHighlight,
-  Text,
+  TouchableOpacity
 } from 'react-native';
 import Style from './style.js';
 import ProductItem from './productItems.js';
 import Pagination from 'components/Pagination/Dynamic.js';
 import Api from 'services/apiv2/index.js';
-import {Routes} from 'common';
+import {Routes, Color} from 'common';
 class Products extends Component {
   constructor(props) {
     super(props);
@@ -60,7 +58,7 @@ class Products extends Component {
       },
     ];
     return (
-      <View style={[{flex: 1}]}>
+      <View style={[{flex: 1, backgroundColor:Color.white}]}>
         <Pagination
           menu={menu}
           activeIndex={this.props.state}

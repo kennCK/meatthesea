@@ -1,43 +1,78 @@
-import React, { Component } from 'react';
-import { Text, View, StyleSheet, Dimensions } from 'react-native';
+import React, {Component} from 'react';
+import {Text, View, StyleSheet, Dimensions} from 'react-native';
+import {connect} from 'react-redux';
+import Geolocation from '@react-native-community/geolocation';
 
 import AddressCard from './AddressCard';
 import CustomButton from './CustomButton';
 const width = Math.round(Dimensions.get('window').width);
-
 
 class SavedAddress extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedTile: 0,
-      addresses: []
+      addresses: [],
+      location: {},
     };
   }
 
   componentDidMount() {
-    const { params } = this.props.navigation.state
+    const {params} = this.props.navigation.state;
     if (params.user) {
-      let { addresses } = params.user
+      let {addresses} = params.user;
       if (addresses) {
         addresses.map(address => {
           this.setState({
-            addresses: [...this.state.addresses, {
-              addressType: address.company,
-              address: address.address1 ? address.address1 : address.address2
-            }]
-          })
+            addresses: [
+              ...this.state.addresses,
+              {
+                addressType: address.company,
+                address: address.address1 ? address.address1 : address.address2,
+              },
+            ],
+          });
         });
-
       }
     }
+    this.getCurrentLocation();
   }
-  selectHandler = index => {
-    this.setState({ selectedTile: index });
+
+  getCurrentLocation = () => {
+    const {setLocation} = this.props;
+    if (this.props.state.location === null) {
+      Geolocation.getCurrentPosition(
+        //Will give you the current location
+        position => {
+          //getting the Longitude from the location json
+          const currentLongitude = JSON.stringify(position.coords.longitude);
+
+          //getting the Latitude from the location json
+          const currentLatitude = JSON.stringify(position.coords.latitude);
+          const currentLocation = {
+            longitude: currentLongitude,
+            latitude: currentLatitude,
+          };
+          setLocation(currentLocation);
+        },
+        error => alert(error.message),
+        {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 1000,
+        },
+      );
+    }
   };
+
+  selectHandler = index => {
+    this.setState({selectedTile: index});
+  };
+
   redirect = route => {
     this.props.navigation.push(route);
   };
+
   render() {
     return (
       <View style={styles.SavedAddressContainer}>
@@ -60,7 +95,7 @@ class SavedAddress extends Component {
             buttonColor="#0064B1"
             buttonText="+ ADD ADDRESS"
             onPress={() => {
-              this.redirect('addAddressScreen');
+              this.redirect('locationWithMapStack');
             }}
           />
         </View>
@@ -86,4 +121,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SavedAddress;
+const mapStateToProps = state => ({state: state});
+
+const mapDispatchToProps = dispatch => {
+  const {actions} = require('@redux');
+  return {
+    setLocation: location => dispatch(actions.setLocation(location)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SavedAddress);

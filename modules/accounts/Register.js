@@ -18,6 +18,7 @@ class Register extends Component {
     this.state = {
       fName: '',
       lName: '',
+      username: '',
       email: '',
       password: '',
       location: '',
@@ -78,6 +79,7 @@ class Register extends Component {
     const {
       fName,
       lName,
+      username,
       email,
       password
     } = this.state;
@@ -85,6 +87,7 @@ class Register extends Component {
       "customer":{
         "first_name": fName,
         "last_name": lName,
+        "username": username,
         "email": email,
         "password": password,
         "role_ids": [3]
@@ -144,6 +147,7 @@ class Register extends Component {
     const {
       fName,
       lName,
+      username,
       email,
       password,
       location,
@@ -153,6 +157,7 @@ class Register extends Component {
     if (username.length >= 6 &&
       fName != '' &&
       lName != '' &&
+      username != '' &&
       location != '' &&
       phoneNumber != '' &&
       floorAndUnit != '' &&
@@ -211,6 +216,13 @@ class Register extends Component {
               onChangeText={(lName) => this.setState({ lName })}
               value={this.state.lName}
               placeholder={'Last name'}
+            />
+            <TextInput
+              style={Style.textInput}
+              {...Style.textPlaceHolder}
+              onChangeText={(username) => this.setState({ username })}
+              value={this.state.username}
+              placeholder={'Username'}
             />
             <TextInput
               style={Style.textInput}

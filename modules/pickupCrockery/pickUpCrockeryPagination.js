@@ -7,7 +7,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import {Color} from 'common';
+import {Color, BasicStyles} from 'common';
 import Helper from './Helper';
 
 const width = Math.round(Dimensions.get('window').width);
@@ -32,13 +32,18 @@ class Pagination extends Component {
                   borderBottomWidth: 8,
                   borderBottomColor:
                     this.props.activeIndex == index ? Color.primary : 'white',
-                  justifyContent: 'space-evenly',
+                  justifyContent: 'center',
                   alignItems: 'center',
+                  flexDirection: 'row',
                 }}>
-                <View style={styles.TitleContainer}>
+                <View
+                  style={[
+                    styles.TitleContainer,
+                    {alignSelf: 'center', justifyContent: 'center'},
+                  ]}>
                   <Text
                     style={{
-                      fontSize: 18,
+                      fontSize: BasicStyles.titleText.fontSize,
                       color:
                         this.props.activeIndex == index
                           ? Color.primary
@@ -46,14 +51,14 @@ class Pagination extends Component {
                     }}>
                     {item.title}
                   </Text>
-                  {item.title === this.props.notificationTitle && (
-                    <View style={styles.NotificationContainer}>
-                      <Text style={styles.NotificationTextStyle}>
-                        {this.props.notificationCount}
-                      </Text>
-                    </View>
-                  )}
                 </View>
+                {item.title === this.props.notificationTitle && (
+                  <View style={styles.NotificationContainer}>
+                    <Text style={styles.NotificationTextStyle}>
+                      {this.props.notificationCount}
+                    </Text>
+                  </View>
+                )}
               </TouchableOpacity>
             ))}
           </ScrollView>

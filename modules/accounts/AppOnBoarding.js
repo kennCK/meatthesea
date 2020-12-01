@@ -76,6 +76,8 @@ class AppOnBoarding extends Component {
         if (this.validate() == false) {
             return
         }
+        this.props.navigation.push('homepageStack');
+
         // this.setState({ isLoading: true })
         // Api.request(Routes.accountCreate, parameter, response => {
         //     this.setState({ isLoading: false })

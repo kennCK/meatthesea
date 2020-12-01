@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text, Image, ScrollView, TouchableHighlight } from 'react-native';
 import styles from '../Style';
-import { BasicStyles } from 'common';
+import { BasicStyles, Routes } from 'common';
 import Style from 'modules/accounts/Style';
 import { Color, Routes } from 'common';
 import OrderItems from './OrderItems';
 import Separator from '../components/Separator';
 import DeliveryDetails from '../components/DeliveryDetails';
 import { OrderDetails, dummyData as orders, deliveryDetails } from "../DummyData";
-
+import Api from 'services/apiv2/index.js';
 
 class OrderHistoryScreen extends Component {
     state = {
@@ -18,8 +18,14 @@ class OrderHistoryScreen extends Component {
         id: 1
     }
     componentDidMount() {
-        
-      
+        Api.getRequest(Routes.orderItemsRetrieveWithDetails("1", "1"), response => {
+            let { order_items } = response;
+            this.setState({
+                orders: order_items
+            })
+        }, error => {
+        });
+
     }
     redirect = (route) => {
         this.props.navigation.push(route);
@@ -30,7 +36,7 @@ class OrderHistoryScreen extends Component {
             <View style={{ flex: 1 }} >
                 <View style={styles.MainContainer}>
                     <View style={styles.TopContainer}>
-                        <Text style={[styles.DescriptionContainer , {fontSize:BasicStyles.standardFontSize+2}]}>Order number 1234</Text>
+                        <Text style={[styles.DescriptionContainer, { fontSize: BasicStyles.standardFontSize + 2 }]}>Order number 1234</Text>
                     </View>
                     <Separator />
                 </View>

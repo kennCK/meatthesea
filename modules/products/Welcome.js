@@ -22,6 +22,7 @@ import {
   faShoppingBasket,
   faHandHolding,
 } from '@fortawesome/free-solid-svg-icons';
+import AsyncStorage from '@react-native-community/async-storage';
 import Products from './components/';
 import DeliveryDetails from './components/deliveryDetails';
 import Menu from './components/menu.js';
@@ -29,6 +30,7 @@ import { Spinner } from 'components';
 import Api from 'services/apiv2/index.js';
 import { Routes } from 'common';
 import { connect } from 'react-redux';
+
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component {
   constructor(props) {
@@ -47,16 +49,24 @@ class Welcome extends Component {
       selectedMenu: null,
       isLoading: false,
       type: null,
-      products: null
+      products: null,
+      token: true
     };
   }
-  componentDidMount() {
-    console.log("user: ", this.props.state.user)
+  getData = async () => {
+    try {
+      const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
+      if (token != null) {
+        this.setState({ token });
+      }
+    } catch (e) {
+      // error reading value
+    }
   }
   isLoading(data) {
     this.setState({ isLoading: data });
   }
-  componentDidUpdate(){
+  componentDidUpdate() {
     // console.log("user: ", this.props.state)
   }
   changeSelectedMenu(data, type) {
@@ -205,7 +215,7 @@ class Welcome extends Component {
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-              disabled={this.props.state.user == null ? true : false}
+              disabled={this.state.token == null ? true : false}
               style={[{ flex: 0 }]}
               onPress={() => this.redirect(0)}>
               <FontAwesomeIcon
@@ -244,7 +254,7 @@ class Welcome extends Component {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
-                disabled={this.props.state.user == null ? true : false}
+                disabled={this.state.token == null ? true : false}
                 onPress={() => this.redirect(3)}>
                 <View
                   style={[
@@ -263,7 +273,7 @@ class Welcome extends Component {
               horizontal={true}
               showsHorizontalScrollIndicator={false}>
               <TouchableOpacity
-                disabled={this.props.state.user == null ? true : false}
+                disabled={this.state.token == null ? true : false}
                 style={{
                   width: width / 2,
                   borderWidth: 1,

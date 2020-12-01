@@ -45,9 +45,11 @@ const PickupCrockeryStack = createStackNavigator({
     navigationOptions: ({navigation}) => ({
       title: 'PICK UP CROCKERY',
       headerLeft: <HeaderOptions navigationProps={navigation} />,
-
       headerTintColor: BasicStyles.headerTintColor,
-      headerTitleContainerStyle: BasicStyles.headerTitleContainerStyle,
+      headerTitleContainerStyle: [
+        BasicStyles.headerTitleContainerStyle,
+        {marginRight: '15%'},
+      ],
       headerTitleStyle: BasicStyles.headerTitleStyle,
     }),
   },

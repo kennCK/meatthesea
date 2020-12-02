@@ -31,7 +31,6 @@ class ProfileScreen extends Component {
     }
     render() {
         const { firstname, lastname, email, phone_number } = this.state;
-        console.log({ firstname, lastname, email, phone_number })
         const navigations = [
             {
                 value: `${firstname} ${lastname}`,
@@ -50,7 +49,7 @@ class ProfileScreen extends Component {
                 value: 'Change Password',
                 icon: faLock,
                 onPress: () => {
-                    alert("test")
+                   this.redirect("changePasswordStack")
                 }
             },
         ]

@@ -115,7 +115,7 @@ const PrimaryNav = createStackNavigator(
     settingsStack: {screen: SettingsStack},
     addAddressStack: {screen: AddAddressStack},
     requestPickupStack: {screen: RequestPickupStack},
-    locationWithMapStack: {screen: LocationWithMapStack},
+    locationWithMapStack: {screen: LocationWithMapStack}
   },
   {
     // Default config for all screens

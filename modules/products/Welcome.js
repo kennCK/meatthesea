@@ -279,7 +279,6 @@ class Welcome extends Component {
             </ScrollView>
           </View>
         </View>
-        {this.state.isLoading ? <Spinner mode="overlay" /> : null}
       </View>
     );
   }

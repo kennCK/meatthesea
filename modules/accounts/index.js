@@ -3,11 +3,13 @@ import AppOnBoarding from './AppOnBoarding';
 import Register from './Register';
 import ForgotPassword from './ForgotPassword';
 import JoinWaitList from './JoinWaitList';
+import ChangePassword from "./ChangePassword";
 
-export  {
+export {
   Login,
   AppOnBoarding,
   Register,
   ForgotPassword,
-  JoinWaitList
+  JoinWaitList,
+  ChangePassword
 }

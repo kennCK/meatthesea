@@ -32,11 +32,6 @@ class Login extends Component {
     };
   }
 
-  async componentDidMount() {
-    console.log(this.props.state.location)
-    // await this.getData()
-  }
-
   test = () => {
     if (config.TEST == true) {
       this.props.navigation.push('homepageStack');
@@ -72,7 +67,6 @@ class Login extends Component {
   submit() {
     // this.test();
     const { email, password } = this.state;
-    console.log(email)
     const { login } = this.props;
     if ((email != null && email != '') && (password != null && password != '')) {
       this.setState({ isLoading: true, error: 0 });

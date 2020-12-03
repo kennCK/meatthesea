@@ -10,10 +10,6 @@ class Settings extends Component {
       selectedTile: 0,
       data: [
         {
-          setting: 'Allow app push notification',
-          isSelected: false,
-        },
-        {
           setting: 'Send me newsletters and offers',
           isSelected: false,
         },

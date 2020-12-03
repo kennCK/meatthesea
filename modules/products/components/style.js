@@ -14,6 +14,10 @@ export default {
     flexDirection: 'row',
     flexWrap: 'wrap'
   },
+  productImageFull:{
+    width: width-50,
+    height: width-50
+  },
   productImage: {
     width: (width/3)-20,
     height: (width/3)-20
@@ -61,8 +65,14 @@ export default {
   hideScroll: {
     visibility: 'hidden'
   },
-  modal: {
+  modalBlue: {
     backgroundColor: Color.primary,
+    alignItems: 'center',
+    margin: 0,
+    height: '100%'
+  },
+  modalWhite: {
+    backgroundColor: 'white',
     alignItems: 'center',
     margin: 0,
     height: '100%'

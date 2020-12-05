@@ -16,7 +16,7 @@ class HeaderOptions extends Component {
   };
   render() {
     return (
-      <View style={{flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row', marginLeft: '2%'}}>
         <TouchableOpacity onPress={this.back.bind(this)}>
           {/*Donute Button Image */}
           <FontAwesomeIcon
@@ -25,6 +25,49 @@ class HeaderOptions extends Component {
             style={styles.iconStyle}
           />
         </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+class CustomHeader extends Component {
+  render() {
+    return (
+      <View
+        style={{
+          height: 70,
+          width: '100%',
+          elevation: 1,
+          borderBottomWidth: 0.25,
+          borderBottomColor: '#F5F5F5',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+        <HeaderOptions navigationProps={this.props.navigationProps} />
+        {/*Replace dummy data here*/}
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: '19%',
+          }}>
+          <Text
+            style={{
+              fontSize: BasicStyles.titleText.fontSize,
+              fontWeight: 'bold',
+            }}>
+            Your Cart
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: BasicStyles.standardFontSize,
+              color: Color.primary,
+            }}>
+            Dulce Village, Tabok, Mandaue City, Block 7 Lot 42
+          </Text>
+        </View>
       </View>
     );
   }
@@ -45,10 +88,7 @@ const CheckoutStack = createStackNavigator({
     navigationOptions: ({navigation}) => ({
       title: 'Your Cart',
       headerLeft: <HeaderOptions navigationProps={navigation} />,
-
-      headerTintColor: BasicStyles.headerTintColor,
-      headerTitleContainerStyle: BasicStyles.headerTitleContainerStyle,
-      headerTitleStyle: BasicStyles.headerTitleStyle,
+      header: <CustomHeader navigationProps={navigation} />,
     }),
   },
 });

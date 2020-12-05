@@ -10,6 +10,7 @@ import {
 import {BasicStyles, Color} from 'common';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faPencilAlt} from '@fortawesome/free-solid-svg-icons';
+import TearLines from 'react-native-tear-lines';
 import Counter from 'modules/checkout/Counter.js';
 
 const paymentMethods = [
@@ -95,6 +96,14 @@ class Checkout extends Component {
                 index={i}
                 onTap={this.handleIncrementAndDecrement}
               />
+              <TouchableOpacity
+                style={{alignSelf: 'flex-start', marginLeft: 13}}>
+                <FontAwesomeIcon
+                  color={Color.primary}
+                  icon={faPencilAlt}
+                  size={14}
+                />
+              </TouchableOpacity>
             </View>
             <View style={styles.Order}>
               <Text numberOfLines={1} style={styles.OrderTextStyle}>
@@ -137,86 +146,120 @@ class Checkout extends Component {
 
   render() {
     return (
-      <ScrollView>
-        <View style={styles.CheckoutContainer}>
-          <View style={styles.DeliverToContainer}>
-            <Text style={styles.DeliverToTextStyle}>Deliver To</Text>
-          </View>
-          <View style={styles.AddressContainer}>
-            <View style={styles.AddressDetailsContainer}>
-              {/*Replace dummy data here*/}
-              <Text style={styles.AddressDetailsTextStyle}>
-                Dulce Village, Tabok, Mandaue City
-              </Text>
-              <Text style={styles.AddressDetailsTextStyle}>Block 7 Lot 42</Text>
-              <Text style={styles.AddressDetailsTextStyle}>+63 9143058173</Text>
-              <Text style={styles.AddressNoteTextStyle}>
-                "Among gate color purple"
-              </Text>
+      <View style={{height: '100%', width: '100%'}}>
+        <ScrollView>
+          <View style={styles.CheckoutContainer}>
+            <View style={styles.DeliverToContainer}>
+              <Text style={styles.DeliverToTextStyle}>Deliver To</Text>
             </View>
-            <TouchableOpacity style={styles.EditContainer} onPres={() => {}}>
-              <FontAwesomeIcon
-                color={Color.primary}
-                icon={faPencilAlt}
-                size={15}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.OrderHeader}>
-            <View style={styles.YourOrderTextContainer}>
-              <Text style={styles.YourOrderTextStyle}>Your Order</Text>
-            </View>
-            <TouchableOpacity style={styles.AddMoreItemsContainer}>
-              <Text style={styles.AddMoreItemsTextStyle}>Add more items</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.OrdersContainer}>{this.renderOrders()}</View>
-          <TouchableOpacity onPress={() => {}} style={styles.ShowMoreContainer}>
-            <Text style={styles.ShowMoreTextStyle}>
-              Show more ({this.state.orders.length - 2} items)
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.PaymentDetailsContainer}>
-            {/**Update total here */}
-            <View style={styles.PaymentDetailContainer}>
-              <Text style={styles.PaymentDetailTextStyle}>Subtotal</Text>
-              <Text style={styles.PaymentDetailTextStyle}>P1473.42</Text>
-            </View>
-            {/**Update total here */}
-            <View style={styles.PaymentDetailContainer}>
-              <Text style={styles.PaymentDetailTextStyle}>Delivery Fee</Text>
-              <Text style={styles.PaymentDetailTextStyle}>P49.75</Text>
-            </View>
-          </View>
-          <View style={styles.PaymentDetailsContainer}>
-            {/**Update total here */}
-            <View style={styles.PaymentDetailContainer}>
-              <Text style={styles.PaymentDetailTextStyle}>
-                Total (including VAT)
-              </Text>
-              <Text style={styles.PaymentDetailTextStyle}>P1423.67</Text>
-            </View>
-          </View>
-          <View style={styles.PaymentMethodsContainer}>
-            <View style={styles.PaymentMethodsHeaderContainer}>
-              <Text style={styles.PaymentMethodTextStyle}>Payment Methods</Text>
-              <TouchableOpacity>
-                <Text style={styles.PaymentMethodEditTextStyle}>Edit</Text>
+            <View style={styles.AddressContainer}>
+              <View style={styles.AddressDetailsContainer}>
+                {/*Replace dummy data here*/}
+                <Text style={styles.AddressDetailsTextStyle}>
+                  Dulce Village, Tabok, Mandaue City
+                </Text>
+                <Text style={styles.AddressDetailsTextStyle}>
+                  Block 7 Lot 42
+                </Text>
+                <Text style={styles.AddressDetailsTextStyle}>
+                  +63 9143058173
+                </Text>
+                <Text style={styles.AddressNoteTextStyle}>
+                  "Among gate color purple"
+                </Text>
+              </View>
+              <TouchableOpacity style={styles.EditContainer} onPres={() => {}}>
+                <FontAwesomeIcon
+                  color={Color.primary}
+                  icon={faPencilAlt}
+                  size={15}
+                />
               </TouchableOpacity>
             </View>
+            <View
+              style={{backgroundColor: '#FFFFFF', width: '100%'}}
+              onLayout={e => {
+                this.refs.bottom.onLayout(e);
+              }}>
+              <View style={styles.OrderHeader}>
+                <View style={styles.YourOrderTextContainer}>
+                  <Text style={styles.YourOrderTextStyle}>Your Order</Text>
+                </View>
+                <TouchableOpacity style={styles.AddMoreItemsContainer}>
+                  <Text style={styles.AddMoreItemsTextStyle}>
+                    Add more items
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.OrdersContainer}>{this.renderOrders()}</View>
+              <TouchableOpacity
+                onPress={() => {}}
+                style={styles.ShowMoreContainer}>
+                <Text style={styles.ShowMoreTextStyle}>
+                  Show more ({this.state.orders.length - 2} items)
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <TearLines
+              isUnder
+              ref="bottom"
+              color="#CCCCCC"
+              backgroundColor="#FFFFFF"
+              tearSize={15}
+              style={{marginTop: 20}}
+            />
+            <View style={styles.PaymentDetailsContainer}>
+              {/**Update total here */}
+              <View style={styles.PaymentDetailContainer}>
+                <Text style={styles.PaymentDetailTextStyle}>Subtotal</Text>
+                <Text style={styles.PaymentDetailTextStyle}>P1473.42</Text>
+              </View>
+              {/**Update total here */}
+              <View style={styles.PaymentDetailContainer}>
+                <Text style={styles.PaymentDetailTextStyle}>Delivery Fee</Text>
+                <Text style={styles.PaymentDetailTextStyle}>P49.75</Text>
+              </View>
+            </View>
+            <View style={styles.PaymentDetailsContainer}>
+              {/**Update total here */}
+              <View style={styles.PaymentDetailContainer}>
+                <Text style={styles.PaymentDetailTextStyle}>
+                  Total (including VAT)
+                </Text>
+                <Text style={styles.PaymentDetailTextStyle}>P1423.67</Text>
+              </View>
+            </View>
+            <View style={styles.PaymentMethodsContainer}>
+              <View style={styles.PaymentMethodsHeaderContainer}>
+                <Text style={styles.PaymentMethodTextStyle}>
+                  Payment Methods
+                </Text>
+                <TouchableOpacity>
+                  <Text style={styles.PaymentMethodEditTextStyle}>Edit</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View
+              style={{
+                marginTop: 20,
+                width: '100%',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingHorizontal: 20,
+              }}>
+              {this.renderPaymentMethods()}
+            </View>
           </View>
-          <View
-            style={{
-              marginTop: 20,
-              width: '100%',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              paddingHorizontal: 20,
-            }}>
-            {this.renderPaymentMethods()}
+        </ScrollView>
+        <TouchableOpacity onPress={() => {}} style={styles.ButtonContainer}>
+          <View style={styles.ButtonTextContainer}>
+            <Text style={styles.ButtonTextStyle}>Place Order</Text>
           </View>
-        </View>
-      </ScrollView>
+          <View style={styles.ButtonAmountContainer}>
+            <Text style={styles.ButtonAmountTextStyle}>P1423.67</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
@@ -310,13 +353,13 @@ const styles = StyleSheet.create({
     color: Color.primary,
   },
   OrdersContainer: {
-    height: 200,
+    height: 160,
     width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
   OrderContainer: {
-    height: 100,
+    height: 80,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -343,7 +386,8 @@ const styles = StyleSheet.create({
     width: '30%',
     height: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    paddingRight: 20,
   },
   ShowMoreContainer: {
     width: '100%',
@@ -419,6 +463,32 @@ const styles = StyleSheet.create({
   AmountTextStyle: {
     fontSize: BasicStyles.standardFontSize,
     fontWeight: 'bold',
+  },
+  ButtonContainer: {
+    ...BasicStyles.btn,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    marginLeft: '4%',
+    flexDirection: 'row',
+  },
+  ButtonTextContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '80%',
+    paddingLeft: '16%',
+  },
+  ButtonTextStyle: {
+    fontSize: BasicStyles.titleText.fontSize,
+    color: '#FFFFFF',
+  },
+  ButtonAmountContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ButtonAmountTextStyle: {
+    fontSize: BasicStyles.titleText.fontSize,
+    color: '#FFFFFF',
   },
 });
 export default Checkout;

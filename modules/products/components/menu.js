@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text, ScrollView, Image} from 'react-native';
+import { View, TouchableOpacity, Text, ScrollView, Image, TouchableHighlight} from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { BasicStyles, Color } from 'common';
 import Style from './style.js';
 import Api from 'services/apiv2/index.js';
 import {Routes} from 'common';
+import NumericInput from 'react-native-numeric-input'
+import Modal from 'react-native-modal';
 
 class Menu extends Component {
   constructor(props) {
     super(props);
     this.state = {
       restaurant: null,
-      deli: null
+      deli: null,
+      visibleModal: false,
+      itemName: null,
+      itemPrice: null,
+      itemDescription: null,
+      itemImage: null,
+      itemID: null,
+      qty: 0
     };
   }
   retrieveRestaurant = () => {
@@ -47,6 +56,20 @@ class Menu extends Component {
     }else{
       this.retrieveDeli();
     }
+  }
+  selectItem(ndx){
+    this.setState({
+      visibleModal: true,
+      itemID: this.props.products[ndx].id,
+      itemName: this.props.products[ndx].name,
+      itemPrice: this.props.products[ndx].price,
+      itemImage: this.props.products[ndx].images[0].src,
+      itemDescription: this.props.products[ndx].full_description,
+      qty: 1
+    });
+  }
+  addToCart(){
+    console.log(this.state.itemID)
   }
   render() {
     return (
@@ -92,7 +115,9 @@ class Menu extends Component {
                 {this.props.products != null &&
                   this.props.products.map((data, idx) => {
                     return (
-                        <TouchableOpacity key={idx}>
+                        <TouchableOpacity
+                          onPress={() => this.selectItem(idx)}
+                          key={idx}>
                           <View style={Style.menuContainer}>
                             <Image source={{uri: data.images[0].src}} style={Style.menuImage}/>
                             <Text style={{fontWeight: 'bold'}}>HK$ {data.price}</Text>
@@ -103,173 +128,55 @@ class Menu extends Component {
                   })}
               </View>
             </View>
-            {/* {this.props.menu == 'bites' &&
-              <View style={{alignItems: 'center'}}>
-              <View style={Style.imageRow}>
-                
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/bites/2.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 120</Text>
-                    <Text>Cold cut platter with Parma ham, cheese, ...</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={Style.imageRow}>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/bites/3.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 60</Text>
-                    <Text>Warm crispy pesto bread served with...</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/bites/4.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 90</Text>
-                    <Text>Homemade seafood croquette (4 pieces)</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={Style.imageRow}>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/bites/5.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 130</Text>
-                    <Text>Tuna tataki with soy sauce, seaweed, ...</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/bites/6.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 150</Text>
-                    <Text>Sizling shrimp with garlic and toast</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-            }
-            {this.props.menu == 'snacks' &&
-              <View style={{alignItems: 'center'}}>
-              <View style={Style.imageRow}>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/snacks/1.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 90</Text>
-                    <Text>Olives, Italia mix</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/snacks/2.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 98</Text>
-                    <Text>Hummus with garlic toast</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={Style.imageRow}>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/snacks/3.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 118</Text>
-                    <Text>Jalapenos filled with herb cheese</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/snacks/4.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 88</Text>
-                    <Text>Dates filled with goat cheese</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={Style.imageRow}>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/snacks/5.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 188</Text>
-                    <Text>Raw beef sausage 'Ossenworst' with ...</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/snacks/6.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 128</Text>
-                    <Text>Pesto and tomato tapenade with toast</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={Style.imageRow}>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/snacks/7.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 128</Text>
-                    <Text>Sweet pepper with cream sheese</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/snacks/8.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 188</Text>
-                    <Text>Escargot with herd butter and toast</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-            }
-            {this.props.menu == 'fried' &&
-              <View style={{alignItems: 'center'}}>
-              <View style={Style.imageRow}>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/fried/1.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 88</Text>
-                    <Text>Cheese pockets 'Kaassouffle' (6 pieces)</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/fried/2.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 88</Text>
-                    <Text>Small sausages 'Frikandellen' (12 pieces)</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={Style.imageRow}>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/fried/3.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 88</Text>
-                    <Text>Mexican herb sausages 'Mexicano' (6 pieces)</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/fried/4.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 80</Text>
-                    <Text>Homemade beef dumpling 'Bitterballen' ...</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={Style.imageRow}>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/fried/5.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 98</Text>
-                    <Text>Homemade pork spring rolls (8 pieces)</Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <View style={Style.menuContainer}>
-                    <Image source={require('assets/products/fried/6.png')} style={Style.menuImage}/>
-                    <Text style={{fontWeight: 'bold'}}>HK$ 118</Text>
-                    <Text>Vegetarian nuggets 'good bite'</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-            } */}
           </ScrollView>
+          <Modal
+            isVisible={this.state.visibleModal}
+            style={Style.modalWhite}
+            onRequestClose={() => {
+              this.setState({visibleModal: false});
+            }}>
+            <View style={{alignItems: 'center', height: '100%', flex: 1}}>
+              <Image source={{uri: this.state.itemImage}} style={Style.productImageFull}/>
+              <TouchableOpacity
+                style={[{backgroundColor: Color.primary, borderRadius: 20, position: 'absolute', top: 15, right: 15}]}
+                onPress={() => {
+                  this.setState({visibleModal: false});
+                }}>
+                <FontAwesomeIcon
+                  icon={faTimes}
+                  style={{
+                    color: Color.white,
+                  }}
+                  size={BasicStyles.iconSize}
+                />
+              </TouchableOpacity>
+              <View style={{padding: 30, borderBottomWidth: 1, borderBottomColor: Color.gray}}>
+                <Text style={{fontWeight: 'bold'}}>{this.state.itemName}</Text>
+                <Text style={{fontWeight: 'bold'}}>HK$ {this.state.itemPrice}</Text>
+                <Text style={{fontSize: BasicStyles.standardFontSize}}>{this.state.itemDescription}</Text>
+              </View>
+            </View>
+            <View style={{alignItems: 'center'}}>
+              <NumericInput 
+                value={this.state.qty} 
+                onChange={qty => this.setState({qty})} 
+                onLimitReached={(isMax,msg) => console.log(isMax,msg)}
+                valueType='real'
+                minValue={1}
+                borderColor='#ffffff'
+                totalWidth={130}
+                editable={false}
+                iconStyle={{ color: Color.primary}}/>
+              <TouchableHighlight
+                style={[BasicStyles.btn, { marginTop: 15 }]}
+                underlayColor={Color.gray}
+                onPress={() => this.addToCart()}>
+                <Text style={[{color: 'white', fontWeight: 'bold', fontSize: 18}]}>
+                  ADD TO BASKET
+                </Text>
+              </TouchableHighlight>
+            </View>
+        </Modal>
       </View>
     );
   }

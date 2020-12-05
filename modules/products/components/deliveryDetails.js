@@ -34,7 +34,7 @@ class DeliveryDetails extends Component{
   render() {
     return (
       <View>
-        <Modal isVisible={this.props.state} style={Style.modal}>
+        <Modal isVisible={this.props.state} style={Style.modalBlue}>
           <View style={{ width: '30%', marginRight: 200 , marginBottom: 15}}>
             <TouchableOpacity style={[{ marginTop: 40 }]} onPress={this.props.click}>
               <FontAwesomeIcon icon={ faTimes } style={{ color: Color.gray }} size={BasicStyles.iconSize} />

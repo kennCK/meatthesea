@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Style from './Style.js';
 import {
   View,
@@ -10,9 +10,9 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import {BasicStyles, Color} from 'common';
+import { BasicStyles, Color } from 'common';
 import Modal from 'react-native-modal';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faTimes,
   faEdit,
@@ -25,9 +25,9 @@ import {
 import Products from './components/';
 import DeliveryDetails from './components/deliveryDetails';
 import Menu from './components/menu.js';
-import {Spinner} from 'components';
+import { Spinner } from 'components';
 import Api from 'services/apiv2/index.js';
-import {Routes} from 'common';
+import { Routes } from 'common';
 import { connect } from 'react-redux';
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component {
@@ -50,21 +50,24 @@ class Welcome extends Component {
       products: null
     };
   }
-  componentDidMount(){
-    console.log(this.props.state)
+  componentDidMount() {
+    console.log("user: ", this.props.state.user)
   }
   isLoading(data) {
-    this.setState({isLoading: data});
+    this.setState({ isLoading: data });
+  }
+  componentDidUpdate(){
+    // console.log("user: ", this.props.state)
   }
   changeSelectedMenu(data, type) {
-    if(data == null){
-      this.setState({products: null})
-    }else{
+    if (data == null) {
+      this.setState({ products: null })
+    } else {
       this.isLoading(true);
       Api.getRequest(
         Routes.productsRetrieve + '?categoryid=' + data,
         response => {
-          this.setState({products: response.products});
+          this.setState({ products: response.products });
           this.isLoading(false);
         },
         error => {
@@ -72,37 +75,38 @@ class Welcome extends Component {
         },
       );
     }
-    this.setState({selectedMenu: data, type: type});
+    this.setState({ selectedMenu: data, type: type });
   }
   redirect(index) {
     this.props.navigation.push(this.state.redirects[index]);
   }
   deliveryModal() {
-    this.setState({deliveryModal: this.state.deliveryModal ? false : true});
+    this.setState({ deliveryModal: this.state.deliveryModal ? false : true });
   }
   changeMenu(index) {
-    this.setState({visibleModal: false});
+    this.setState({ visibleModal: false });
     if (index == 2) {
       this.props.navigation.push('appOnBoardingStack');
     } else {
-      this.setState({menu: index});
+      this.setState({ menu: index });
     }
   }
   render() {
+
     return (
       <View style={Style.MainContainer}>
         <Modal
           isVisible={this.state.visibleModal}
           style={Style.modal}
           onRequestClose={() => {
-            this.setState({visibleModal: false});
+            this.setState({ visibleModal: false });
           }}>
           <View
             style={{
               marginRight: -300,
             }}>
             <TouchableOpacity
-              style={[{marginTop: 40, backgroundColor: Color.white, borderRadius: 10}]}
+              style={[{ marginTop: 40, backgroundColor: Color.white, borderRadius: 10 }]}
               onPress={() => this.changeMenu(2)}>
               <FontAwesomeIcon
                 icon={faTimes}
@@ -126,7 +130,7 @@ class Welcome extends Component {
               </Text>
             </View>
             <TouchableOpacity
-              style={[BasicStyles.btn, Style.btnWhite, {marginTop: 70}]}
+              style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]}
               onPress={() => this.changeMenu(1)}>
               <Text style={[Style.textPrimary]}>GO TO GROCERIES</Text>
             </TouchableOpacity>
@@ -145,7 +149,7 @@ class Welcome extends Component {
               </Text>
             </View>
             <TouchableHighlight
-              style={[BasicStyles.btn, Style.btnWhite, {marginTop: 70}]}
+              style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]}
               onPress={() => this.changeMenu(0)}>
               <Text style={[Style.textPrimary]}>GO TO RESTAURANTS</Text>
             </TouchableHighlight>
@@ -157,36 +161,36 @@ class Welcome extends Component {
         />
         <View>
           <View style={Style.delivery}>
-            <Text style={[{fontSize: BasicStyles.standardFontSize, flex: 1}]}>Deliver to: </Text>
-            <Text style={[Style.textPrimary, {flex: 3, fontSize: BasicStyles.standardFontSize}]}>
+            <Text style={[{ fontSize: BasicStyles.standardFontSize, flex: 1 }]}>Deliver to: </Text>
+            <Text style={[Style.textPrimary, { flex: 3, fontSize: BasicStyles.standardFontSize }]}>
               1a, Centre Stage Tower 1
             </Text>
             <TouchableOpacity
-              style={[{flex: 0}]}
+              style={[{ flex: 0 }]}
               onPress={() => this.deliveryModal()}>
               <FontAwesomeIcon
                 icon={faEdit}
-                style={{color: Color.darkGray}}
+                style={{ color: Color.darkGray }}
                 size={BasicStyles.iconSize}
               />
             </TouchableOpacity>
           </View>
           <View style={Style.delivery}>
             <View style={Style.searchBar}>
-              <TouchableOpacity style={[{flex: 1}]}>
+              <TouchableOpacity style={[{ flex: 1 }]}>
                 <FontAwesomeIcon
                   icon={faSearch}
-                  style={{color: Color.darkGray, marginLeft: 10}}
+                  style={{ color: Color.darkGray, marginLeft: 10 }}
                   size={BasicStyles.iconSize}
                 />
               </TouchableOpacity>
               <TextInput
-                style={[{height: 37, flex: 7, width: '100%'}]}
+                style={[{ height: 37, flex: 7, width: '100%' }]}
                 placeholder={'Search'}
               />
               <TouchableOpacity
                 style={[
-                  {flex: 0, borderLeftColor: Color.gray, borderLeftWidth: 1},
+                  { flex: 0, borderLeftColor: Color.gray, borderLeftWidth: 1 },
                 ]}
                 onPress={() => this.redirect(1)}>
                 <FontAwesomeIcon
@@ -201,11 +205,12 @@ class Welcome extends Component {
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-              style={[{flex: 0}]}
+              disabled={this.props.state.user == null ? true : false}
+              style={[{ flex: 0 }]}
               onPress={() => this.redirect(0)}>
               <FontAwesomeIcon
                 icon={faUserCircle}
-                style={{color: Color.primary}}
+                style={{ color: Color.primary }}
                 size={BasicStyles.iconSize}
               />
             </TouchableOpacity>
@@ -227,7 +232,7 @@ class Welcome extends Component {
               load={data => this.isLoading(data)}
             />
           )}
-          <View style={{height: 50, flexDirection: 'row', backgroundColor: Color.white}}>
+          <View style={{ height: 50, flexDirection: 'row', backgroundColor: Color.white }}>
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}>
@@ -239,14 +244,15 @@ class Welcome extends Component {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
+                disabled={this.props.state.user == null ? true : false}
                 onPress={() => this.redirect(3)}>
                 <View
                   style={[
-                    {width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1},
+                    { width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1 },
                   ]}>
                   <FontAwesomeIcon
                     icon={faHandHolding}
-                    style={{color: Color.darkGray}}
+                    style={{ color: Color.darkGray }}
                     size={30}
                   />
                   <Text style={Style.bottomMenuText}>Pick up crockeries</Text>
@@ -257,6 +263,7 @@ class Welcome extends Component {
               horizontal={true}
               showsHorizontalScrollIndicator={false}>
               <TouchableOpacity
+                disabled={this.props.state.user == null ? true : false}
                 style={{
                   width: width / 2,
                   borderWidth: 1,
@@ -266,11 +273,11 @@ class Welcome extends Component {
                 onPress={() => this.redirect(2)}>
                 <View
                   style={[
-                    {width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1},
+                    { width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flex: 1 },
                   ]}>
                   <FontAwesomeIcon
                     icon={faShoppingBasket}
-                    style={{color: Color.darkGray}}
+                    style={{ color: Color.darkGray }}
                     size={30}
                   />
                   <Text style={Style.bottomMenuText}>Basket</Text>
@@ -279,7 +286,6 @@ class Welcome extends Component {
             </ScrollView>
           </View>
         </View>
-        {this.state.isLoading ? <Spinner mode="overlay" /> : null}
       </View>
     );
   }
@@ -289,7 +295,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome)

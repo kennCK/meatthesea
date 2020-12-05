@@ -5,6 +5,7 @@ import {
   Register,
   ForgotPassword,
   JoinWaitList,
+  ChangePassword,
 } from 'modules/accounts';
 import Drawer from './Drawer';
 import ReturnInPersonStack from 'modules/returnInPerson/ReturnInPersonDrawer';
@@ -42,6 +43,15 @@ const LoginStack = createStackNavigator(
 const ForgotPasswordStack = createStackNavigator(
   {
     forgotPasswordScreen: {screen: ForgotPassword},
+  },
+  {
+    headerMode: 'none',
+    navigationOptions: {},
+  },
+);
+const ChangePasswordStack = createStackNavigator(
+  {
+    changePasswordScreen: {screen: ChangePassword},
   },
   {
     headerMode: 'none',

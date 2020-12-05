@@ -46,25 +46,37 @@ class ForgotPassword extends Component {
       this.setState({ errorMessage: 'You have entered an invalid email address.' })
       return false
     }
-    Api.getRequest(
-      Routes.customerRetrieve + '?fields=email,id',
-      response => {
-        let ndx = 0
-        while(ndx < response.customers.length && email != response.customers[ndx].email){
-          ndx++
-        }
-        if(ndx < response.customers.length){
-          this.setState({ changeStep: 1, userID: response.customers[ndx].id})
-          return true
-        }else{
-          this.setState({ errorMessage: 'Email address not found!' })
-          return false
-        }
-      },
-      error => {
-        console.log(error);
-      },
-    );
+    console.log(email)
+    Api.postRequest(Routes.customerForgotPassword+"?email="+ email, null, 
+      response =>{
+        this.setState({
+          successMessage: response.message,
+          errorMessage: null
+        })
+      }, error => {
+        this.setState({ errorMessage: 'Email not found' })
+        return false
+      });
+    // Api.getRequest(
+    //   Routes.customerRetrieve + '?fields=email,id',
+    //   response => {
+    //     let ndx = 0
+    //     while(ndx < response.customers.length && email != response.customers[ndx].email){
+    //       ndx++
+    //     }
+    //     if(ndx < response.customers.length){
+    //       // this.setState({ changeStep: 1, userID: response.customers[ndx].id})
+    //       return true
+    //     }else{
+    //       this.setState({ errorMessage: 'Email address not found!' })
+    //       return false
+    //     }
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   },
+    // );
+
     // Api.request(config.IS_DEV + '/accounts/request_reset', parameter, userInfo => {
     //   this.setState({
     //     successMessage: 'Successfully sent! Please check your e-mail address to continue.',
@@ -235,7 +247,7 @@ class ForgotPassword extends Component {
           onPress={() => this.requestReset()}
           underlayColor={Color.gray}>
           <Text style={[Style.textPrimary, Style.fontWeight('bold')]}>
-            Request change
+            REQUEST CHANGE
           </Text>
         </TouchableHighlight>
       </View>
@@ -273,7 +285,7 @@ class ForgotPassword extends Component {
                 paddingRight: 10
               }}>
                 <Text style={[Style.messageText, {
-                  color: Color.black
+                  color: Color.white
                 }]}>{successMessage}</Text>
               </View>
             )

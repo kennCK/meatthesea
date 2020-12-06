@@ -24,6 +24,8 @@ export default {
   customerRetrieveCount: apiUrl + 'customers/count',
   customerSearch: apiUrl + 'customers/search',
   customerLogin:apiUrl+'customerlogin',
+  customerRegister:apiUrl + 'customer_register/',
+  customerForgotPassword:apiUrl + 'customer_forgot_password/',
 
   // Languages
   languageRetrieve: apiUrl + 'languages',

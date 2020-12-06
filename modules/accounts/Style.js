@@ -65,6 +65,7 @@ export default {
     paddingLeft: 10,
     marginBottom: 20,
     borderRadius: 5,
+    color: Color.white
   },
   btnPrimary: {
     height: 50,

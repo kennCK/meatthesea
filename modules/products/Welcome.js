@@ -89,7 +89,7 @@ class Welcome extends Component {
     }
     redirect(index) {
         let route = this.state.redirects[index];
-        if (this.props.state.user == null) {
+        if (this.props.state.token == null) {
             route = 'loginStack'
         }
         this.props.navigation.push(route);
@@ -219,7 +219,8 @@ class Welcome extends Component {
                             </TouchableOpacity>
                         </View>
                         {
-                            this.props.state.user && <TouchableOpacity
+                            // this.props.state.user &&
+                             <TouchableOpacity
                                 disabled={this.state.token == null ? true : false}
                                 style={[{ flex: 0 }]}
                                 onPress={() => this.redirect(0)}>

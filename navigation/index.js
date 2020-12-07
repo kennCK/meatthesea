@@ -129,6 +129,7 @@ const PrimaryNav = createStackNavigator(
     locationWithMapStack: {screen: LocationWithMapStack},
     addPaymentMethodStack: {screen: AddPaymentMethodStack},
     checkoutStack: {screen: CheckoutStack},
+    changePasswordStack: {screen: ChangePasswordStack},
   },
   {
     // Default config for all screens

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Image, ScrollView, TouchableHighlight } from 'react-native';
 import styles from '../Style';
-import { BasicStyles, Routes } from 'common';
+import { BasicStyles } from 'common';
 import Style from 'modules/accounts/Style';
 import { Color, Routes } from 'common';
 import OrderItems from './OrderItems';

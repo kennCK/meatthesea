@@ -16,14 +16,12 @@ class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fName: '',
-      lName: '',
+      fullName: '',
       username: '',
       email: '',
       password: '',
       location: '',
       phoneNumber: '',
-      floorAndUnit: '',
       isLoading: false,
       token: null,
       error: 0,
@@ -77,35 +75,28 @@ class Register extends Component {
 
   submit() {
     const {
-      fName,
-      lName,
+      fullName,
       username,
       email,
-      password
+      password,
+      location,
+      phoneNumber
     } = this.state;
-    let param = {
-      "customer":{
-        "first_name": fName,
-        "last_name": lName,
-        "username": username,
-        "email": email,
-        "password": password,
-        "role_ids": [3]
-      }
+    if(this.validate() == true){
+      console.log(true)
+        Api.postRequest(
+          Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname"+fullName+"&PhoneNumber="+phoneNumber+"&Address1="+location+"&StoreId=1", null,
+          response => {
+            this.setState({ isLoading: false })
+            this.props.navigation.navigate('loginStack')
+          },
+          error => {
+            console.log(error)
+            this.setState({ isLoading: false })
+            this.setState({ isResponseError: true })
+          },
+        );
     }
-    console.log(param)
-    Api.postRequest(
-      Routes.customerAdd, param,
-      response => {
-        this.setState({ isLoading: false })
-        this.props.navigation.navigate('loginStack')
-      },
-      error => {
-        console.log(error)
-        this.setState({ isLoading: false })
-        this.setState({ isResponseError: true })
-      },
-    );
 
 
     // const { username, email, password } = this.state;
@@ -145,22 +136,18 @@ class Register extends Component {
 
   validate() {
     const {
-      fName,
-      lName,
+      fullName,
       username,
       email,
       password,
       location,
       phoneNumber,
-      floorAndUnit
     } = this.state;
     if (username.length >= 6 &&
-      fName != '' &&
-      lName != '' &&
+      fullName != '' &&
       username != '' &&
       location != '' &&
       phoneNumber != '' &&
-      floorAndUnit != '' &&
       email !== '' &&
       password !== '' &&
       password.length >= 6 &&
@@ -172,10 +159,19 @@ class Register extends Component {
     } else if (password !== '' && password.length < 6) {
       this.setState({ errorMessage: 'Password must be atleast 6 characters.' })
       return false
+    } else if (username !== '' && username.length < 6) {
+      this.setState({ errorMessage: 'Username must be atleast 6 characters.' })
+      return false
     } else if (phoneNumber !== '' && phoneNumber.length < 6) {
       this.setState({ errorMessage: 'Phone number must be atleast 6 characters.' })
       return false
     } else {
+      console.log(fullName)
+      console.log(username)
+      console.log(email)
+      console.log(password)
+      console.log(location)
+      console.log(phoneNumber)
       this.setState({ errorMessage: 'Please fill in all required fields.' })
       return false
     }
@@ -206,16 +202,9 @@ class Register extends Component {
             <TextInput
               style={Style.textInput}
               {...Style.textPlaceHolder}
-              onChangeText={(fName) => this.setState({ fName })}
-              value={this.state.fName}
-              placeholder={'First name'}
-            />
-            <TextInput
-              style={Style.textInput}
-              {...Style.textPlaceHolder}
-              onChangeText={(lName) => this.setState({ lName })}
-              value={this.state.lName}
-              placeholder={'Last name'}
+              onChangeText={(fullName) => this.setState({ fullName })}
+              value={this.state.fullName}
+              placeholder={'Full name'}
             />
             <TextInput
               style={Style.textInput}
@@ -258,13 +247,6 @@ class Register extends Component {
                 this.setState({ location: selectedItem.name })
               }
             }} />
-            <TextInput
-              style={Style.textInput}
-              {...Style.textPlaceHolder}
-              onChangeText={(floorAndUnit) => this.setState({ floorAndUnit })}
-              value={this.state.floorAndUnit}
-              placeholder={'Floor and unit'}
-            />
             <View style={[Style.bottomTextContainer, { paddingHorizontal: 3 }]}>
               <Text style={[{
                 textAlign: 'justify',
@@ -317,6 +299,7 @@ const mapStateToProps = state => ({ state: state });
 const mapDispatchToProps = dispatch => {
   const { actions } = require('@redux');
   return {
+    setLocation: location => dispatch(actions.setLocation(location)),
     login: (user, token) => dispatch(actions.login(user, token)),
     logout: () => dispatch(actions.logout())
   };

@@ -46,7 +46,6 @@ class Login extends Component {
         this.props.navigation.push('homepageStack');
       }
     }
-
     try {
       const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
       const token_expiration = await AsyncStorage.getItem(Helper.APP_NAME + 'token_expiration');

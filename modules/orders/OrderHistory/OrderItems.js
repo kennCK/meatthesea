@@ -16,7 +16,7 @@ import Separator from '../components/Separator';
 
 export default class OrderItems extends Component {
   render() {
-    let {header, items} = this.props.data;
+    let {store, items} = this.props;
     return (
       <View>
         <View style={{paddingTop: 20, marginBottom: 15}}>
@@ -28,7 +28,7 @@ export default class OrderItems extends Component {
               Style.fontAlign('left'),
               Style.fontSize(BasicStyles.standardFontSize),
             ]}>
-            {header}
+            {store}
           </Text>
           {items.map((itemText, idx) => {
             return (
@@ -41,7 +41,7 @@ export default class OrderItems extends Component {
                       Style.fontWeight('700'),
                       Style.fontSize(BasicStyles.standardFontSize),
                     ]}>
-                    {itemText.item}
+                    {itemText.name}
                   </Text>
                   <Text
                     style={{
@@ -49,29 +49,9 @@ export default class OrderItems extends Component {
                       right: 25,
                       top: 5,
                     }}>
-                    {itemText.price}
+                    HK$ {itemText.price || 0}
                   </Text>
                 </View>
-                {
-                  // itemText.addOns.map((addOn, id) => {
-                  //     return (
-                  //         <View key={id}>
-                  //             <Text
-                  //                 style={[
-                  //                     { marginVertical: 2, marginLeft: 5, color: Color.darkGray },
-                  //                     BasicStyles.titleText,
-                  //                     Style.fontWeight("100"),
-                  //                     Style.fontSize(BasicStyles.standardFontSize)
-                  //                 ]}>+{addOn.item}</Text>
-                  //             {addOn.price && <Text style={{
-                  //                 position: 'absolute',
-                  //                 right: 25,
-                  //                 top: 5
-                  //             }}>{addOn.price}</Text>}
-                  //         </View>
-                  //     )
-                  // })
-                }
               </View>
             );
           })}

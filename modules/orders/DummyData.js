@@ -4,7 +4,7 @@ import { faCreditCard, faClock } from '@fortawesome/free-regular-svg-icons';
 const dummyData = [
     {
         id: 1,
-        header: "RESTAURANT MENU ITEMS",
+        store: "RESTAURANT MENU ITEMS",
         items: [
             {
                 item: 'Item name',
@@ -38,7 +38,7 @@ const dummyData = [
     },
     {
         id: 2,
-        header: "DELI-SHOP ITEMS",
+        store: "DELI-SHOP ITEMS",
         items: [
             {
                 item: 'Item name',
@@ -74,7 +74,7 @@ const dummyData = [
     },
     {
         id: 3,
-        header: "DELI-SHOP ITEMS",
+        store: "DELI-SHOP ITEMS",
         items: [
             {
                 item: 'Item name',
@@ -108,7 +108,7 @@ const dummyData = [
     },
     {
         id: 4,
-        header: "DELI-SHOP ITEMS",
+        store: "DELI-SHOP ITEMS",
         items: [
             {
                 item: 'Item name',

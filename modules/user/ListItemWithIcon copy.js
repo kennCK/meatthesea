@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
+  TouchableWithoutFeedback,
   TouchableHighlight,
 } from 'react-native';
 import styles from './Style';
@@ -17,28 +18,30 @@ class OrderHistoryScreen extends Component {
         underlayColor={Color.white}
         onPress={onPress && onPress}>
         <View
+          key={title}
           style={{
             borderBottomColor: Color.gray,
             backgroundColor: Color.accentGray,
             borderBottomWidth: 1,
-            paddingVertical: 15,
-            paddingHorizontal: 20,
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
           }}>
-          <FontAwesomeIcon
-            icon={icon}
-            color={Color.primary}
-            size={BasicStyles.standardFontSize}
-          />
-          <Text
-            style={{
-              fontSize: BasicStyles.standardFontSize,
-              color: Color.black,
-              marginLeft: 10,
-            }}>
-            {title}
+          <Text style={[BasicStyles.titleText, {marginVertical: 15}]}>
+            <FontAwesomeIcon
+              style={{
+                marginTop: 14,
+              }}
+              color={Color.primary}
+              icon={icon}
+              size={BasicStyles.standardFontSize}
+            />
+            <Text
+              style={[
+                BasicStyles.titleText,
+                styles.ListItemText,
+                Style.fontSize(BasicStyles.standardFontSize),
+              ]}>
+              {'  '}
+              {title}
+            </Text>
           </Text>
         </View>
       </TouchableHighlight>

@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
         color: Color.darkGray,
     },
     ListItemIcon: {
-        marginTop: 10,
-        marginBottom: 15,
+        // marginTop: 10,
+        // marginBottom: 15,
         color: Color.primary
     }
 });

@@ -28,6 +28,7 @@ import LocationStack from 'components/Location/Drawer.js';
 import LocationWithMap from 'components/Location/LocationWithMap';
 import AddPaymentMethodStack from 'modules/addPaymentMethod/AddPaymentMethodDrawer.js';
 import CheckoutStack from 'modules/checkout/CheckoutDrawer.js';
+import AddSubscriptionStack from 'modules/addSubscription/AddSubscriptionDrawer.js';
 // login stack
 const LoginStack = createStackNavigator(
   {
@@ -130,6 +131,7 @@ const PrimaryNav = createStackNavigator(
     addPaymentMethodStack: {screen: AddPaymentMethodStack},
     checkoutStack: {screen: CheckoutStack},
     changePasswordStack: {screen: ChangePasswordStack},
+    addSubscriptionStack: {screen: AddSubscriptionStack},
   },
   {
     // Default config for all screens

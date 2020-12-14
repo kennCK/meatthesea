@@ -74,6 +74,7 @@ const reducer = (state = initialState, action) => {
       let {access_token, expires_in} = token;
       storeData('token', access_token);
       storeData('token_expiration', expires_in.toString());
+      console.log('token', token)
       Data.setToken(token);
       return {...state, user, token};
     case types.UPDATE_USER:

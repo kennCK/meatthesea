@@ -110,7 +110,7 @@ class Login extends Component {
         if (diffInMinutes >= MAX_BACKGROUND_SESSION_IN_MINUTES) {          
           Alert.alert('Session Expired', 'Please log in your account')
           logout()
-          this.props.navigation.push('loginStack');
+          this.props.navigation.navigate('loginStack');
         }
       }
     }
@@ -161,7 +161,7 @@ class Login extends Component {
           route = 'Dashboard'
           break
       }
-      const navigateAction = NavigationActions.push({
+      const navigateAction = NavigationActions.navigate({
         routeName: route
       });
       this.props.navigation.dispatch(navigateAction); 
@@ -181,7 +181,7 @@ class Login extends Component {
       const { user } =  this.props.state
       if (user !== null) {
         if (notification.payload.extra === 'Delivery') {
-          const navigateAction = NavigationActions.push({
+          const navigateAction = NavigationActions.navigate({
             routeName: 'NewDelivery',
             params: notification.payload.data
           });
@@ -209,13 +209,13 @@ class Login extends Component {
 
   test = () => {
     if(config.TEST == true){
-      this.props.navigation.push('drawerStack');
+      this.props.navigation.navigate('drawerStack');
       return true;
     }
   }
 
   redirect = (route) => {
-    this.props.navigation.push(route);
+    this.props.navigation.navigate(route);
   }
 
   playAudio = () => {
@@ -253,13 +253,13 @@ class Login extends Component {
         "A new delivery is available!",
         [
           { text: "VIEW", onPress: () => {
-            const navigateAction = NavigationActions.push({
+            const navigateAction = NavigationActions.navigate({
               routeName: 'NewDelivery',
               params: response
             });
             this.props.navigation.dispatch(navigateAction); 
           } },
-          { text: "CANCEL", onPress: () => this.props.navigation.push('Delivery') }
+          { text: "CANCEL", onPress: () => this.props.navigation.navigate('Delivery') }
         ],
         { cancelable: false }
         );
@@ -319,9 +319,9 @@ class Login extends Component {
       this.setState({isLoading: false});
 
       if ((user.account_type + '').toLowerCase() === 'merchant') {
-        this.props.navigation.push('MyOrders');  
+        this.props.navigation.navigate('MyOrders');  
       } else {
-        this.props.navigation.push('drawerStack');
+        this.props.navigation.navigate('drawerStack');
       }
     }else{
       const { setNotifications, setMessenger } = this.props;
@@ -407,12 +407,12 @@ class Login extends Component {
         return
       }
     }
-    this.props.navigation.push('drawerStack');
+    this.props.navigation.navigate('drawerStack');
   }
 
   onSuccessOtp = () => {
     this.setState({isOtpModal: false})
-    this.props.navigation.push('drawerStack');
+    this.props.navigation.navigate('drawerStack');
   }
 
   submit(){

@@ -15,8 +15,8 @@ const types = {
 };
 
 export const actions = {
-  login: (user, token) => {
-    return {type: types.LOGIN, user, token};
+  login: (email, password, user, token) => {
+    return {type: types.LOGIN, user, token, email, password};
   },
   logout() {
     return {type: types.LOGOUT};
@@ -59,7 +59,7 @@ storeData = async (key, value) => {
 };
 
 const reducer = (state = initialState, action) => {
-  const {type, user, token} = action;
+  const {type, user, token, email, password} = action;
   const {unread} = action;
   const {notification} = action;
   const {theme} = action;
@@ -74,6 +74,8 @@ const reducer = (state = initialState, action) => {
       let {access_token, expires_in} = token;
       storeData('token', access_token);
       storeData('token_expiration', expires_in.toString());
+      storeData('email', email);
+      storeData('password', password);
       console.log('token', token)
       Data.setToken(token);
       return {...state, user, token};
@@ -147,6 +149,8 @@ const reducer = (state = initialState, action) => {
         theme,
       };
     case types.SET_LOCATION:
+      console.log('location', location)
+      storeData('store', location.id);
       return {
         ...state,
         location,

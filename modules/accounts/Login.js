@@ -34,7 +34,7 @@ class Login extends Component {
 
   test = () => {
     if (config.TEST == true) {
-      this.props.navigation.push('homepageStack');
+      this.props.navigation.navigate('homepageStack');
       return true;
     }
   }
@@ -44,20 +44,26 @@ class Login extends Component {
   }
 
   getData = async () => {
-    let checkToken = (_expiry) => {
-      if (_expiry < new Date().getTime() / 1000) {
-        this.props.logout();
-      } else {
-        this.props.navigation.push('homepageStack');
-      }
-    }
+    // let checkToken = (_expiry) => {
+    //   if (_expiry < new Date().getTime() / 1000) {
+    //     this.props.logout();
+    //   } else {
+    //     this.submit()
+    //   }
+    // }
     try {
       const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
       const token_expiration = await AsyncStorage.getItem(Helper.APP_NAME + 'token_expiration');
+      const email = await AsyncStorage.getItem(Helper.APP_NAME + 'email');
+      const password = await AsyncStorage.getItem(Helper.APP_NAME + 'password');
       if (token != null) {
-        this.setState({ token });
+        this.setState({ token,  email, password});
         setInterval(() => {
-          checkToken(token_expiration)
+            if (token_expiration < new Date().getTime() / 1000) {
+              this.props.logout();
+            } else {
+              this.submit()
+            }
         }, 1000)
       }
     } catch (e) {
@@ -77,15 +83,15 @@ class Login extends Component {
       Api.getRequest(Routes.customerLogin + `?Email=${email}&Password=${password}`, response => {
         let { customer, authorization } = response;
         this.setState({ isLoading: false})
-        login(customer, authorization);
+        login(email, password, customer, authorization);
         this.redirect("homepageStack")
       }, error => {
         this.setState({ isLoading: false, error: 2 })
-        login(null, null)
+        login(null, null, null, null)
       });
     } else {
       this.setState({ error: 1 });
-      login(null, null)
+      login(null, null, null, null)
     }
   }
 
@@ -173,7 +179,7 @@ const mapStateToProps = state => ({ state: state });
 const mapDispatchToProps = dispatch => {
   const { actions } = require('@redux');
   return {
-    login: (user, token) => dispatch(actions.login(user, token)),
+    login: (email, password, user, token) => dispatch(actions.login(email, password, user, token)),
     logout: () => dispatch(actions.logout()),
   };
 };

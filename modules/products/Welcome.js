@@ -93,10 +93,7 @@ class Welcome extends Component {
   }
   redirect(index) {
     let route = this.state.redirects[index];
-    if (this.state.isGuest) {
-      route = 'loginStack';
-    }
-    this.props.navigation.push(route);
+    this.props.navigation.navigate(route);
   }
   deliveryModal() {
     this.setState({deliveryModal: this.state.deliveryModal ? false : true});
@@ -279,7 +276,6 @@ class Welcome extends Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
-                  disabled={this.state.token == null ? true : false}
                   onPress={() => this.redirect(3)}>
                   <View
                     style={[
@@ -304,7 +300,6 @@ class Welcome extends Component {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}>
                 <TouchableOpacity
-                  disabled={this.state.token == null ? true : false}
                   style={{
                     width: width / 2,
                     borderWidth: 1,

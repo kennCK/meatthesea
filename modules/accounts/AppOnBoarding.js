@@ -29,35 +29,13 @@ class AppOnBoarding extends Component {
       isResponseError: false,
       location: '',
       stores: [],
+      email: null,
+      password: null,
+      locationId: null
     };
   }
 
   getLocations() {}
-
-  getData = async () => {
-    let checkToken = (_expiry) => {
-      if (_expiry < new Date().getTime() / 1000) {
-        this.props.logout();
-      } else {
-        this.props.navigation.push('homepageStack');
-      }
-    };
-
-    try {
-      const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
-      const token_expiration = await AsyncStorage.getItem(
-        Helper.APP_NAME + 'token_expiration',
-      );
-      if (token != null) {
-        this.setState({token});
-        setInterval(() => {
-          checkToken(token_expiration);
-        }, 1000);
-      }
-    } catch (e) {
-      // error reading value
-    }
-  };
 
   componentDidMount() {
     this.setState({isLoading: true});
@@ -68,6 +46,14 @@ class AppOnBoarding extends Component {
         this.setState({isLoading: false});
         this.setState({stores: response.stores});
         this.props.setStores(response.stores);
+        if(this.state.locationId != null){
+          let selectedItem = response.stores.map((item) => {
+            if(parseInt(item.id) == this.state.locationId){
+              return item
+            }
+          })
+          this.props.setLocation(selectedItem)
+        }
       },
       (error) => {
         this.setState({isLoading: false});
@@ -76,31 +62,63 @@ class AppOnBoarding extends Component {
     );
   }
 
+  getData = async () => {
+    try {
+      const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
+      const token_expiration = await AsyncStorage.getItem(Helper.APP_NAME + 'token_expiration');
+      const email = await AsyncStorage.getItem(Helper.APP_NAME + 'email');
+      const password = await AsyncStorage.getItem(Helper.APP_NAME + 'password');
+      const locationId = await AsyncStorage.getItem(Helper.APP_NAME + 'location');
+      if (token != null) {
+        this.setState({ email, password, locationId});
+        setInterval(() => {
+            this.directLogin()
+        }, 1000)
+      }
+    } catch (e) {
+      // error reading value
+    }
+  }
+
   redirect = (route) => {
-    this.props.navigation.push(route);
+    this.props.navigation.navigate(route);
   };
 
-  submit() {
+  submit(){
     // const { location } = this.state;
     if (this.validate() == false) {
       return;
     }
-    this.props.navigation.push('homepageStack');
+    this.redirect("homepageStack")
+  }
 
-    // this.setState({ isLoading: true })
-    // Api.request(Routes.accountCreate, parameter, response => {
-    //     this.setState({ isLoading: false })
-    //     // if (response.error !== null) {
-
-    //     // }
-    // }, error => {
-    //     this.setState({ isResponseError: true })
-    // })
+  directLogin() {
+    // const { location } = this.state;
+    if (this.validate() == false) {
+      return;
+    }
+    const { email, password } = this.state;
+    const { login } = this.props;
+    if ((email != null && email != '') && (password != null && password != '')) {
+      this.setState({ isLoading: true, error: 0 });
+      Api.getRequest(Routes.customerLogin + `?Email=${email}&Password=${password}`, response => {
+        let { customer, authorization } = response;
+        this.setState({ isLoading: false})
+        login(email, password, customer, authorization);
+        this.redirect("homepageStack")
+      }, error => {
+        this.setState({ isLoading: false, error: 2 })
+        login(null, null, null, null)
+      });
+    } else {
+      this.setState({ error: 1 });
+      login(null, null, null, null)
+    }
   }
 
   validate() {
-    const {location} = this.state;
-    if (!location) {
+    const {locationId, location} = this.state;
+    if (!locationId && !location) {
       this.setState({errorMessage: 'Please select your location.'});
       return false;
     }
@@ -231,6 +249,7 @@ const mapDispatchToProps = (dispatch) => {
     setLocation: (location) => dispatch(actions.setLocation(location)),
     setStores: (stores) => dispatch(actions.setStores(stores)),
     logout: () => dispatch(actions.logout()),
+    login: (email, password, user, token) => dispatch(actions.login(email, password, user, token)),
   };
 };
 

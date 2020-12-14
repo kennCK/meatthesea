@@ -46,7 +46,7 @@ class Login extends Component {
   getData = async () => {
     let checkToken = (_expiry) => {
       if (_expiry < new Date().getTime() / 1000) {
-        // this.props.logout();
+        this.props.logout();
       } else {
         this.props.navigation.push('homepageStack');
       }
@@ -66,7 +66,7 @@ class Login extends Component {
   }
 
   redirect = (route) => {
-    this.props.navigation.push(route);
+    this.props.navigation.navigate(route);
   }
   submit() {
     // this.test();
@@ -76,15 +76,16 @@ class Login extends Component {
       this.setState({ isLoading: true, error: 0 });
       Api.getRequest(Routes.customerLogin + `?Email=${email}&Password=${password}`, response => {
         let { customer, authorization } = response;
-        console.log('customer', customer)
-        this.setState({ isLoading: false, token: authorization.access_token })
+        this.setState({ isLoading: false})
         login(customer, authorization);
-        return this.redirect("homepageStack")
+        this.redirect("homepageStack")
       }, error => {
         this.setState({ isLoading: false, error: 2 })
+        login(null, null)
       });
     } else {
       this.setState({ error: 1 });
+      login(null, null)
     }
   }
 

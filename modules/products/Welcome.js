@@ -261,7 +261,7 @@ class Welcome extends Component {
               load={(data) => this.isLoading(data)}
             />
           )}
-          {this.state.isGuest == false && (
+          {this.props.state.user !== null && (
             <View
               style={{
                 height: 50,

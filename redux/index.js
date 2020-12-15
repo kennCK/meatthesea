@@ -77,9 +77,11 @@ const reducer = (state = initialState, action) => {
       AsyncStorage.clear();
       return Object.assign({}, initialState);
     case types.LOGIN:
-      let {access_token, expires_in} = token;
-      storeData('token', access_token);
-      storeData('token_expiration', expires_in.toString());
+      if(token !== null){
+        let {access_token, expires_in} = token;
+        storeData('token', access_token);
+        storeData('token_expiration', expires_in.toString());
+      }
       storeData('email', email);
       storeData('password', password);
       console.log('token', token)

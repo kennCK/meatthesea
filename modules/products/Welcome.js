@@ -58,6 +58,7 @@ class Welcome extends Component {
   componentDidMount() {
     const { filter } = this.props.state;
     const { setHomepageSettings } = this.props;
+    this.retrieveCart()
     if(filter){
       setHomepageSettings({
         type: filter.category == 'restaurant' ? 0 : 1,
@@ -70,6 +71,20 @@ class Welcome extends Component {
       })
     }
   }
+
+  retrieveCart = () => {
+    const { user } = this.props.state;
+    if(user == null){
+      return
+    }
+    Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
+        const { setCart } = this.props;
+        setCart(response.shopping_carts)
+      }, (error) => {
+        console.log(error);
+    });
+  }
+
   changeSelectedMenu(data, type) {
     if (data == null) {
       this.setState({products: null});
@@ -99,7 +114,7 @@ class Welcome extends Component {
     }
   }
   render() {
-    const { homepage, search } = this.props.state;
+    const { homepage, search, cart } = this.props.state;
     console.log('homepage', homepage)
     return (
       <View style={Style.MainContainer}>
@@ -328,10 +343,29 @@ class Welcome extends Component {
                     ]}>
                     <FontAwesomeIcon
                       icon={faShoppingBasket}
-                      style={{color: Color.darkGray}}
+                      style={{color: cart && cart.length > 0 ? Color.secondary : Color.darkGray}}
                       size={30}
                     />
                     <Text style={Style.bottomMenuText}>Basket</Text>
+                    {
+                      (cart && cart.length > 0) && (
+                        <View style={{
+                          height: 30,
+                          width: 30,
+                          backgroundColor: Color.secondary,
+                          borderRadius: 15,
+                          marginLeft: 10,
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <Text style={[Style.bottomMenuText, {
+                            color: Color.white,
+                            marginLeft: 0,
+                            textAlign: 'center'
+                          }]}>{cart.length}</Text>
+                        </View>
+                      )
+                    }
                   </View>
                 </TouchableOpacity>
               </ScrollView>
@@ -352,6 +386,7 @@ const mapDispatchToProps = (dispatch) => {
     setStores: (stores) => dispatch(actions.setStores(stores)),
     setSearch: (search) => dispatch(actions.setSearch(search)),
     setHomepageSettings: (settings) => dispatch(actions.setHomepageSettings(settings)),
+    setCart: (cart) => dispatch(actions.setCart(cart)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);

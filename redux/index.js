@@ -16,7 +16,9 @@ const types = {
   SET_DELI_CATEGORIES: 'SET_DELI_CATEGORIES',
   SET_RESTAURANT_CATEGORIES: 'SET_RESTAURANT_CATEGORIES',
   SET_HOMEPAGE_SETTINGS: 'SET_HOMEPAGE_SETTINGS',
-  SET_SEARCH: 'SET_SEARCH'
+  SET_SEARCH: 'SET_SEARCH',
+  SET_CART: 'SET_CART',
+  SET_ORDER_DETAILS: 'SET_ORDER_DETAILS'
 };
 
 export const actions = {
@@ -58,6 +60,12 @@ export const actions = {
   },
   setSearch(search){
     return { type: types.SET_SEARCH, search };
+  },
+  setCart(cart){
+    return { type: types.SET_CART, cart };
+  },
+  setOrderDetails(details){
+    return { type: types.SET_ORDER_DETAILS, details };
   }
 };
 
@@ -72,7 +80,9 @@ const initialState = {
   restaurant: null,
   deliStore: null,
   homepage: null,
-  search: null
+  search: null,
+  cart: null,
+  orderDetails: null
 };
 
 storeData = async (key, value) => {
@@ -91,6 +101,7 @@ const reducer = (state = initialState, action) => {
   const {location} = action;
   const {stores} = action;
   const { filter, categories, settings, search } = action;
+  const { cart, details } = action;
 
   switch (type) {
     case types.LOGOUT:
@@ -213,6 +224,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         search
+      }
+    case types.SET_CART:
+      return {
+        ...state,
+        cart
+      }
+    case types.SET_ORDER_DETAILS:
+      return {
+        ...state,
+        orderDetails: details
       }
     default:
       return {...state, nav: state.nav};

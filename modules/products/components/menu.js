@@ -18,18 +18,27 @@ import NumericInput from 'react-native-numeric-input';
 import Modal from 'react-native-modal';
 import {connect} from 'react-redux';
 class Menu extends Component {
-  state = {
-    restaurant: null,
-    deli: null,
-    visibleModal: false,
-    itemName: null,
-    itemPrice: null,
-    itemDescription: null,
-    itemImage: null,
-    itemID: null,
-    qty: 0,
-    products: null
-  };
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      restaurant: null,
+      deli: null,
+      visibleModal: false,
+      itemName: null,
+      itemPrice: null,
+      itemDescription: null,
+      itemImage: null,
+      itemID: null,
+      qty: 0,
+      products: null,
+      productInCart: null
+    };
+  }
+
+  componentDidMount() {
+    this.retrieveCart()
+  }
 
   retrieveProducts = () => {
     const { filter, search, location } = this.props.state;
@@ -40,7 +49,6 @@ class Menu extends Component {
       console.log('retrieve not search')
       Api.getRequest(Routes.productsRetrieve + '?categoryid=' + filter.id, (response) => {
           this.setState({products: response.products});
-          this.isLoading(false);
         }, (error) => {
           console.log(error);
         },
@@ -48,15 +56,26 @@ class Menu extends Component {
     }else{
       let parameters = '?Keyword=' + search + '&StoreId=' + location.id + '&CategoryIds=' + filter.id;
       Api.getRequest(Routes.productSearch + parameters, (response) => {
-          console.log(response.products)
           this.setState({products: response.products});
-          this.isLoading(false);
         }, (error) => {
           console.log(error);
         },
       );
     }
-    
+  }
+
+  retrieveCart = () => {
+    const { user } = this.props.state;
+    if(user == null){
+      return
+    }
+    Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
+        const { setCart } = this.props;
+        setCart(response.shopping_carts)
+        this.retrieveProducts()
+      }, (error) => {
+        console.log(error);
+    });
   }
 
   retrieveRestaurant = () => {
@@ -73,6 +92,7 @@ class Menu extends Component {
       },
     );
   };
+
   retrieveDeli = () => {
     this.props.load(true);
     const { location } = this.props.state;
@@ -87,9 +107,7 @@ class Menu extends Component {
       },
     );
   };
-  componentDidMount() {
-    this.retrieveProducts()
-  }
+
 
   setSelectedFilter(item, category){
     const{ setFilter } = this.props;
@@ -100,15 +118,32 @@ class Menu extends Component {
   }
 
   selectItem(item) {
-    this.setState({
-      visibleModal: true,
-      itemID: item.id,
-      itemName: item.name,
-      itemPrice: item.price,
-      itemImage: item.images[0].src,
-      itemDescription: item.full_description,
-      qty: 1,
-    });
+    const { cart } = this.props.state;
+    let selectedCartItem = null
+    if(cart !== null){
+      for (var i = 0; i < cart.length; i++) {
+        let cartItem = cart[i]
+        if(parseInt(cartItem.product_id) == parseInt(item.id)){
+          selectedCartItem = cartItem
+          this.setState({
+            productInCart: cartItem
+          })
+          break
+        }
+      }
+    }
+    const { productInCart } = this.state;
+    setTimeout(() => {
+      this.setState({
+        visibleModal: true,
+        itemID: item.id,
+        itemName: item.name,
+        itemPrice: item.price,
+        itemImage: item.images[0].src,
+        itemDescription: item.full_description,
+        qty: selectedCartItem ? selectedCartItem.quantity : 1
+      });
+    }, 1000)
   }
 
   alertMethod(title, message){
@@ -118,6 +153,7 @@ class Menu extends Component {
       [
         { text: "OK", onPress: () => {
           this.setState({visibleModal: false});
+          this.retrieveCart()
         }},
       ],
       { cancelable: false }
@@ -126,32 +162,22 @@ class Menu extends Component {
 
   addToCart() {
     const { user, location } = this.props.state;
-    const { itemID } = this.state;
-    console.log('user', user)
+    const { itemID, productInCart } = this.state;
     if(user == null || location == null || itemID == null){
       return
     }
-    // let parameters = {
-    //     CustomerId: user.id,
-    //     StoreId: location.id,
-    //     ProductId: itemID,
-    //     Quantity: this.state.qty,
-    //     CartType: 1
-    // }
-    // console.log('parameters', parameters)
     let parameters = '?CustomerId=' + user.id + '&StoreId=' + location.id + '&ProductId=' + itemID + '&Quantity=' + this.state.qty + '&CartType=1';
-    Api.postRequest(Routes.shoppingCartItemsAddToCart + parameters, {}, (response) => {
+    Api.postRequest((productInCart ? Routes.shoppingCartItemsUpdateCart : Routes.shoppingCartItemsAddToCart) + parameters, {}, (response) => {
         this.alertMethod('Success Added!', 'Test')
-        console.log('response add to cart', response)
       }, (error) => {
         console.log(error);
       }
     );
   }
+  
   render() {
     const { restaurant, deliStore, filter, homepage } = this.props.state;
     const { products } = this.state;
-    console.log('products', products)
     return (
       <View style={{flex: 1}}>
         <View
@@ -331,6 +357,7 @@ const mapDispatchToProps = (dispatch) => {
   const {actions} = require('@redux');
   return {
     setFilter: (filter) => dispatch(actions.setFilter(filter)),
+    setCart: (cart) => dispatch(actions.setCart(cart)),
   };
 };
 

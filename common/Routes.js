@@ -117,6 +117,7 @@ export default {
   // ShoppingCartItems
   shoppingCartItemsRetrieve: apiUrl + 'shopping_cart_items',
   shoppingCartItemsAdd: apiUrl + 'shopping_cart_items',
+  shoppingCartItemsAddToCart: apiUrl + 'add_to_shopping_cart',
   shoppingCartItemsRetrieveByCustomer: customerId =>
     'shopping_cart_items/' + customerId,
   shoppingCartItemsUpdate: id => apiUrl + 'shopping_cart_items/' + id,

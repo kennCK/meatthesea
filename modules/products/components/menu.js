@@ -5,6 +5,7 @@ import {
   Text,
   ScrollView,
   Image,
+  Alert,
   TouchableHighlight,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -109,8 +110,40 @@ class Menu extends Component {
       qty: 1,
     });
   }
+
+  alertMethod(title, message){
+    Alert.alert(
+      title,
+      message,
+      [
+        { text: "OK", onPress: () => {
+          this.setState({visibleModal: false});
+        }},
+      ],
+      { cancelable: false }
+    );
+  }
+
   addToCart() {
-    console.log(this.state.itemID);
+    const { user, location } = this.props.state;
+    const { itemID } = this.state;
+    console.log('user', user)
+    if(user == null || location == null || itemID == null){
+      return
+    }
+    let parameters = {
+        CustomerId: user.id,
+        StoreId: location.id,
+        ProductId: itemID,
+        Quantity: this.state.qty,
+        CartType: 0
+    }
+    Api.postRequest(Routes.shoppingCartItemsAddToCart, parameters, (response) => {
+        this.alertMethod('Success Added!', 'Test')
+      }, (error) => {
+        console.log(error);
+      },
+    );
   }
   render() {
     const { restaurant, deliStore, filter, homepage } = this.props.state;
@@ -268,7 +301,7 @@ class Menu extends Component {
               style={[BasicStyles.btn, {marginTop: 15}]}
               underlayColor={Color.gray}
               onPress={() => {
-                if (this.props.user == null) {
+                if (this.props.state.user == null) {
                   this.props.router.push('loginStack');
                   this.setState({visibleModal: false});
                 } else {

@@ -233,7 +233,7 @@ class Welcome extends Component {
           </View>
           {this.state.selectedMenu == null && (
             <Products
-              state={this.state.menu}
+              active={this.state.menu}
               click={(index) => this.changeMenu(index)}
               choose={(data, type) => this.changeSelectedMenu(data, type)}
               load={(data) => this.isLoading(data)}
@@ -326,7 +326,7 @@ class Welcome extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  state,
+  state: state
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -336,4 +336,3 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);
-// export default Welcome;

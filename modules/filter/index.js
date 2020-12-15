@@ -15,17 +15,17 @@ class Filter extends Component {
       isLoading: false
     }
   }
-  retrieveRestaurant = () => {
+  retrieveRestaurant = (storeId) => {
     this.setState({isLoading: true})
-    Api.getRequest(Routes.restaurantCategoriesRetrieve + "?storeId=" + 1, response => {
+    Api.getRequest(Routes.restaurantCategoriesRetrieve + "?storeId=" + storeId, response => {
       this.setState({restaurant: response.categories, isLoading: false})
     }, error => {
       console.log(error);
     });
   }
-  retrieveDeli = () => {
+  retrieveDeli = (storeId) => {
     this.setState({isLoading: true})
-    Api.getRequest(Routes.deliCategoriesRetrieve + "?storeId=" + 1, response => {
+    Api.getRequest(Routes.deliCategoriesRetrieve + "?storeId=" + storeId, response => {
       this.setState({deli: response.categories, isLoading: false})
     }, error => {
       console.log(error);
@@ -38,15 +38,14 @@ class Filter extends Component {
       this.props.navigation.navigate('homepageStack')
       return
     }
-    this.retrieveRestaurant()
-    this.retrieveDeli()
-    console.log('store', this.props.state.location.store_id)
+    this.retrieveRestaurant(location.id)
+    this.retrieveDeli(location.id)
+    console.log('store', this.props.state.location.id)
   }
 
-  setSelectedFilter(name){
+  setSelectedFilter(item, category){
     const{ setFilter } = this.props;
-    setFilter({
-      name: name,
+    setFilter({...item,
       category: category
     })
     this.props.navigation.navigate('homepageStack')
@@ -61,29 +60,29 @@ class Filter extends Component {
           </View>
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20, paddingTop: 0}]}>
           { this.state.restaurant != null &&
-                this.state.restaurant.map((data, idx) => {
-                  return
-                  <TouchableOpacity
-                    style={[{ marginTop: 15 }]}
-                    key={idx}
-                    onPress={() => this.setSelectedFilter(data.name, 'restaurant')}>
-                  <Text>{data.name}</Text>
-                </TouchableOpacity>
-                })
-              }
+            this.state.restaurant.map((item, idx) => {
+              return (<TouchableOpacity
+                style={[{ marginTop: 15 }]}
+                key={idx}
+                onPress={() => this.setSelectedFilter(item, 'restaurant')}
+                >
+                <Text>{item.name}</Text>
+              </TouchableOpacity>)
+            })
+          }
           </View>
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20}]}>
-            <Text style={[BasicStyles.headerTitleStyle, {fontSize:20}]}>Meals from our kitchen</Text>
+            <Text style={[BasicStyles.headerTitleStyle, {fontSize:20}]}>Grocery Items</Text>
           </View>
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20, paddingTop: 0}]}>
           { this.state.deli != null &&
-                this.state.deli.map((data, idx) => {
-                  return
-                  <TouchableOpacity
+                this.state.deli.map((item, idx) => {
+                  return <TouchableOpacity
                     style={[{ marginTop: 15 }]}
                     key={idx}
-                    onPress={() => this.setSelectedFilter(data.name, 'deli')}>
-                    <Text>{data.name}</Text>
+                    onPress={() => this.setSelectedFilter(item, 'deli')}
+                    >
+                    <Text>{item.name}</Text>
                   </TouchableOpacity>
                 })
               }

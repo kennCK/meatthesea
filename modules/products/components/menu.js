@@ -15,6 +15,7 @@ import Api from 'services/apiv2/index.js';
 import {Routes} from 'common';
 import NumericInput from 'react-native-numeric-input';
 import Modal from 'react-native-modal';
+import {connect} from 'react-redux';
 class Menu extends Component {
   state = {
     restaurant: null,
@@ -30,8 +31,9 @@ class Menu extends Component {
 
   retrieveRestaurant = () => {
     this.props.load(true);
+    const { location } = this.props.state;
     Api.getRequest(
-      Routes.restaurantCategoriesRetrieve + '?storeId=' + 1,
+      Routes.restaurantCategoriesRetrieve + '?storeId=' + location.id,
       (response) => {
         this.setState({restaurant: response.categories});
         this.props.load(false);
@@ -43,8 +45,9 @@ class Menu extends Component {
   };
   retrieveDeli = () => {
     this.props.load(true);
+    const { location } = this.props.state;
     Api.getRequest(
-      Routes.deliCategoriesRetrieve + '?storeId=' + 1,
+      Routes.deliCategoriesRetrieve + '?storeId=' + location.id,
       (response) => {
         this.setState({deli: response.categories});
         this.props.load(false);
@@ -251,4 +254,13 @@ class Menu extends Component {
     );
   }
 }
-export default Menu;
+
+const mapStateToProps = (state) => ({state: state});
+
+const mapDispatchToProps = (dispatch) => {
+  const {actions} = require('@redux');
+  return {
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

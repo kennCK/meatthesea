@@ -96,6 +96,7 @@ export default {
   productsRetrieve: apiUrl + 'products',
   productsAdd: apiUrl + 'products',
   productsCount: apiUrl + 'products/count',
+  productSearch: apiUrl + 'product_search',
   productsRetrieveById: id => apiUrl + 'products/' + id,
   productsUpdateById: id => apiUrl + 'products/' + id,
   productsDeleteById: id => apiUrl + 'products/' + id,

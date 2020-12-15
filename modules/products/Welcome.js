@@ -48,8 +48,7 @@ class Welcome extends Component {
       menu: 0,
       isLoading: false,
       products: null,
-      token: true,
-      search: null
+      token: true
     };
   }
   
@@ -100,7 +99,7 @@ class Welcome extends Component {
     }
   }
   render() {
-    const { homepage } = this.props.state;
+    const { homepage, search } = this.props.state;
     console.log('homepage', homepage)
     return (
       <View style={Style.MainContainer}>
@@ -204,8 +203,23 @@ class Welcome extends Component {
               <TextInput
                 style={[{height: 37, flex: 7, width: '100%'}]}
                 placeholder={'Search'}
-                onChangeText={(search) => this.setState({search})}
-                value={this.state.search}
+                onChangeText={(search) => {
+                    this.setState({search})
+                    const { setSearch, setHomepageSettings } = this.props;
+                    if(search.length > 3){
+                      setSearch(search)
+                      setHomepageSettings({
+                        type: 1,
+                        selectedMenu: 1
+                      })
+                    }else{
+                      setSearch(null)
+                      setHomepageSettings(null)
+                    }
+                    
+                  }
+                }
+                value={search}
               />
               <TouchableOpacity
                 style={[
@@ -336,6 +350,7 @@ const mapDispatchToProps = (dispatch) => {
   const {actions} = require('@redux');
   return {
     setStores: (stores) => dispatch(actions.setStores(stores)),
+    setSearch: (search) => dispatch(actions.setSearch(search)),
     setHomepageSettings: (settings) => dispatch(actions.setHomepageSettings(settings)),
   };
 };

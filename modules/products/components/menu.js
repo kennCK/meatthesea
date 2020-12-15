@@ -31,20 +31,31 @@ class Menu extends Component {
   };
 
   retrieveProducts = () => {
-    const { filter } = this.props.state;
+    const { filter, search, location } = this.props.state;
     if(filter == null){
       return
     }
-    Api.getRequest(
-      Routes.productsRetrieve + '?categoryid=' + filter.id,
-      (response) => {
-        this.setState({products: response.products});
-        this.isLoading(false);
-      },
-      (error) => {
-        console.log(error);
-      },
-    );
+    if(search == null || search == '' || location == null){
+      console.log('retrieve not search')
+      Api.getRequest(Routes.productsRetrieve + '?categoryid=' + filter.id, (response) => {
+          this.setState({products: response.products});
+          this.isLoading(false);
+        }, (error) => {
+          console.log(error);
+        },
+      );  
+    }else{
+      let parameters = '?Keyword=' + search + '&StoreId=' + location.id + '&CategoryIds=' + filter.id;
+      Api.getRequest(Routes.productSearch + parameters, (response) => {
+          console.log(response.products)
+          this.setState({products: response.products});
+          this.isLoading(false);
+        }, (error) => {
+          console.log(error);
+        },
+      );
+    }
+    
   }
 
   retrieveRestaurant = () => {
@@ -104,6 +115,7 @@ class Menu extends Component {
   render() {
     const { restaurant, deliStore, filter, homepage } = this.props.state;
     const { products } = this.state;
+    console.log('products', products)
     return (
       <View style={{flex: 1}}>
         <View

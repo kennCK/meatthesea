@@ -131,18 +131,21 @@ class Menu extends Component {
     if(user == null || location == null || itemID == null){
       return
     }
-    let parameters = {
-        CustomerId: user.id,
-        StoreId: location.id,
-        ProductId: itemID,
-        Quantity: this.state.qty,
-        CartType: 0
-    }
-    Api.postRequest(Routes.shoppingCartItemsAddToCart, parameters, (response) => {
+    // let parameters = {
+    //     CustomerId: user.id,
+    //     StoreId: location.id,
+    //     ProductId: itemID,
+    //     Quantity: this.state.qty,
+    //     CartType: 1
+    // }
+    // console.log('parameters', parameters)
+    let parameters = '?CustomerId=' + user.id + '&StoreId=' + location.id + '&ProductId=' + itemID + '&Quantity=' + this.state.qty + '&CartType=1';
+    Api.postRequest(Routes.shoppingCartItemsAddToCart + parameters, {}, (response) => {
         this.alertMethod('Success Added!', 'Test')
+        console.log('response add to cart', response)
       }, (error) => {
         console.log(error);
-      },
+      }
     );
   }
   render() {

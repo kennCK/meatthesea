@@ -22,6 +22,9 @@ class Products extends Component {
   retrieveRestaurant = () => {
     const { location } = this.props.state;
     const { setRestaurantCategories } = this.props;
+    if(location == null){
+      return
+    }
     this.props.load(true);
     Api.getRequest(
       Routes.restaurantCategoriesRetrieve + '?storeId=' + location.id,
@@ -37,6 +40,9 @@ class Products extends Component {
   retrieveDeli = () => {
     const { location } = this.props.state;
     const { setDeliCategories } = this.props;
+    if(location == null){
+      return
+    }
     this.props.load(true);
     Api.getRequest(
       Routes.deliCategoriesRetrieve + '?storeId=' + location.id,

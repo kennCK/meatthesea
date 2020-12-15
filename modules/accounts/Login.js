@@ -32,6 +32,10 @@ class Login extends Component {
     };
   }
 
+  componentDidMount(){
+    this.getData()
+  }
+
   test = () => {
     if (config.TEST == true) {
       this.props.navigation.navigate('homepageStack');

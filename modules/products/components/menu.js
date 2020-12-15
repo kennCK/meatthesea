@@ -78,6 +78,15 @@ class Menu extends Component {
   componentDidMount() {
     this.retrieveProducts()
   }
+
+  setSelectedFilter(item, category){
+    const{ setFilter } = this.props;
+    setFilter({...item,
+      category: category
+    })
+    this.retrieveProducts()
+  }
+
   selectItem(item) {
     this.setState({
       visibleModal: true,
@@ -93,7 +102,7 @@ class Menu extends Component {
     console.log(this.state.itemID);
   }
   render() {
-    const { restaurant, deliStore } = this.props.state;
+    const { restaurant, deliStore, filter } = this.props.state;
     const { products } = this.state;
     return (
       <View style={{flex: 1}}>
@@ -130,14 +139,13 @@ class Menu extends Component {
                 return (
                   <TouchableOpacity
                     style={Style.menuButton}
-                    onPress={() => this.props.press(data.id, this.props.type)}
+                    onPress={() => this.setSelectedFilter(data, 'restaurant')}
                     key={idx}>
                     <Text
-                      style={
-                        this.props.menu == data.id
-                          ? {color: Color.primary}
-                          : {color: Color.black}
-                      }>
+                      style={{
+                        color: filter && filter.id == data.id ? Color.primary : Color.black,
+                        fontWeight: filter && filter.id == data.id ? 'bold' : 'normal'
+                      }}>
                       {data.name}
                     </Text>
                   </TouchableOpacity>
@@ -148,14 +156,13 @@ class Menu extends Component {
                 return (
                   <TouchableOpacity
                     style={Style.menuButton}
-                    onPress={() => this.props.press(data.id, this.props.type)}
+                    onPress={() => this.setSelectedFilter(data, 'deli')}
                     key={idx}>
                     <Text
-                      style={
-                        this.props.menu == data.id
-                          ? {color: Color.primary}
-                          : {color: Color.black}
-                      }>
+                      style={{
+                        color: filter && filter.id == data.id ? Color.primary : Color.black,
+                        fontWeight: filter && filter.id == data.id ? 'bold' : 'normal'
+                      }}>
                       {data.name}
                     </Text>
                   </TouchableOpacity>
@@ -275,6 +282,7 @@ const mapStateToProps = (state) => ({state: state});
 const mapDispatchToProps = (dispatch) => {
   const {actions} = require('@redux');
   return {
+    setFilter: (filter) => dispatch(actions.setFilter(filter)),
   };
 };
 

@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import Data from 'services/Data';
-import { Helper, Color } from 'common';
+import {Helper, Color} from 'common';
 
 const types = {
   LOGOUT: 'LOGOUT',
@@ -11,29 +11,33 @@ const types = {
   SET_THEME: 'SET_THEME',
   nav: null,
   SET_LOCATION: 'SET_LOCATION',
+  SET_STORES: 'SET_STORES',
 };
 
 export const actions = {
-  login: (user, token) => {
-    return { type: types.LOGIN, user, token };
+  login: (email, password, user, token) => {
+    return {type: types.LOGIN, user, token, email, password};
   },
   logout() {
-    return { type: types.LOGOUT };
+    return {type: types.LOGOUT};
   },
-  updateUser: user => {
-    return { type: types.UPDATE_USER, user };
+  updateUser: (user) => {
+    return {type: types.UPDATE_USER, user};
   },
   setNotifications(unread, notifications) {
-    return { type: types.SET_NOTIFICATIONS, unread, notifications };
+    return {type: types.SET_NOTIFICATIONS, unread, notifications};
   },
   updateNotifications(unread, notification) {
-    return { type: types.UPDATE_NOTIFICATIONS, unread, notification };
+    return {type: types.UPDATE_NOTIFICATIONS, unread, notification};
   },
   setTheme(theme) {
-    return { type: types.SET_THEME, theme };
+    return {type: types.SET_THEME, theme};
   },
   setLocation(location) {
-    return { type: types.SET_LOCATION, location };
+    return {type: types.SET_LOCATION, location};
+  },
+  setStores(stores) {
+    return {type: types.SET_STORES, stores};
   },
 };
 
@@ -43,6 +47,7 @@ const initialState = {
   notifications: null,
   theme: null,
   location: null,
+  stores: [],
 };
 
 storeData = async (key, value) => {
@@ -54,22 +59,26 @@ storeData = async (key, value) => {
 };
 
 const reducer = (state = initialState, action) => {
-  const { type, user, token } = action;
-  const { unread } = action;
-  const { notification } = action;
-  const { theme } = action;
-  const { location } = action;
+  const {type, user, token, email, password} = action;
+  const {unread} = action;
+  const {notification} = action;
+  const {theme} = action;
+  const {location} = action;
+  const {stores} = action;
 
   switch (type) {
     case types.LOGOUT:
       AsyncStorage.clear();
       return Object.assign({}, initialState);
     case types.LOGIN:
-      let { access_token, expires_in } = token;
+      let {access_token, expires_in} = token;
       storeData('token', access_token);
       storeData('token_expiration', expires_in.toString());
+      storeData('email', email);
+      storeData('password', password);
+      console.log('token', token)
       Data.setToken(token);
-      return { ...state, user, token };
+      return {...state, user, token};
     case types.UPDATE_USER:
       return {
         ...state,
@@ -140,13 +149,19 @@ const reducer = (state = initialState, action) => {
         theme,
       };
     case types.SET_LOCATION:
-      console.log('LOCATION', location);
+      console.log('location', location)
+      storeData('store', location.id);
       return {
         ...state,
         location,
       };
+    case types.SET_STORES:
+      return {
+        ...state,
+        stores,
+      };
     default:
-      return { ...state, nav: state.nav };
+      return {...state, nav: state.nav};
   }
 };
 export default reducer;

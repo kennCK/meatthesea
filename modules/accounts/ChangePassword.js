@@ -36,7 +36,7 @@ class Login extends Component {
             if (_expiry < new Date().getTime() / 1000) {
                 this.props.logout();
             } else {
-                this.props.navigation.push('homepageStack');
+                this.props.navigation.navigate('homepageStack');
             }
         }
 
@@ -55,7 +55,7 @@ class Login extends Component {
     }
 
     redirect = (route) => {
-        this.props.navigation.push(route);
+        this.props.navigation.navigate(route);
     }
     submit() {
         const { confirmPassword, newPassword, currentPassword } = this.state

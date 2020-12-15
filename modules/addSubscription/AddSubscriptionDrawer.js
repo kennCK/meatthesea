@@ -5,14 +5,14 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import {Color, BasicStyles} from 'common';
 import {connect} from 'react-redux';
-import AddAddress from 'modules/addAddress';
+import AddSubscription from 'modules/addSubscription';
 
 class HeaderOptions extends Component {
   constructor(props) {
     super(props);
   }
   back = () => {
-    this.props.navigationProps.navigate('drawerStack');
+    this.props.navigationProps.pop();
   };
   render() {
     return (
@@ -39,11 +39,11 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const AddAddressStack = createStackNavigator({
-  addAddressScreen: {
-    screen: AddAddress,
+const AddSubscriptionStack = createStackNavigator({
+  addSubscriptionScreen: {
+    screen: AddSubscription,
     navigationOptions: ({navigation}) => ({
-      title: 'ADD ADDRESS',
+      title: 'ADD SUBSCRIPTION',
       headerLeft: <HeaderOptions navigationProps={navigation} />,
 
       headerTintColor: BasicStyles.headerTintColor,
@@ -63,4 +63,4 @@ const styles = StyleSheet.create({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(AddAddressStack);
+)(AddSubscriptionStack);

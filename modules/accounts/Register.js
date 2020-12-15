@@ -70,7 +70,7 @@ class Register extends Component {
   }
 
   redirect = (route) => {
-    this.props.navigation.push(route);
+    this.props.navigation.navigate(route);
   }
 
   submit() {

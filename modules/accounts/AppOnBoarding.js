@@ -71,7 +71,7 @@ class AppOnBoarding extends Component {
       const locationId = await AsyncStorage.getItem(Helper.APP_NAME + 'location');
       if (token != null) {
         this.setState({ email, password, locationId});
-        setInterval(() => {
+        setTimeout(() => {
             this.directLogin()
         }, 1000)
       }
@@ -86,9 +86,12 @@ class AppOnBoarding extends Component {
 
   submit(){
     // const { location } = this.state;
+    const { login } = this.props;
     if (this.validate() == false) {
       return;
     }
+    console.log('test2')
+    login(null, null, null, null)
     this.redirect("homepageStack")
   }
 
@@ -97,6 +100,7 @@ class AppOnBoarding extends Component {
     if (this.validate() == false) {
       return;
     }
+    console.log('test3')
     const { email, password } = this.state;
     const { login } = this.props;
     if ((email != null && email != '') && (password != null && password != '')) {

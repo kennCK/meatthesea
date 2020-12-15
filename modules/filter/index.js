@@ -4,6 +4,7 @@ import { BasicStyles, Color } from 'common';
 import Api from 'services/apiv2/index.js';
 import { Routes } from 'common';
 import { Spinner } from 'components';
+import { connect } from 'react-redux';
 
 class Filter extends Component {
   constructor(props) {
@@ -30,10 +31,27 @@ class Filter extends Component {
       console.log(error);
     });
   }
+  
   componentDidMount(){
+    const { location } = this.props.state;
+    if(location === null){
+      this.props.navigation.navigate('homepageStack')
+      return
+    }
     this.retrieveRestaurant()
     this.retrieveDeli()
+    console.log('store', this.props.state.location.store_id)
   }
+
+  setSelectedFilter(name){
+    const{ setFilter } = this.props;
+    setFilter({
+      name: name,
+      category: category
+    })
+    this.props.navigation.navigate('homepageStack')
+  }
+
   render() {
     return (
       <View>
@@ -44,7 +62,11 @@ class Filter extends Component {
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20, paddingTop: 0}]}>
           { this.state.restaurant != null &&
                 this.state.restaurant.map((data, idx) => {
-                  return <TouchableOpacity style={[{ marginTop: 15 }]} key={idx}>
+                  return
+                  <TouchableOpacity
+                    style={[{ marginTop: 15 }]}
+                    key={idx}
+                    onPress={() => this.setSelectedFilter(data.name, 'restaurant')}>
                   <Text>{data.name}</Text>
                 </TouchableOpacity>
                 })
@@ -56,9 +78,13 @@ class Filter extends Component {
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20, paddingTop: 0}]}>
           { this.state.deli != null &&
                 this.state.deli.map((data, idx) => {
-                  return <TouchableOpacity style={[{ marginTop: 15 }]} key={idx}>
-                  <Text>{data.name}</Text>
-                </TouchableOpacity>
+                  return
+                  <TouchableOpacity
+                    style={[{ marginTop: 15 }]}
+                    key={idx}
+                    onPress={() => this.setSelectedFilter(data.name, 'deli')}>
+                    <Text>{data.name}</Text>
+                  </TouchableOpacity>
                 })
               }
           </View>
@@ -69,4 +95,16 @@ class Filter extends Component {
   }
 }
 
-export default Filter;
+const mapStateToProps = state => ({ state: state });
+
+const mapDispatchToProps = dispatch => {
+  const { actions } = require('@redux');
+  return {
+    setFilter: (filter) => dispatch(actions.setFilter(filter)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Filter);

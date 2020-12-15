@@ -12,6 +12,7 @@ const types = {
   nav: null,
   SET_LOCATION: 'SET_LOCATION',
   SET_STORES: 'SET_STORES',
+  SET_FILTER: 'SET_FILTER'
 };
 
 export const actions = {
@@ -39,6 +40,9 @@ export const actions = {
   setStores(stores) {
     return {type: types.SET_STORES, stores};
   },
+  setFilter(filter) {
+    return {type: types.SET_FILTER, filter};
+  },
 };
 
 const initialState = {
@@ -48,6 +52,7 @@ const initialState = {
   theme: null,
   location: null,
   stores: [],
+  filter: null
 };
 
 storeData = async (key, value) => {
@@ -65,6 +70,7 @@ const reducer = (state = initialState, action) => {
   const {theme} = action;
   const {location} = action;
   const {stores} = action;
+  const { filter } = action;
 
   switch (type) {
     case types.LOGOUT:
@@ -160,6 +166,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         stores,
       };
+    case types.SET_FILTER:
+      return {
+        ...state,
+        filter
+      }
     default:
       return {...state, nav: state.nav};
   }

@@ -54,16 +54,7 @@ class Welcome extends Component {
       isGuest: true,
     };
   }
-  getData = async () => {
-    try {
-      const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
-      if (token != null) {
-        this.setState({token});
-      }
-    } catch (e) {
-      // error reading value
-    }
-  };
+  
   isLoading(data) {
     this.setState({isLoading: data});
   }
@@ -99,9 +90,10 @@ class Welcome extends Component {
     this.setState({deliveryModal: this.state.deliveryModal ? false : true});
   }
   changeMenu(index) {
+    console.log('hi')
     this.setState({visibleModal: false});
     if (index == 2) {
-      this.props.navigation.push('appOnBoardingStack');
+      // this.props.navigation.navigate('appOnBoardingStack');
     } else {
       this.setState({menu: index});
     }
@@ -258,7 +250,7 @@ class Welcome extends Component {
               load={(data) => this.isLoading(data)}
             />
           )}
-          {this.props.state.user !== null && (
+          {(
             <View
               style={{
                 height: 50,

@@ -53,6 +53,14 @@ class Products extends Component {
     this.retrieveRestaurant();
     this.retrieveDeli();
   }
+
+  setSelectedFilter(item, category){
+    const{ setFilter } = this.props;
+    setFilter({...item,
+      category: category
+    })
+  }
+
   render() {
     let menu = [
       {
@@ -81,7 +89,10 @@ class Products extends Component {
                   restaurant.map((data, idx) => {
                     return (
                       <TouchableOpacity
-                        onPress={() => this.props.choose(data.id, 0)}
+                        onPress={() => {
+                          this.props.choose(data.id, 0)
+                          this.setSelectedFilter(data, 'restaurant')
+                        }}
                         key={idx}>
                         <ProductItem
                           name={data.name}
@@ -105,7 +116,10 @@ class Products extends Component {
                   deliStore.map((data, idx) => {
                     return (
                       <TouchableOpacity
-                        onPress={() => this.props.choose(data.id, 1)}
+                        onPress={() => {
+                          this.props.choose(data.id, 1)
+                          this.setSelectedFilter(data, 'deli')
+                        }}
                         key={idx}>
                         <ProductItem
                           name={data.name}
@@ -130,6 +144,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setDeliCategories: (categories) => dispatch(actions.setDeliCategories(categories)),
     setRestaurantCategories: (categories) => dispatch(actions.setRestaurantCategories(categories)),
+    setFilter: (filter) => dispatch(actions.setFilter(filter)),
   };
 };
 

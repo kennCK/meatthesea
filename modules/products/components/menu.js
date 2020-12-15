@@ -102,7 +102,7 @@ class Menu extends Component {
     console.log(this.state.itemID);
   }
   render() {
-    const { restaurant, deliStore, filter } = this.props.state;
+    const { restaurant, deliStore, filter, homepage } = this.props.state;
     const { products } = this.state;
     return (
       <View style={{flex: 1}}>
@@ -125,10 +125,10 @@ class Menu extends Component {
               style={[{paddingLeft: 20, paddingRight: 20}]}
             />
           </TouchableOpacity>
-          {this.props.type == 0 && (
+          {homepage && homepage.type == 0 && (
             <Text style={{fontWeight: 'bold'}}>RESTAURANT MENU</Text>
           )}
-          {this.props.type == 1 && (
+          {homepage && homepage.type == 1 && (
             <Text style={{fontWeight: 'bold'}}>DELI-STORE MENU</Text>
           )}
         </View>

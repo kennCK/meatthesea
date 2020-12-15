@@ -46,11 +46,10 @@ class Welcome extends Component {
       ],
       deliveryModal: false,
       menu: 0,
-      selectedMenu: null,
       isLoading: false,
-      type: null,
       products: null,
-      token: true
+      token: true,
+      search: null
     };
   }
   
@@ -59,14 +58,14 @@ class Welcome extends Component {
   }
   componentDidMount() {
     const { filter } = this.props.state;
-    console.log('filter', filter)
+    const { setHomepageSettings } = this.props;
     if(filter){
-      this.setState({
+      setHomepageSettings({
         type: filter.category == 'restaurant' ? 0 : 1,
         selectedMenu: filter.category == 'restaurant' ? 0 : 1
       })
     }else{
-      this.setState({
+      setHomepageSettings({
         type: null,
         selectedMenu: null
       })
@@ -78,7 +77,11 @@ class Welcome extends Component {
     } else {
       this.isLoading(true);
     }
-    this.setState({selectedMenu: data, type: type});
+    const { setHomepageSettings } = this.props;
+    setHomepageSettings({
+      type: type,
+      selectedMenu: data
+    })
   }
   redirect(index) {
     let route = this.state.redirects[index];
@@ -97,6 +100,8 @@ class Welcome extends Component {
     }
   }
   render() {
+    const { homepage } = this.props.state;
+    console.log('homepage', homepage)
     return (
       <View style={Style.MainContainer}>
         <Modal
@@ -199,6 +204,8 @@ class Welcome extends Component {
               <TextInput
                 style={[{height: 37, flex: 7, width: '100%'}]}
                 placeholder={'Search'}
+                onChangeText={(search) => this.setState({search})}
+                value={this.state.search}
               />
               <TouchableOpacity
                 style={[
@@ -229,7 +236,7 @@ class Welcome extends Component {
               </TouchableOpacity>
             }
           </View>
-          {this.state.selectedMenu == null && (
+          {(homepage == null || (homepage && homepage.selectedMenu == null)) && (
             <Products
               active={this.state.menu}
               click={(index) => this.changeMenu(index)}
@@ -237,10 +244,10 @@ class Welcome extends Component {
               load={(data) => this.isLoading(data)}
             />
           )}
-          {this.state.selectedMenu != null && (
+          {(homepage && homepage.selectedMenu != null) && (
             <Menu
               router={this.props.navigation}
-              menu={this.state.selectedMenu}
+              menu={homepage.selectedMenu}
               type={this.state.type}
               press={(data, type) => this.changeSelectedMenu(data, type)}
               load={(data) => this.isLoading(data)}
@@ -329,6 +336,7 @@ const mapDispatchToProps = (dispatch) => {
   const {actions} = require('@redux');
   return {
     setStores: (stores) => dispatch(actions.setStores(stores)),
+    setHomepageSettings: (settings) => dispatch(actions.setHomepageSettings(settings)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);

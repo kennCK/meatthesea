@@ -5,6 +5,7 @@ import Api from 'services/apiv2/index.js';
 import { Routes } from 'common';
 import { Spinner } from 'components';
 import { connect } from 'react-redux';
+import {NavigationActions, StackActions} from 'react-navigation';
 
 class Filter extends Component {
   constructor(props) {
@@ -51,6 +52,11 @@ class Filter extends Component {
     const{ setFilter } = this.props;
     setFilter({...item,
       category: category
+    })
+    const { setHomepageSettings } = this.props;
+    setHomepageSettings({
+      type: category == 'restaurant' ? 0 : 1,
+      selectedMenu: category == 'restaurant' ? 0 : 1
     })
     this.props.navigation.navigate('homepageStack')
   }
@@ -113,6 +119,7 @@ const mapDispatchToProps = dispatch => {
     setFilter: (filter) => dispatch(actions.setFilter(filter)),
     setDeliCategories: (categories) => dispatch(actions.setDeliCategories(categories)),
     setRestaurantCategories: (categories) => dispatch(actions.setRestaurantCategories(categories)),
+    setHomepageSettings: (settings) => dispatch(actions.setHomepageSettings(settings)),
   };
 };
 

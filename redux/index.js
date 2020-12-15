@@ -14,7 +14,8 @@ const types = {
   SET_STORES: 'SET_STORES',
   SET_FILTER: 'SET_FILTER',
   SET_DELI_CATEGORIES: 'SET_DELI_CATEGORIES',
-  SET_RESTAURANT_CATEGORIES: 'SET_RESTAURANT_CATEGORIES'
+  SET_RESTAURANT_CATEGORIES: 'SET_RESTAURANT_CATEGORIES',
+  SET_HOMEPAGE_SETTINGS: 'SET_HOMEPAGE_SETTINGS',
 };
 
 export const actions = {
@@ -51,6 +52,9 @@ export const actions = {
   setRestaurantCategories(categories) {
     return {type: types.SET_RESTAURANT_CATEGORIES, categories};
   },
+  setHomepageSettings(settings){
+    return { type: types.SET_HOMEPAGE_SETTINGS, settings};
+  }
 };
 
 const initialState = {
@@ -62,7 +66,8 @@ const initialState = {
   stores: [],
   filter: null,
   restaurant: null,
-  deliStore: null
+  deliStore: null,
+  homepage: null
 };
 
 storeData = async (key, value) => {
@@ -80,7 +85,7 @@ const reducer = (state = initialState, action) => {
   const {theme} = action;
   const {location} = action;
   const {stores} = action;
-  const { filter, categories } = action;
+  const { filter, categories, settings } = action;
 
   switch (type) {
     case types.LOGOUT:
@@ -193,6 +198,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         restaurant: categories
+      }
+    case types.SET_HOMEPAGE_SETTINGS:
+      return {
+        ...state,
+        homepage: settings
       }
     default:
       return {...state, nav: state.nav};

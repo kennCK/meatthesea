@@ -50,7 +50,8 @@ class Welcome extends Component {
             isLoading: false,
             type: null,
             products: null,
-            token: true
+            token: true,
+            // user: null
         };
     }
     getData = async () => {
@@ -63,22 +64,26 @@ class Welcome extends Component {
             // error reading value
         }
     }
-    isLoading(data) {
-        this.setState({ isLoading: data });
-    }
+
     componentDidMount() {
+        // this.setState({user: this.props.state.user})
         console.log("user: ", this.props.state)
     }
+    
     changeSelectedMenu(data, type) {
         if (data == null) {
             this.setState({ products: null })
         } else {
-            this.isLoading(true);
+            this.setState({
+                isLoading: data
+            })
             Api.getRequest(
                 Routes.productsRetrieve + '?categoryid=' + data,
                 response => {
                     this.setState({ products: response.products });
-                    this.isLoading(false);
+                    this.setState({
+                        isLoading: data
+                    })
                 },
                 error => {
                     console.log(error);
@@ -92,6 +97,7 @@ class Welcome extends Component {
         if (this.props.state.token == null) {
             route = 'loginStack'
         }
+        console.log('----- T O K E N N U L L ------')
         this.props.navigation.push(route);
     }
     deliveryModal() {
@@ -117,15 +123,16 @@ class Welcome extends Component {
                     }}>
                     <View
                         style={{
-                            marginRight: -300,
+                            marginRight: 300
                         }}>
                         <TouchableOpacity
-                            style={[{ marginTop: 40, backgroundColor: Color.white, borderRadius: 10 }]}
+                            style={[{ marginTop: 0, backgroundColor: Color.white, borderRadius: 50 }]}
                             onPress={() => this.changeMenu(2)}>
                             <FontAwesomeIcon
                                 icon={faTimes}
                                 style={{
                                     color: Color.primary,
+                                    margin: 5
                                 }}
                                 size={BasicStyles.iconSize}
                             />
@@ -141,7 +148,7 @@ class Welcome extends Component {
                         <View style={Style.TextContainer}>
                             <Text style={[Style.textSecondary]}>
                                 Products from our deli store right at your finger tips
-              </Text>
+                            </Text>
                         </View>
                         <TouchableOpacity
                             style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]}
@@ -160,7 +167,7 @@ class Welcome extends Component {
                         <View style={Style.TextContainer}>
                             <Text style={[Style.textSecondary]}>
                                 Meals from our kitchen straight to your dinner table
-              </Text>
+                            </Text>
                         </View>
                         <TouchableHighlight
                             style={[BasicStyles.btn, Style.btnWhite, { marginTop: 70 }]}
@@ -178,7 +185,7 @@ class Welcome extends Component {
                         <Text style={[{ fontSize: BasicStyles.standardFontSize, flex: 1 }]}>Deliver to: </Text>
                         <Text style={[Style.textPrimary, { flex: 3, fontSize: BasicStyles.standardFontSize }]}>
                             1a, Centre Stage Tower 1
-            </Text>
+                        </Text>
                         <TouchableOpacity
                             style={[{ flex: 0 }]}
                             onPress={() => this.deliveryModal()}>
@@ -237,7 +244,9 @@ class Welcome extends Component {
                             state={this.state.menu}
                             click={index => this.changeMenu(index)}
                             choose={(data, type) => this.changeSelectedMenu(data, type)}
-                            load={data => this.isLoading(data)}
+                            load={data => this.setState({
+                                isLoading: data
+                            })}
                         />
                     )}
                     {this.state.selectedMenu != null && (
@@ -248,7 +257,9 @@ class Welcome extends Component {
                             type={this.state.type}
                             user={this.props.state.user}
                             press={(data, type) => this.changeSelectedMenu(data, type)}
-                            load={data => this.isLoading(data)}
+                            load={data => this.setState({
+                                isLoading: data
+                            })}
                         />
                     )}
                     {
@@ -314,11 +325,12 @@ class Welcome extends Component {
     }
 }
 const mapStateToProps = (state) => ({
-    state
+    state: state
 })
 
-const mapDispatchToProps = {
-
+const mapDispatchToProps = dispatch => {
+    const {actions} = require('@redux');
+    return {};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome)

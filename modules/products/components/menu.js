@@ -132,13 +132,15 @@ class Menu extends Component {
         <Modal
           isVisible={this.state.visibleModal}
           style={Style.modalWhite}
+          animationIn="slideInRight"
+          animationOut="slideOutRight"
           onRequestClose={() => {
             this.setState({ visibleModal: false });
           }}>
-          <View style={{ alignItems: 'center', height: '100%', flex: 1 }}>
+          <View style={{ alignItems: 'center', height: '100%', flex: 1}}>
             <Image source={{ uri: this.state.itemImage }} style={Style.productImageFull} />
             <TouchableOpacity
-              style={[{ backgroundColor: Color.primary, borderRadius: 20, position: 'absolute', top: 15, right: 15 }]}
+              style={[{ backgroundColor: Color.primary, borderRadius: 20, position: 'absolute', top: 15, left: 15 }]}
               onPress={() => {
                 this.setState({ visibleModal: false });
               }}>
@@ -146,6 +148,7 @@ class Menu extends Component {
                 icon={faTimes}
                 style={{
                   color: Color.white,
+                  margin: 5
                 }}
                 size={BasicStyles.iconSize}
               />

@@ -15,8 +15,8 @@ export default {
     flexWrap: 'wrap'
   },
   productImageFull:{
-    width: width-50,
-    height: width-50
+    width: width-0,
+    height: width-20
   },
   productImage: {
     width: (width/3)-20,

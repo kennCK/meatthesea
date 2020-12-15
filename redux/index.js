@@ -12,7 +12,9 @@ const types = {
   nav: null,
   SET_LOCATION: 'SET_LOCATION',
   SET_STORES: 'SET_STORES',
-  SET_FILTER: 'SET_FILTER'
+  SET_FILTER: 'SET_FILTER',
+  SET_DELI_CATEGORIES: 'SET_DELI_CATEGORIES',
+  SET_RESTAURANT_CATEGORIES: 'SET_RESTAURANT_CATEGORIES'
 };
 
 export const actions = {
@@ -43,6 +45,12 @@ export const actions = {
   setFilter(filter) {
     return {type: types.SET_FILTER, filter};
   },
+  setDeliCategories(categories) {
+    return {type: types.SET_DELI_CATEGORIES, categories};
+  },
+  setRestaurantCategories(categories) {
+    return {type: types.SET_RESTAURANT_CATEGORIES, categories};
+  },
 };
 
 const initialState = {
@@ -52,7 +60,9 @@ const initialState = {
   theme: null,
   location: null,
   stores: [],
-  filter: null
+  filter: null,
+  restaurant: null,
+  deliStore: null
 };
 
 storeData = async (key, value) => {
@@ -70,7 +80,7 @@ const reducer = (state = initialState, action) => {
   const {theme} = action;
   const {location} = action;
   const {stores} = action;
-  const { filter } = action;
+  const { filter, categories } = action;
 
   switch (type) {
     case types.LOGOUT:
@@ -172,6 +182,17 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         filter
+      }
+    case types.SET_DELI_CATEGORIES:
+      return {
+        ...state,
+        deliStore: categories
+      }
+
+    case types.SET_RESTAURANT_CATEGORIES:
+      return {
+        ...state,
+        restaurant: categories
       }
     default:
       return {...state, nav: state.nav};

@@ -27,7 +27,25 @@ class Menu extends Component {
     itemImage: null,
     itemID: null,
     qty: 0,
+    products: null
   };
+
+  retrieveProducts = () => {
+    const { filter } = this.props.state;
+    if(filter == null){
+      return
+    }
+    Api.getRequest(
+      Routes.productsRetrieve + '?categoryid=' + filter.id,
+      (response) => {
+        this.setState({products: response.products});
+        this.isLoading(false);
+      },
+      (error) => {
+        console.log(error);
+      },
+    );
+  }
 
   retrieveRestaurant = () => {
     this.props.load(true);
@@ -58,21 +76,16 @@ class Menu extends Component {
     );
   };
   componentDidMount() {
-    console.log(this.props.state);
-    if (this.props.type == 0) {
-      this.retrieveRestaurant();
-    } else {
-      this.retrieveDeli();
-    }
+    this.retrieveProducts()
   }
-  selectItem(ndx) {
+  selectItem(item) {
     this.setState({
       visibleModal: true,
-      itemID: this.props.products[ndx].id,
-      itemName: this.props.products[ndx].name,
-      itemPrice: this.props.products[ndx].price,
-      itemImage: this.props.products[ndx].images[0].src,
-      itemDescription: this.props.products[ndx].full_description,
+      itemID: item.id,
+      itemName: item.name,
+      itemPrice: item.price,
+      itemImage: item.images[0].src,
+      itemDescription: item.full_description,
       qty: 1,
     });
   }
@@ -80,6 +93,8 @@ class Menu extends Component {
     console.log(this.state.itemID);
   }
   render() {
+    const { restaurant, deliStore } = this.props.state;
+    const { products } = this.state;
     return (
       <View style={{flex: 1}}>
         <View
@@ -110,8 +125,8 @@ class Menu extends Component {
         </View>
         <ScrollView showsHorizontalScrollIndicator={false}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {this.state.restaurant != null &&
-              this.state.restaurant.map((data, idx) => {
+            {restaurant != null &&
+              restaurant.map((data, idx) => {
                 return (
                   <TouchableOpacity
                     style={Style.menuButton}
@@ -128,8 +143,8 @@ class Menu extends Component {
                   </TouchableOpacity>
                 );
               })}
-            {this.state.deli != null &&
-              this.state.deli.map((data, idx) => {
+            {deliStore != null &&
+              deliStore.map((data, idx) => {
                 return (
                   <TouchableOpacity
                     style={Style.menuButton}
@@ -149,21 +164,21 @@ class Menu extends Component {
           </ScrollView>
           <View style={{alignItems: 'center'}}>
             <View style={Style.imageRow}>
-              {this.props.products != null &&
-                this.props.products.map((data, idx) => {
+              {products != null &&
+                products.map((item, idx) => {
                   return (
                     <TouchableOpacity
-                      onPress={() => this.selectItem(idx)}
+                      onPress={() => this.selectItem(item)}
                       key={idx}>
                       <View style={Style.menuContainer}>
                         <Image
-                          source={{uri: data.images[0].src}}
+                          source={{uri: item.images[0].src}}
                           style={Style.menuImage}
                         />
                         <Text style={{fontWeight: 'bold'}}>
-                          HK$ {data.price}
+                          HK$ {item.price}
                         </Text>
-                        <Text>{data.name}</Text>
+                        <Text>{item.name}</Text>
                       </View>
                     </TouchableOpacity>
                   );
@@ -243,7 +258,7 @@ class Menu extends Component {
               }}>
               <Text
                 style={[{color: 'white', fontWeight: 'bold', fontSize: 18}]}>
-                {this.props.isGuest == true
+                {this.props.state.user === null
                   ? 'LOGIN TO CONTINUE'
                   : 'ADD TO BASKET'}
               </Text>

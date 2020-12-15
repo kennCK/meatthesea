@@ -21,12 +21,12 @@ class Products extends Component {
   }
   retrieveRestaurant = () => {
     const { location } = this.props.state;
+    const { setRestaurantCategories } = this.props;
     this.props.load(true);
     Api.getRequest(
       Routes.restaurantCategoriesRetrieve + '?storeId=' + location.id,
       response => {
-        this.setState({restaurant: response.categories});
-        console.log('products restaurant', response.categories)
+        setRestaurantCategories(response.categories)
         this.props.load(false);
       },
       error => {
@@ -36,12 +36,12 @@ class Products extends Component {
   };
   retrieveDeli = () => {
     const { location } = this.props.state;
+    const { setDeliCategories } = this.props;
     this.props.load(true);
     Api.getRequest(
       Routes.deliCategoriesRetrieve + '?storeId=' + location.id,
       response => {
-        this.setState({deli: response.categories});
-        console.log('products categories', response.categories)
+        setDeliCategories(response.categories)
         this.props.load(false);
       },
       error => {
@@ -62,6 +62,7 @@ class Products extends Component {
         title: 'DELI-STORE',
       },
     ];
+    const { restaurant, deliStore } = this.props.state;
     return (
       <View style={[{flex: 1, backgroundColor:Color.white}]}>
         <Pagination
@@ -71,13 +72,13 @@ class Products extends Component {
         />
         {this.props.active == 0 && (
           <ScrollView
-            style={this.props.state == 0 ? Style.showScroll : Style.hideScroll}
+            style={this.props.active == 0 ? Style.showScroll : Style.hideScroll}
             showsVerticalScrollIndicator={false}>
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/res.png')} />
               <View style={Style.imageRow}>
-                {this.state.restaurant != null &&
-                  this.state.restaurant.map((data, idx) => {
+                {restaurant != null &&
+                  restaurant.map((data, idx) => {
                     return (
                       <TouchableOpacity
                         onPress={() => this.props.choose(data.id, 0)}
@@ -95,13 +96,13 @@ class Products extends Component {
         )}
         {this.props.active == 1 && (
           <ScrollView
-            style={this.props.state == 1 ? Style.showScroll : Style.hideScroll}
+            style={this.props.active == 1 ? Style.showScroll : Style.hideScroll}
             showsVerticalScrollIndicator={false}>
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/deli.png')} />
               <View style={Style.imageRow}>
-                {this.state.deli != null &&
-                  this.state.deli.map((data, idx) => {
+                {deliStore != null &&
+                  deliStore.map((data, idx) => {
                     return (
                       <TouchableOpacity
                         onPress={() => this.props.choose(data.id, 1)}
@@ -127,6 +128,8 @@ const mapStateToProps = (state) => ({state: state});
 const mapDispatchToProps = (dispatch) => {
   const {actions} = require('@redux');
   return {
+    setDeliCategories: (categories) => dispatch(actions.setDeliCategories(categories)),
+    setRestaurantCategories: (categories) => dispatch(actions.setRestaurantCategories(categories)),
   };
 };
 

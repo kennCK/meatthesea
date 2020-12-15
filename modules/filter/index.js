@@ -18,7 +18,9 @@ class Filter extends Component {
   retrieveRestaurant = (storeId) => {
     this.setState({isLoading: true})
     Api.getRequest(Routes.restaurantCategoriesRetrieve + "?storeId=" + storeId, response => {
-      this.setState({restaurant: response.categories, isLoading: false})
+      const { setRestaurantCategories } = this.props;
+      setRestaurantCategories(response.categories)
+      this.setState({isLoading: false})
     }, error => {
       console.log(error);
     });
@@ -26,7 +28,9 @@ class Filter extends Component {
   retrieveDeli = (storeId) => {
     this.setState({isLoading: true})
     Api.getRequest(Routes.deliCategoriesRetrieve + "?storeId=" + storeId, response => {
-      this.setState({deli: response.categories, isLoading: false})
+      const { setDeliCategories } = this.props;
+      setDeliCategories(response.categories)
+      this.setState({isLoading: false})
     }, error => {
       console.log(error);
     });
@@ -52,6 +56,7 @@ class Filter extends Component {
   }
 
   render() {
+    const { restaurant, deliStore,filter } = this.props.state;
     return (
       <View>
         <ScrollView showsHorizontalScrollIndicator={false}>
@@ -59,14 +64,17 @@ class Filter extends Component {
             <Text style={[BasicStyles.headerTitleStyle, {fontSize:20}]}>Meals from our kitchen</Text>
           </View>
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20, paddingTop: 0}]}>
-          { this.state.restaurant != null &&
-            this.state.restaurant.map((item, idx) => {
+          { restaurant != null &&
+            restaurant.map((item, idx) => {
               return (<TouchableOpacity
                 style={[{ marginTop: 15 }]}
                 key={idx}
                 onPress={() => this.setSelectedFilter(item, 'restaurant')}
                 >
-                <Text>{item.name}</Text>
+                <Text style={{
+                  color: filter !== null && filter.id === item.id ? Color.primary : Color.black,
+                  fontWeight: filter !== null && filter.id === item.id ? 'bold' : 'normal'
+                }}>{item.name}</Text>
               </TouchableOpacity>)
             })
           }
@@ -75,14 +83,17 @@ class Filter extends Component {
             <Text style={[BasicStyles.headerTitleStyle, {fontSize:20}]}>Grocery Items</Text>
           </View>
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20, paddingTop: 0}]}>
-          { this.state.deli != null &&
-                this.state.deli.map((item, idx) => {
+          { deliStore != null &&
+                deliStore.map((item, idx) => {
                   return <TouchableOpacity
                     style={[{ marginTop: 15 }]}
                     key={idx}
                     onPress={() => this.setSelectedFilter(item, 'deli')}
                     >
-                    <Text>{item.name}</Text>
+                    <Text style={{
+                      color: filter !== null && filter.id === item.id ? Color.primary : Color.black,
+                      fontWeight: filter !== null && filter.id === item.id ? 'bold' : 'normal'
+                    }}>{item.name}</Text>
                   </TouchableOpacity>
                 })
               }
@@ -100,6 +111,8 @@ const mapDispatchToProps = dispatch => {
   const { actions } = require('@redux');
   return {
     setFilter: (filter) => dispatch(actions.setFilter(filter)),
+    setDeliCategories: (categories) => dispatch(actions.setDeliCategories(categories)),
+    setRestaurantCategories: (categories) => dispatch(actions.setRestaurantCategories(categories)),
   };
 };
 

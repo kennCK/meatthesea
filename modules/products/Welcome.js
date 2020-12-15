@@ -50,8 +50,7 @@ class Welcome extends Component {
       isLoading: false,
       type: null,
       products: null,
-      token: true,
-      isGuest: true,
+      token: true
     };
   }
   
@@ -59,26 +58,25 @@ class Welcome extends Component {
     this.setState({isLoading: data});
   }
   componentDidMount() {
-    this.setState({
-      isGuest: this.props.state.user == null,
-    });
-    // console.log("user: ", this.props.state.user)
+    const { filter } = this.props.state;
+    console.log('filter', filter)
+    if(filter){
+      this.setState({
+        type: filter.category == 'restaurant' ? 0 : 1,
+        selectedMenu: filter.category == 'restaurant' ? 0 : 1
+      })
+    }else{
+      this.setState({
+        type: null,
+        selectedMenu: null
+      })
+    }
   }
   changeSelectedMenu(data, type) {
     if (data == null) {
       this.setState({products: null});
     } else {
       this.isLoading(true);
-      Api.getRequest(
-        Routes.productsRetrieve + '?categoryid=' + data,
-        (response) => {
-          this.setState({products: response.products});
-          this.isLoading(false);
-        },
-        (error) => {
-          console.log(error);
-        },
-      );
     }
     this.setState({selectedMenu: data, type: type});
   }
@@ -242,10 +240,8 @@ class Welcome extends Component {
           {this.state.selectedMenu != null && (
             <Menu
               router={this.props.navigation}
-              products={this.state.products}
               menu={this.state.selectedMenu}
               type={this.state.type}
-              isGuest={this.state.isGuest}
               press={(data, type) => this.changeSelectedMenu(data, type)}
               load={(data) => this.isLoading(data)}
             />

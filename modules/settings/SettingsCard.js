@@ -15,6 +15,11 @@ class SettingsCard extends Component {
         style={styles.SettingsCardContainer}
         onPress={() => {
           this.props.onSelect(this.props.id);
+          if (this.props.selectedTile === false) {
+            this.props.subscribe();
+          } else {
+            this.props.deactivate();
+          }
         }}>
         <View
           style={[

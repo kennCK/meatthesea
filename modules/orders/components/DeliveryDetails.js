@@ -290,19 +290,23 @@ class DeliveryDetails extends Component {
                 <TouchableOpacity onPress={() => {
                   this.props.navigate('savedAddressStack')
                 }}>
-                  <FontAwesomeIcon
-                    style={[styles.DeliveryDetailIcon]}
-                    color={Color.primary}
-                    icon={faMapMarkerAlt}
-                    size={BasicStyles.standardFontSize}
-                  />
-                  <Text
-                    style={[
-                      BasicStyles.titleText,
-                      styles.DeliveryDetailText,
-                      {fontSize: BasicStyles.standardFontSize},
-                    ]}>
-                    Click to add address
+                  <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
+                    <FontAwesomeIcon
+                      style={[styles.DeliveryDetailIcon]}
+                      color={Color.primary}
+                      icon={faMapMarkerAlt}
+                      size={BasicStyles.standardFontSize}
+                    />
+                    <Text
+                      style={[
+                        BasicStyles.titleText,
+                        styles.DeliveryDetailText,
+                        {
+                          fontSize: BasicStyles.standardFontSize
+                        },
+                      ]}>
+                      Click to add address
+                    </Text>
                   </Text>
                 </TouchableOpacity>
               )

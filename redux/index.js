@@ -18,7 +18,10 @@ const types = {
   SET_HOMEPAGE_SETTINGS: 'SET_HOMEPAGE_SETTINGS',
   SET_SEARCH: 'SET_SEARCH',
   SET_CART: 'SET_CART',
-  SET_ORDER_DETAILS: 'SET_ORDER_DETAILS'
+  SET_ORDER_DETAILS: 'SET_ORDER_DETAILS',
+  SET_USER_LOCATION: 'SET_USER_LOCATION',
+  SET_PAYMENT_METHOD: 'SET_PAYMENT_METHOD',
+  SET_PICKUP_CROCKERIES: 'SET_PICKUP_CROCKERIES',
 };
 
 export const actions = {
@@ -66,6 +69,15 @@ export const actions = {
   },
   setOrderDetails(details){
     return { type: types.SET_ORDER_DETAILS, details };
+  },
+  setUserLocation(location){
+    return { type: types.SET_USER_LOCATION, location };
+  },
+  setPaymentMethod(payment){
+    return { type: types.SET_PAYMENT_METHOD, payment };
+  },
+  setPickupCrockeries(crockeries){
+    return { type: types.SET_PICKUP_CROCKERIES, crockeries };
   }
 };
 
@@ -82,7 +94,10 @@ const initialState = {
   homepage: null,
   search: null,
   cart: null,
-  orderDetails: null
+  orderDetails: null,
+  userLocation: null,
+  paymentMethod: null,
+  crockeries: null
 };
 
 storeData = async (key, value) => {
@@ -101,7 +116,8 @@ const reducer = (state = initialState, action) => {
   const {location} = action;
   const {stores} = action;
   const { filter, categories, settings, search } = action;
-  const { cart, details } = action;
+  const { cart, details, payment } = action;
+  const { crockeries } = action;
 
   switch (type) {
     case types.LOGOUT:
@@ -234,6 +250,21 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         orderDetails: details
+      }
+    case types.SET_USER_LOCATION:
+      return {
+        ...state,
+        userLocation: location
+      }
+    case types.SET_PAYMENT_METHOD:
+      return {
+        ...state,
+        paymentMethod: payment
+      }
+    case types.SET_PICKUP_CROCKERIES:
+      return {
+        ...state,
+        crockeries
       }
     default:
       return {...state, nav: state.nav};

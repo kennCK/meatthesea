@@ -150,7 +150,7 @@ class OrderSummaryScreen extends Component {
           </View>
           {
             (
-              <DeliveryDetails {...{ OrderDetails, deliveryDetails, redirect: this.redirect, isSummary: true }} />
+              <DeliveryDetails {...{ OrderDetails, deliveryDetails, redirect: this.redirect, isSummary: true }} navigate={(route) => this.props.navigation.navigate(route)}/>
             )
           }
 

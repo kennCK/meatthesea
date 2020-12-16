@@ -65,6 +65,9 @@ export default {
   ordersRetrieveByCustomer: customer_id =>
     apiUrl + 'orders/customer/' + customer_id,
 
+  // Payments
+  paypalDetails: apiUrl + 'get_paypal_details',
+
   // ProductAttributes
   productAttribuesRetrieve: apiUrl + 'productattributes',
   productAttribuesAdd: apiUrl + 'productattributes',

@@ -176,12 +176,6 @@ class Menu extends Component {
           onRequestClose={() => {
             this.setState({visibleModal: false});
           }}>
-<<<<<<< HEAD
-          <View style={{ alignItems: 'center', height: '100%', flex: 1}}>
-            <Image source={{ uri: this.state.itemImage }} style={Style.productImageFull} />
-            <TouchableOpacity
-              style={[{ backgroundColor: Color.primary, borderRadius: 20, position: 'absolute', top: 15, left: 15 }]}
-=======
           <View style={{alignItems: 'center', height: '100%', flex: 1}}>
             <Image
               source={{uri: this.state.itemImage}}
@@ -197,7 +191,6 @@ class Menu extends Component {
                   right: 15,
                 },
               ]}
->>>>>>> 71cac73f61c94522568d3f879f0c5d4a200542ef
               onPress={() => {
                 this.setState({visibleModal: false});
               }}>

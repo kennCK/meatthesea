@@ -94,7 +94,7 @@ class DeliveryDetails extends Component {
                   </RadioButton>
                 </Text>
               </View>
-              <View>
+              <View style={{marginTop: 10}}>
                 <Text
                   style={[
                     {marginVertical: 2, marginLeft: 5, color: Color.black},
@@ -145,7 +145,7 @@ class DeliveryDetails extends Component {
                 top: 5,
                 fontSize: BasicStyles.standardFontSize,
               }}>
-              HK$ {orderDetails ? orderDetails.subtotal : 0}
+              HK$ {orderDetails ? parseFloat(orderDetails.subtotal).toFixed(2) : 0}
             </Text>
           </View>
           {isSummary && (
@@ -224,8 +224,9 @@ class DeliveryDetails extends Component {
                 right: 25,
                 fontSize: BasicStyles.standardFontSize,
                 top: 5,
+                fontWeight: 'bold'
               }}>
-              HK$ {orderDetails ? orderDetails.total : 0}
+              HK$ {orderDetails ? parseFloat(orderDetails.total).toFixed(2) : 0.00}
             </Text>
           </View>
         </View>
@@ -280,23 +281,7 @@ class DeliveryDetails extends Component {
                 {deliveryDetails.address}
               </Text>
             </Text>
-            <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
-              <FontAwesomeIcon
-                style={[styles.DeliveryDetailIcon]}
-                color={Color.primary}
-                icon={faCreditCard}
-                size={BasicStyles.standardFontSize}
-              />
-              <Text
-                style={[
-                  BasicStyles.titleText,
-                  styles.DeliveryDetailText,
-                  {fontSize: BasicStyles.standardFontSize},
-                ]}>
-                {'  '}
-                {deliveryDetails.payment}
-              </Text>
-            </Text>
+
             <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
               <FontAwesomeIcon
                 style={[styles.DeliveryDetailIcon]}
@@ -314,6 +299,29 @@ class DeliveryDetails extends Component {
                 {moment(deliveryDetails.time).format('MM-DD-YYYY, hh:mm a')}
               </Text>
             </Text>
+
+            <TouchableOpacity onPress={() => {
+              this.props.navigate('paymentStack')
+            }}>
+              <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
+                <FontAwesomeIcon
+                  style={[styles.DeliveryDetailIcon]}
+                  color={Color.primary}
+                  icon={faCreditCard}
+                  size={BasicStyles.standardFontSize}
+                />
+                <Text
+                  style={[
+                    BasicStyles.titleText,
+                    styles.DeliveryDetailText,
+                    {fontSize: BasicStyles.standardFontSize},
+                  ]}>
+                  {'  '}
+                  {'Payment Method: ' + deliveryDetails.payment}
+                </Text>
+              </Text>
+            </TouchableOpacity>
+            
           </View>
         </View>
       </View>

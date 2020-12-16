@@ -66,6 +66,7 @@ class OrderSummaryScreen extends Component {
 
   placeOrder(){
     const { user, userLocation, paymentMethod, deliveryTime, cart, orderDetails} = this.props.state;
+    this.redirect('requestPickupStack')
     if(user == null){
       this.setState({
         errorMessage: 'Invalid Customer Information'

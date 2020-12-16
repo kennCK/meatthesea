@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import Style from './style.js';
 import ProductItem from './productItems.js';
-import Pagination from 'components/Pagination/Dynamic.js';
+import Pagination from 'components/Pagination/WithBackground.js';
 import Api from 'services/apiv2/index.js';
 import {Routes, Color} from 'common';
 import {connect} from 'react-redux';

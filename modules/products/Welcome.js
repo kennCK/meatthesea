@@ -260,7 +260,7 @@ class Welcome extends Component {
                 <FontAwesomeIcon
                   icon={faUserCircle}
                   style={{color: Color.primary}}
-                  size={BasicStyles.iconSize}
+                  size={40}
                 />
               </TouchableOpacity>
             }

@@ -99,6 +99,7 @@ export default {
   productsRetrieve: apiUrl + 'products',
   productsAdd: apiUrl + 'products',
   productsCount: apiUrl + 'products/count',
+  productSearch: apiUrl + 'product_search',
   productsRetrieveById: id => apiUrl + 'products/' + id,
   productsUpdateById: id => apiUrl + 'products/' + id,
   productsDeleteById: id => apiUrl + 'products/' + id,
@@ -119,6 +120,8 @@ export default {
   // ShoppingCartItems
   shoppingCartItemsRetrieve: apiUrl + 'shopping_cart_items',
   shoppingCartItemsAdd: apiUrl + 'shopping_cart_items',
+  shoppingCartItemsAddToCart: apiUrl + 'add_to_shopping_cart',
+  shoppingCartItemsUpdateCart: apiUrl + 'update_shopping_cart',
   shoppingCartItemsRetrieveByCustomer: customerId =>
     'shopping_cart_items/' + customerId,
   shoppingCartItemsUpdate: id => apiUrl + 'shopping_cart_items/' + id,

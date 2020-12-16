@@ -46,50 +46,56 @@ class Welcome extends Component {
       ],
       deliveryModal: false,
       menu: 0,
-      selectedMenu: null,
       isLoading: false,
-      type: null,
       products: null,
-      token: true,
-      isGuest: true,
+      token: true
     };
   }
-  getData = async () => {
-    try {
-      const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
-      if (token != null) {
-        this.setState({token});
-      }
-    } catch (e) {
-      // error reading value
-    }
-  };
+  
   isLoading(data) {
     this.setState({isLoading: data});
   }
   componentDidMount() {
-    this.setState({
-      isGuest: this.props.state.user == null,
-    });
-    // console.log("user: ", this.props.state.user)
+    const { filter } = this.props.state;
+    const { setHomepageSettings } = this.props;
+    this.retrieveCart()
+    if(filter){
+      setHomepageSettings({
+        type: filter.category == 'restaurant' ? 0 : 1,
+        selectedMenu: filter.category == 'restaurant' ? 0 : 1
+      })
+    }else{
+      setHomepageSettings({
+        type: null,
+        selectedMenu: null
+      })
+    }
   }
+
+  retrieveCart = () => {
+    const { user } = this.props.state;
+    if(user == null){
+      return
+    }
+    Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
+        const { setCart } = this.props;
+        setCart(response.shopping_carts)
+      }, (error) => {
+        console.log(error);
+    });
+  }
+
   changeSelectedMenu(data, type) {
     if (data == null) {
       this.setState({products: null});
     } else {
       this.isLoading(true);
-      Api.getRequest(
-        Routes.productsRetrieve + '?categoryid=' + data,
-        (response) => {
-          this.setState({products: response.products});
-          this.isLoading(false);
-        },
-        (error) => {
-          console.log(error);
-        },
-      );
     }
-    this.setState({selectedMenu: data, type: type});
+    const { setHomepageSettings } = this.props;
+    setHomepageSettings({
+      type: type,
+      selectedMenu: data
+    })
   }
   redirect(index) {
     let route = this.state.redirects[index];
@@ -99,14 +105,17 @@ class Welcome extends Component {
     this.setState({deliveryModal: this.state.deliveryModal ? false : true});
   }
   changeMenu(index) {
+    console.log('hi')
     this.setState({visibleModal: false});
     if (index == 2) {
-      this.props.navigation.push('appOnBoardingStack');
+      // this.props.navigation.navigate('appOnBoardingStack');
     } else {
       this.setState({menu: index});
     }
   }
   render() {
+    const { homepage, search, cart } = this.props.state;
+    console.log('homepage', homepage)
     return (
       <View style={Style.MainContainer}>
         <Modal
@@ -209,6 +218,23 @@ class Welcome extends Component {
               <TextInput
                 style={[{height: 37, flex: 7, width: '100%'}]}
                 placeholder={'Search'}
+                onChangeText={(search) => {
+                    this.setState({search})
+                    const { setSearch, setHomepageSettings } = this.props;
+                    if(search.length > 3){
+                      setSearch(search)
+                      setHomepageSettings({
+                        type: 1,
+                        selectedMenu: 1
+                      })
+                    }else{
+                      setSearch(null)
+                      setHomepageSettings(null)
+                    }
+                    
+                  }
+                }
+                value={search}
               />
               <TouchableOpacity
                 style={[
@@ -239,26 +265,24 @@ class Welcome extends Component {
               </TouchableOpacity>
             }
           </View>
-          {this.state.selectedMenu == null && (
+          {(homepage == null || (homepage && homepage.selectedMenu == null)) && (
             <Products
-              state={this.state.menu}
+              active={this.state.menu}
               click={(index) => this.changeMenu(index)}
               choose={(data, type) => this.changeSelectedMenu(data, type)}
               load={(data) => this.isLoading(data)}
             />
           )}
-          {this.state.selectedMenu != null && (
+          {(homepage && homepage.selectedMenu != null) && (
             <Menu
               router={this.props.navigation}
-              products={this.state.products}
-              menu={this.state.selectedMenu}
+              menu={homepage.selectedMenu}
               type={this.state.type}
-              isGuest={this.state.isGuest}
               press={(data, type) => this.changeSelectedMenu(data, type)}
               load={(data) => this.isLoading(data)}
             />
           )}
-          {this.props.state.user !== null && (
+          {(
             <View
               style={{
                 height: 50,
@@ -319,10 +343,29 @@ class Welcome extends Component {
                     ]}>
                     <FontAwesomeIcon
                       icon={faShoppingBasket}
-                      style={{color: Color.darkGray}}
+                      style={{color: cart && cart.length > 0 ? Color.secondary : Color.darkGray}}
                       size={30}
                     />
                     <Text style={Style.bottomMenuText}>Basket</Text>
+                    {
+                      (cart && cart.length > 0) && (
+                        <View style={{
+                          height: 30,
+                          width: 30,
+                          backgroundColor: Color.secondary,
+                          borderRadius: 15,
+                          marginLeft: 10,
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <Text style={[Style.bottomMenuText, {
+                            color: Color.white,
+                            marginLeft: 0,
+                            textAlign: 'center'
+                          }]}>{cart.length}</Text>
+                        </View>
+                      )
+                    }
                   </View>
                 </TouchableOpacity>
               </ScrollView>
@@ -334,14 +377,16 @@ class Welcome extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  state,
+  state: state
 });
 
 const mapDispatchToProps = (dispatch) => {
   const {actions} = require('@redux');
   return {
     setStores: (stores) => dispatch(actions.setStores(stores)),
+    setSearch: (search) => dispatch(actions.setSearch(search)),
+    setHomepageSettings: (settings) => dispatch(actions.setHomepageSettings(settings)),
+    setCart: (cart) => dispatch(actions.setCart(cart)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);
-// export default Welcome;

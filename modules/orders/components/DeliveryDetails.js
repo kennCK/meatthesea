@@ -18,25 +18,50 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {RadioButton, RadioButtonInput} from 'react-native-simple-radio-button';
 import {faEdit} from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
-export default class DeliveryDetails extends Component {
-  state = {
-    tip: 0,
-    value: 0,
-    value2: 0,
-  };
+import {connect} from 'react-redux';
+
+class DeliveryDetails extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 0,
+      value2: 0
+    };
+  }
+
+
   updateQuantity = (mode = 1) => {
     let {tip} = this.state;
     this.setState({tip: mode == 1 ? ++tip : --tip});
   };
+
   componentDidMount() {
-    console.log(JSON.stringify(this.props.OrderDetails));
+    const { cart } = this.props.state;
+    if(cart == null){
+      return
+    }
+    let total = 0
+    for (var i = 0; i < cart.length; i++) {
+      let item = cart[i]
+      total += (parseInt(item.quantity) * parseFloat(item.product.price))
+      if(i == cart.length - 1){
+        const { setOrderDetails } = this.props;
+        setOrderDetails({
+          total: total,
+          subtotal: total,
+          tip: 0
+        })
+      }
+    }
   }
+
   render() {
-    let {OrderDetails, deliveryDetails, isSummary = false} = this.props;
-    let {tip} = this.state;
+    let {deliveryDetails, isSummary = false} = this.props;
+    const { orderDetails, userLocation } = this.props.state;
+    console.log('orderDetails', orderDetails)
     return (
       <View>
-        {isSummary && (
+        {(orderDetails) && (
           <>
             <View style={{paddingTop: 20, marginBottom: 20}}>
               <View>
@@ -69,7 +94,7 @@ export default class DeliveryDetails extends Component {
                   </RadioButton>
                 </Text>
               </View>
-              <View>
+              <View style={{marginTop: 10}}>
                 <Text
                   style={[
                     {marginVertical: 2, marginLeft: 5, color: Color.black},
@@ -120,7 +145,7 @@ export default class DeliveryDetails extends Component {
                 top: 5,
                 fontSize: BasicStyles.standardFontSize,
               }}>
-              HK$ {OrderDetails.subtotal}
+              HK$ {orderDetails ? parseFloat(orderDetails.subtotal).toFixed(2) : 0}
             </Text>
           </View>
           {isSummary && (
@@ -162,7 +187,7 @@ export default class DeliveryDetails extends Component {
                         Style.fontSize(BasicStyles.standardFontSize),
                         {marginHorizontal: 4},
                       ]}>
-                      {tip > 0 ? tip : 0}
+                      {orderDetails ? orderDetails.tip : 0}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -199,8 +224,9 @@ export default class DeliveryDetails extends Component {
                 right: 25,
                 fontSize: BasicStyles.standardFontSize,
                 top: 5,
+                fontWeight: 'bold'
               }}>
-              HK$ {OrderDetails.total}
+              HK$ {orderDetails ? parseFloat(orderDetails.total).toFixed(2) : 0.00}
             </Text>
           </View>
         </View>
@@ -238,40 +264,28 @@ export default class DeliveryDetails extends Component {
                 </Text>
               )}
             </View>
-            <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
-              <FontAwesomeIcon
-                style={[styles.DeliveryDetailIcon]}
-                color={Color.primary}
-                icon={faMapMarkerAlt}
-                size={BasicStyles.standardFontSize}
-              />
-              <Text
-                style={[
-                  BasicStyles.titleText,
-                  styles.DeliveryDetailText,
-                  {fontSize: BasicStyles.standardFontSize},
-                ]}>
-                {'  '}
-                {deliveryDetails.address}
-              </Text>
-            </Text>
-            <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
-              <FontAwesomeIcon
-                style={[styles.DeliveryDetailIcon]}
-                color={Color.primary}
-                icon={faCreditCard}
-                size={BasicStyles.standardFontSize}
-              />
-              <Text
-                style={[
-                  BasicStyles.titleText,
-                  styles.DeliveryDetailText,
-                  {fontSize: BasicStyles.standardFontSize},
-                ]}>
-                {'  '}
-                {deliveryDetails.payment}
-              </Text>
-            </Text>
+            {
+              userLocation && (
+                <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
+                  <FontAwesomeIcon
+                    style={[styles.DeliveryDetailIcon]}
+                    color={Color.primary}
+                    icon={faMapMarkerAlt}
+                    size={BasicStyles.standardFontSize}
+                  />
+                  <Text
+                    style={[
+                      BasicStyles.titleText,
+                      styles.DeliveryDetailText,
+                      {fontSize: BasicStyles.standardFontSize},
+                    ]}>
+                    {'  '}
+                    {userLocation.route + ', ' + userLocation.city + ', ' + userLocation.country}
+                  </Text>
+                </Text>
+              )
+            }
+
             <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
               <FontAwesomeIcon
                 style={[styles.DeliveryDetailIcon]}
@@ -289,9 +303,47 @@ export default class DeliveryDetails extends Component {
                 {moment(deliveryDetails.time).format('MM-DD-YYYY, hh:mm a')}
               </Text>
             </Text>
+
+            <TouchableOpacity onPress={() => {
+              this.props.navigate('paymentStack')
+            }}>
+              <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
+                <FontAwesomeIcon
+                  style={[styles.DeliveryDetailIcon]}
+                  color={Color.primary}
+                  icon={faCreditCard}
+                  size={BasicStyles.standardFontSize}
+                />
+                <Text
+                  style={[
+                    BasicStyles.titleText,
+                    styles.DeliveryDetailText,
+                    {fontSize: BasicStyles.standardFontSize},
+                  ]}>
+                  {'  '}
+                  {'Payment Method: ' + deliveryDetails.payment}
+                </Text>
+              </Text>
+            </TouchableOpacity>
+            
           </View>
         </View>
       </View>
     );
   }
 }
+
+
+const mapStateToProps = (state) => ({
+  state: state
+});
+
+const mapDispatchToProps = (dispatch) => {
+  const {actions} = require('@redux');
+  return {
+    setCart: (cart) => dispatch(actions.setCart(cart)),
+    setOrderDetails: (details) => dispatch(actions.setOrderDetails(details)),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(DeliveryDetails);
+

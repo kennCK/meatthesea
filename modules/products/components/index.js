@@ -10,6 +10,7 @@ import ProductItem from './productItems.js';
 import Pagination from 'components/Pagination/Dynamic.js';
 import Api from 'services/apiv2/index.js';
 import {Routes, Color} from 'common';
+import {connect} from 'react-redux';
 class Products extends Component {
   constructor(props) {
     super(props);
@@ -19,11 +20,16 @@ class Products extends Component {
     };
   }
   retrieveRestaurant = () => {
+    const { location } = this.props.state;
+    const { setRestaurantCategories } = this.props;
+    if(location == null){
+      return
+    }
     this.props.load(true);
     Api.getRequest(
-      Routes.restaurantCategoriesRetrieve + '?storeId=' + 1,
+      Routes.restaurantCategoriesRetrieve + '?storeId=' + location.id,
       response => {
-        this.setState({restaurant: response.categories});
+        setRestaurantCategories(response.categories)
         this.props.load(false);
       },
       error => {
@@ -32,11 +38,16 @@ class Products extends Component {
     );
   };
   retrieveDeli = () => {
+    const { location } = this.props.state;
+    const { setDeliCategories } = this.props;
+    if(location == null){
+      return
+    }
     this.props.load(true);
     Api.getRequest(
-      Routes.deliCategoriesRetrieve + '?storeId=' + 1,
+      Routes.deliCategoriesRetrieve + '?storeId=' + location.id,
       response => {
-        this.setState({deli: response.categories});
+        setDeliCategories(response.categories)
         this.props.load(false);
       },
       error => {
@@ -48,6 +59,14 @@ class Products extends Component {
     this.retrieveRestaurant();
     this.retrieveDeli();
   }
+
+  setSelectedFilter(item, category){
+    const{ setFilter } = this.props;
+    setFilter({...item,
+      category: category
+    })
+  }
+
   render() {
     let menu = [
       {
@@ -57,25 +76,29 @@ class Products extends Component {
         title: 'DELI-STORE',
       },
     ];
+    const { restaurant, deliStore } = this.props.state;
     return (
       <View style={[{flex: 1, backgroundColor:Color.white}]}>
         <Pagination
           menu={menu}
-          activeIndex={this.props.state}
+          activeIndex={this.props.active}
           onChange={index => this.props.click(index)}
         />
-        {this.props.state == 0 && (
+        {this.props.active == 0 && (
           <ScrollView
-            style={this.props.state == 0 ? Style.showScroll : Style.hideScroll}
+            style={this.props.active == 0 ? Style.showScroll : Style.hideScroll}
             showsVerticalScrollIndicator={false}>
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/res.png')} />
               <View style={Style.imageRow}>
-                {this.state.restaurant != null &&
-                  this.state.restaurant.map((data, idx) => {
+                {restaurant != null &&
+                  restaurant.map((data, idx) => {
                     return (
                       <TouchableOpacity
-                        onPress={() => this.props.choose(data.id, 0)}
+                        onPress={() => {
+                          this.props.choose(data.id, 0)
+                          this.setSelectedFilter(data, 'restaurant')
+                        }}
                         key={idx}>
                         <ProductItem
                           name={data.name}
@@ -88,18 +111,21 @@ class Products extends Component {
             </View>
           </ScrollView>
         )}
-        {this.props.state == 1 && (
+        {this.props.active == 1 && (
           <ScrollView
-            style={this.props.state == 1 ? Style.showScroll : Style.hideScroll}
+            style={this.props.active == 1 ? Style.showScroll : Style.hideScroll}
             showsVerticalScrollIndicator={false}>
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/deli.png')} />
               <View style={Style.imageRow}>
-                {this.state.deli != null &&
-                  this.state.deli.map((data, idx) => {
+                {deliStore != null &&
+                  deliStore.map((data, idx) => {
                     return (
                       <TouchableOpacity
-                        onPress={() => this.props.choose(data.id, 1)}
+                        onPress={() => {
+                          this.props.choose(data.id, 1)
+                          this.setSelectedFilter(data, 'deli')
+                        }}
                         key={idx}>
                         <ProductItem
                           name={data.name}
@@ -117,4 +143,16 @@ class Products extends Component {
   }
 }
 
-export default Products;
+const mapStateToProps = (state) => ({state: state});
+
+const mapDispatchToProps = (dispatch) => {
+  const {actions} = require('@redux');
+  return {
+    setDeliCategories: (categories) => dispatch(actions.setDeliCategories(categories)),
+    setRestaurantCategories: (categories) => dispatch(actions.setRestaurantCategories(categories)),
+    setFilter: (filter) => dispatch(actions.setFilter(filter)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Products);
+

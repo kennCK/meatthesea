@@ -12,6 +12,14 @@ const types = {
   nav: null,
   SET_LOCATION: 'SET_LOCATION',
   SET_STORES: 'SET_STORES',
+  SET_FILTER: 'SET_FILTER',
+  SET_DELI_CATEGORIES: 'SET_DELI_CATEGORIES',
+  SET_RESTAURANT_CATEGORIES: 'SET_RESTAURANT_CATEGORIES',
+  SET_HOMEPAGE_SETTINGS: 'SET_HOMEPAGE_SETTINGS',
+  SET_SEARCH: 'SET_SEARCH',
+  SET_CART: 'SET_CART',
+  SET_ORDER_DETAILS: 'SET_ORDER_DETAILS',
+  SET_USER_LOCATION: 'SET_USER_LOCATION'
 };
 
 export const actions = {
@@ -39,6 +47,30 @@ export const actions = {
   setStores(stores) {
     return {type: types.SET_STORES, stores};
   },
+  setFilter(filter) {
+    return {type: types.SET_FILTER, filter};
+  },
+  setDeliCategories(categories) {
+    return {type: types.SET_DELI_CATEGORIES, categories};
+  },
+  setRestaurantCategories(categories) {
+    return {type: types.SET_RESTAURANT_CATEGORIES, categories};
+  },
+  setHomepageSettings(settings){
+    return { type: types.SET_HOMEPAGE_SETTINGS, settings};
+  },
+  setSearch(search){
+    return { type: types.SET_SEARCH, search };
+  },
+  setCart(cart){
+    return { type: types.SET_CART, cart };
+  },
+  setOrderDetails(details){
+    return { type: types.SET_ORDER_DETAILS, details };
+  },
+  setUserLocation(location){
+    return { type: types.SET_USER_LOCATION, location };
+  }
 };
 
 const initialState = {
@@ -48,6 +80,14 @@ const initialState = {
   theme: null,
   location: null,
   stores: [],
+  filter: null,
+  restaurant: null,
+  deliStore: null,
+  homepage: null,
+  search: null,
+  cart: null,
+  orderDetails: null,
+  userLocation: null
 };
 
 storeData = async (key, value) => {
@@ -65,15 +105,19 @@ const reducer = (state = initialState, action) => {
   const {theme} = action;
   const {location} = action;
   const {stores} = action;
+  const { filter, categories, settings, search } = action;
+  const { cart, details } = action;
 
   switch (type) {
     case types.LOGOUT:
       AsyncStorage.clear();
       return Object.assign({}, initialState);
     case types.LOGIN:
-      let {access_token, expires_in} = token;
-      storeData('token', access_token);
-      storeData('token_expiration', expires_in.toString());
+      if(token !== null){
+        let {access_token, expires_in} = token;
+        storeData('token', access_token);
+        storeData('token_expiration', expires_in.toString());
+      }
       storeData('email', email);
       storeData('password', password);
       console.log('token', token)
@@ -160,6 +204,47 @@ const reducer = (state = initialState, action) => {
         ...state,
         stores,
       };
+    case types.SET_FILTER:
+      return {
+        ...state,
+        filter
+      }
+    case types.SET_DELI_CATEGORIES:
+      return {
+        ...state,
+        deliStore: categories
+      }
+
+    case types.SET_RESTAURANT_CATEGORIES:
+      return {
+        ...state,
+        restaurant: categories
+      }
+    case types.SET_HOMEPAGE_SETTINGS:
+      return {
+        ...state,
+        homepage: settings
+      }
+    case types.SET_SEARCH:
+      return {
+        ...state,
+        search
+      }
+    case types.SET_CART:
+      return {
+        ...state,
+        cart
+      }
+    case types.SET_ORDER_DETAILS:
+      return {
+        ...state,
+        orderDetails: details
+      }
+    case types.SET_USER_LOCATION:
+      return {
+        ...state,
+        userLocation: location
+      }
     default:
       return {...state, nav: state.nav};
   }

@@ -12,7 +12,7 @@ class HeaderOptions extends Component {
     super(props);
   }
   back = () => {
-    this.props.navigationProps.push('drawerStack');
+    this.props.navigationProps.push('homepageStack');
   };
   render() {
     return (

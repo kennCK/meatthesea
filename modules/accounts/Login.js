@@ -62,13 +62,7 @@ class Login extends Component {
       const password = await AsyncStorage.getItem(Helper.APP_NAME + 'password');
       if (token != null) {
         this.setState({ token,  email, password});
-        setInterval(() => {
-            if (token_expiration < new Date().getTime() / 1000) {
-              this.props.logout();
-            } else {
-              this.submit()
-            }
-        }, 1000)
+        this.submit()
       }
     } catch (e) {
       // error reading value
@@ -79,8 +73,9 @@ class Login extends Component {
     this.props.navigation.navigate(route);
   }
   submit() {
-    // this.test();
     const { email, password } = this.state;
+    
+    console.log('test')
     const { login } = this.props;
     if ((email != null && email != '') && (password != null && password != '')) {
       this.setState({ isLoading: true, error: 0 });

@@ -5,6 +5,7 @@ import {
   Text,
   ScrollView,
   Image,
+  Alert,
   TouchableHighlight,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -15,23 +16,73 @@ import Api from 'services/apiv2/index.js';
 import {Routes} from 'common';
 import NumericInput from 'react-native-numeric-input';
 import Modal from 'react-native-modal';
+import {connect} from 'react-redux';
 class Menu extends Component {
-  state = {
-    restaurant: null,
-    deli: null,
-    visibleModal: false,
-    itemName: null,
-    itemPrice: null,
-    itemDescription: null,
-    itemImage: null,
-    itemID: null,
-    qty: 0,
-  };
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      restaurant: null,
+      deli: null,
+      visibleModal: false,
+      itemName: null,
+      itemPrice: null,
+      itemDescription: null,
+      itemImage: null,
+      itemID: null,
+      qty: 0,
+      products: null,
+      productInCart: null
+    };
+  }
+
+  componentDidMount() {
+    this.retrieveCart()
+  }
+
+  retrieveProducts = () => {
+    const { filter, search, location } = this.props.state;
+    if(filter == null){
+      return
+    }
+    if(search == null || search == '' || location == null){
+      console.log('retrieve not search')
+      Api.getRequest(Routes.productsRetrieve + '?categoryid=' + filter.id, (response) => {
+          this.setState({products: response.products});
+        }, (error) => {
+          console.log(error);
+        },
+      );  
+    }else{
+      let parameters = '?Keyword=' + search + '&StoreId=' + location.id + '&CategoryIds=' + filter.id;
+      Api.getRequest(Routes.productSearch + parameters, (response) => {
+          this.setState({products: response.products});
+        }, (error) => {
+          console.log(error);
+        },
+      );
+    }
+  }
+
+  retrieveCart = () => {
+    const { user } = this.props.state;
+    if(user == null){
+      return
+    }
+    Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
+        const { setCart } = this.props;
+        setCart(response.shopping_carts)
+        this.retrieveProducts()
+      }, (error) => {
+        console.log(error);
+    });
+  }
 
   retrieveRestaurant = () => {
     this.props.load(true);
+    const { location } = this.props.state;
     Api.getRequest(
-      Routes.restaurantCategoriesRetrieve + '?storeId=' + 1,
+      Routes.restaurantCategoriesRetrieve + '?storeId=' + location.id,
       (response) => {
         this.setState({restaurant: response.categories});
         this.props.load(false);
@@ -41,10 +92,12 @@ class Menu extends Component {
       },
     );
   };
+
   retrieveDeli = () => {
     this.props.load(true);
+    const { location } = this.props.state;
     Api.getRequest(
-      Routes.deliCategoriesRetrieve + '?storeId=' + 1,
+      Routes.deliCategoriesRetrieve + '?storeId=' + location.id,
       (response) => {
         this.setState({deli: response.categories});
         this.props.load(false);
@@ -54,29 +107,77 @@ class Menu extends Component {
       },
     );
   };
-  componentDidMount() {
-    console.log(this.props.state);
-    if (this.props.type == 0) {
-      this.retrieveRestaurant();
-    } else {
-      this.retrieveDeli();
+
+
+  setSelectedFilter(item, category){
+    const{ setFilter } = this.props;
+    setFilter({...item,
+      category: category
+    })
+    this.retrieveProducts()
+  }
+
+  selectItem(item) {
+    const { cart } = this.props.state;
+    let selectedCartItem = null
+    if(cart !== null){
+      for (var i = 0; i < cart.length; i++) {
+        let cartItem = cart[i]
+        if(parseInt(cartItem.product_id) == parseInt(item.id)){
+          selectedCartItem = cartItem
+          this.setState({
+            productInCart: cartItem
+          })
+          break
+        }
+      }
     }
+    const { productInCart } = this.state;
+    setTimeout(() => {
+      this.setState({
+        visibleModal: true,
+        itemID: item.id,
+        itemName: item.name,
+        itemPrice: item.price,
+        itemImage: item.images[0].src,
+        itemDescription: item.full_description,
+        qty: selectedCartItem ? selectedCartItem.quantity : 1
+      });
+    }, 1000)
   }
-  selectItem(ndx) {
-    this.setState({
-      visibleModal: true,
-      itemID: this.props.products[ndx].id,
-      itemName: this.props.products[ndx].name,
-      itemPrice: this.props.products[ndx].price,
-      itemImage: this.props.products[ndx].images[0].src,
-      itemDescription: this.props.products[ndx].full_description,
-      qty: 1,
-    });
+
+  alertMethod(title, message){
+    Alert.alert(
+      title,
+      message,
+      [
+        { text: "OK", onPress: () => {
+          this.setState({visibleModal: false});
+          this.retrieveCart()
+        }},
+      ],
+      { cancelable: false }
+    );
   }
+
   addToCart() {
-    console.log(this.state.itemID);
+    const { user, location } = this.props.state;
+    const { itemID, productInCart } = this.state;
+    if(user == null || location == null || itemID == null){
+      return
+    }
+    let parameters = '?CustomerId=' + user.id + '&StoreId=' + location.id + '&ProductId=' + itemID + '&Quantity=' + this.state.qty + '&CartType=1';
+    Api.postRequest((productInCart ? Routes.shoppingCartItemsUpdateCart : Routes.shoppingCartItemsAddToCart) + parameters, {}, (response) => {
+        this.alertMethod('Success Added!', 'Test')
+      }, (error) => {
+        console.log(error);
+      }
+    );
   }
+  
   render() {
+    const { restaurant, deliStore, filter, homepage } = this.props.state;
+    const { products } = this.state;
     return (
       <View style={{flex: 1}}>
         <View
@@ -98,46 +199,44 @@ class Menu extends Component {
               style={[{paddingLeft: 20, paddingRight: 20}]}
             />
           </TouchableOpacity>
-          {this.props.type == 0 && (
+          {homepage && homepage.type == 0 && (
             <Text style={{fontWeight: 'bold'}}>RESTAURANT MENU</Text>
           )}
-          {this.props.type == 1 && (
+          {homepage && homepage.type == 1 && (
             <Text style={{fontWeight: 'bold'}}>DELI-STORE MENU</Text>
           )}
         </View>
         <ScrollView showsHorizontalScrollIndicator={false}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {this.state.restaurant != null &&
-              this.state.restaurant.map((data, idx) => {
+            {restaurant != null &&
+              restaurant.map((data, idx) => {
                 return (
                   <TouchableOpacity
                     style={Style.menuButton}
-                    onPress={() => this.props.press(data.id, this.props.type)}
+                    onPress={() => this.setSelectedFilter(data, 'restaurant')}
                     key={idx}>
                     <Text
-                      style={
-                        this.props.menu == data.id
-                          ? {color: Color.primary}
-                          : {color: Color.black}
-                      }>
+                      style={{
+                        color: filter && filter.id == data.id ? Color.primary : Color.black,
+                        fontWeight: filter && filter.id == data.id ? 'bold' : 'normal'
+                      }}>
                       {data.name}
                     </Text>
                   </TouchableOpacity>
                 );
               })}
-            {this.state.deli != null &&
-              this.state.deli.map((data, idx) => {
+            {deliStore != null &&
+              deliStore.map((data, idx) => {
                 return (
                   <TouchableOpacity
                     style={Style.menuButton}
-                    onPress={() => this.props.press(data.id, this.props.type)}
+                    onPress={() => this.setSelectedFilter(data, 'deli')}
                     key={idx}>
                     <Text
-                      style={
-                        this.props.menu == data.id
-                          ? {color: Color.primary}
-                          : {color: Color.black}
-                      }>
+                      style={{
+                        color: filter && filter.id == data.id ? Color.primary : Color.black,
+                        fontWeight: filter && filter.id == data.id ? 'bold' : 'normal'
+                      }}>
                       {data.name}
                     </Text>
                   </TouchableOpacity>
@@ -146,21 +245,21 @@ class Menu extends Component {
           </ScrollView>
           <View style={{alignItems: 'center'}}>
             <View style={Style.imageRow}>
-              {this.props.products != null &&
-                this.props.products.map((data, idx) => {
+              {products != null &&
+                products.map((item, idx) => {
                   return (
                     <TouchableOpacity
-                      onPress={() => this.selectItem(idx)}
+                      onPress={() => this.selectItem(item)}
                       key={idx}>
                       <View style={Style.menuContainer}>
                         <Image
-                          source={{uri: data.images[0].src}}
+                          source={{uri: item.images[0].src}}
                           style={Style.menuImage}
                         />
                         <Text style={{fontWeight: 'bold'}}>
-                          HK$ {data.price}
+                          HK$ {item.price}
                         </Text>
-                        <Text>{data.name}</Text>
+                        <Text>{item.name}</Text>
                       </View>
                     </TouchableOpacity>
                   );
@@ -234,7 +333,7 @@ class Menu extends Component {
               style={[BasicStyles.btn, {marginTop: 15}]}
               underlayColor={Color.gray}
               onPress={() => {
-                if (this.props.user == null) {
+                if (this.props.state.user == null) {
                   this.props.router.push('loginStack');
                   this.setState({visibleModal: false});
                 } else {
@@ -243,7 +342,7 @@ class Menu extends Component {
               }}>
               <Text
                 style={[{color: 'white', fontWeight: 'bold', fontSize: 18}]}>
-                {this.props.isGuest == true
+                {this.props.state.user === null
                   ? 'LOGIN TO CONTINUE'
                   : 'ADD TO BASKET'}
               </Text>
@@ -254,4 +353,15 @@ class Menu extends Component {
     );
   }
 }
-export default Menu;
+
+const mapStateToProps = (state) => ({state: state});
+
+const mapDispatchToProps = (dispatch) => {
+  const {actions} = require('@redux');
+  return {
+    setFilter: (filter) => dispatch(actions.setFilter(filter)),
+    setCart: (cart) => dispatch(actions.setCart(cart)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

@@ -18,7 +18,8 @@ const types = {
   SET_HOMEPAGE_SETTINGS: 'SET_HOMEPAGE_SETTINGS',
   SET_SEARCH: 'SET_SEARCH',
   SET_CART: 'SET_CART',
-  SET_ORDER_DETAILS: 'SET_ORDER_DETAILS'
+  SET_ORDER_DETAILS: 'SET_ORDER_DETAILS',
+  SET_USER_LOCATION: 'SET_USER_LOCATION'
 };
 
 export const actions = {
@@ -66,6 +67,9 @@ export const actions = {
   },
   setOrderDetails(details){
     return { type: types.SET_ORDER_DETAILS, details };
+  },
+  setUserLocation(location){
+    return { type: types.SET_USER_LOCATION, location };
   }
 };
 
@@ -82,7 +86,8 @@ const initialState = {
   homepage: null,
   search: null,
   cart: null,
-  orderDetails: null
+  orderDetails: null,
+  userLocation: null
 };
 
 storeData = async (key, value) => {
@@ -234,6 +239,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         orderDetails: details
+      }
+    case types.SET_USER_LOCATION:
+      return {
+        ...state,
+        userLocation: location
       }
     default:
       return {...state, nav: state.nav};

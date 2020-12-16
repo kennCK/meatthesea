@@ -57,7 +57,7 @@ class DeliveryDetails extends Component {
 
   render() {
     let {deliveryDetails, isSummary = false} = this.props;
-    const { orderDetails } = this.props.state;
+    const { orderDetails, userLocation } = this.props.state;
     console.log('orderDetails', orderDetails)
     return (
       <View>
@@ -264,23 +264,27 @@ class DeliveryDetails extends Component {
                 </Text>
               )}
             </View>
-            <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
-              <FontAwesomeIcon
-                style={[styles.DeliveryDetailIcon]}
-                color={Color.primary}
-                icon={faMapMarkerAlt}
-                size={BasicStyles.standardFontSize}
-              />
-              <Text
-                style={[
-                  BasicStyles.titleText,
-                  styles.DeliveryDetailText,
-                  {fontSize: BasicStyles.standardFontSize},
-                ]}>
-                {'  '}
-                {deliveryDetails.address}
-              </Text>
-            </Text>
+            {
+              userLocation && (
+                <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
+                  <FontAwesomeIcon
+                    style={[styles.DeliveryDetailIcon]}
+                    color={Color.primary}
+                    icon={faMapMarkerAlt}
+                    size={BasicStyles.standardFontSize}
+                  />
+                  <Text
+                    style={[
+                      BasicStyles.titleText,
+                      styles.DeliveryDetailText,
+                      {fontSize: BasicStyles.standardFontSize},
+                    ]}>
+                    {'  '}
+                    {userLocation.route + ', ' + userLocation.city + ', ' + userLocation.country}
+                  </Text>
+                </Text>
+              )
+            }
 
             <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
               <FontAwesomeIcon

@@ -114,7 +114,7 @@ class Welcome extends Component {
     }
   }
   render() {
-    const { homepage, search, cart } = this.props.state;
+    const { homepage, search, cart, crockeries } = this.props.state;
     console.log('homepage', homepage)
     return (
       <View style={Style.MainContainer}>
@@ -313,9 +313,31 @@ class Welcome extends Component {
                     ]}>
                     <FontAwesomeIcon
                       icon={faHandHolding}
-                      style={{color: Color.darkGray}}
+                      style={{color: Color.secondary}}
                       size={30}
                     />
+                    {
+                      (crockeries && crockeries.length > 0) && (
+                        <View style={{
+                          height: 20,
+                          width: 20,
+                          backgroundColor: Color.danger,
+                          borderRadius: 10,
+                          marginLeft: 10,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginLeft: -15,
+                          marginTop: -10
+                        }}>
+                          <Text style={[Style.bottomMenuText, {
+                            color: Color.white,
+                            marginLeft: 0,
+                            textAlign: 'center',
+                            fontSize: 10
+                          }]}>{crockeries.length}</Text>
+                        </View>
+                      )
+                    }
                     <Text style={Style.bottomMenuText}>Pick up crockeries</Text>
                   </View>
                 </TouchableOpacity>
@@ -343,29 +365,33 @@ class Welcome extends Component {
                     ]}>
                     <FontAwesomeIcon
                       icon={faShoppingBasket}
-                      style={{color: cart && cart.length > 0 ? Color.secondary : Color.darkGray}}
+                      style={{color: Color.secondary}}
                       size={30}
                     />
-                    <Text style={Style.bottomMenuText}>Basket</Text>
                     {
                       (cart && cart.length > 0) && (
                         <View style={{
-                          height: 30,
-                          width: 30,
-                          backgroundColor: Color.secondary,
-                          borderRadius: 15,
+                          height: 20,
+                          width: 20,
+                          backgroundColor: Color.danger,
+                          borderRadius: 10,
                           marginLeft: 10,
                           alignItems: 'center',
-                          justifyContent: 'center'
+                          justifyContent: 'center',
+                          marginLeft: -15,
+                          marginTop: -10
                         }}>
                           <Text style={[Style.bottomMenuText, {
                             color: Color.white,
                             marginLeft: 0,
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            fontSize: 10
                           }]}>{cart.length}</Text>
                         </View>
                       )
                     }
+                    <Text style={Style.bottomMenuText}>Basket</Text>
+                    
                   </View>
                 </TouchableOpacity>
               </ScrollView>

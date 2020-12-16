@@ -6,7 +6,7 @@ import {
 import styles from '../Style';
 import { BasicStyles } from 'common';
 import Style from 'modules/accounts/Style';
-import { Color } from 'common';
+import { Color, Routes } from 'common';
 import OrderItems from './OrderItems';
 import Separator from '../components/Separator';
 import DeliveryDetails from '../components/DeliveryDetails';
@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEdit, faInfoCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from 'react-native-date-picker'
 import {connect} from 'react-redux';
+import Api from 'services/apiv2/index.js';
 
 class OrderSummaryScreen extends Component {
   constructor(props) {
@@ -23,42 +24,49 @@ class OrderSummaryScreen extends Component {
       isVisible: false,
       selectedTime: '',
       hour: '',
-      mins: ''
+      mins: '',
+      key: 1
     };
   }
 
   componentDidMount(){
-    this.updateTotal()
   }
 
-  updateTotal(){
-    const { cart } = this.props.state;
-    let total = 0
-    for (var i = 0; i < cart && cart.length; i++) {
-      let item = cart[i]
-      total += (parseInt(item.quantity) * parseFloat(item.product.price))
-      if(i == cart.length - 1){
-        const { setOrderDetails } = this.props;
-        setOrderDetails({
-          total: total,
-          subtotal: total,
-          tip: 0
-        })
-      }
+  retrieveCart = () => {
+    const { user } = this.props.state;
+    if(user == null){
+      return
     }
+    Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
+        const { setCart } = this.props;
+        setCart(response.shopping_carts)
+        this.setState({
+          key: this.state.key + 1
+        })
+      }, (error) => {
+        console.log(error);
+    });
   }
   
   redirect = (route) => {
     this.props.navigation.push(route);
   }
+
+  setSelectedTime(time){
+    const { setSelectedDeliveryTime } = this.props;
+    setSelectedDeliveryTime(time)
+    this.toggleModal()
+  }
+
   toggleModal = () => {
     let { isVisible } = this.state;
     this.setState({ isVisible: !isVisible })
   }
+
   render() {
     const { cart, orderDetails } = this.props.state;
     return (
-      <View style={{ flex: 1 }} >
+      <View style={{ flex: 1 }} key={this.state.key}>
         <Modal visible={this.state.isVisible} >
           <View style={{ flex: 1, backgroundColor: Color.primary }}>
           <TouchableOpacity
@@ -101,8 +109,8 @@ class OrderSummaryScreen extends Component {
                   }}
                     onPress={() => {
                         const { hour, mins } = this.state
-                        this.setState({ selectedTime: `${hour}:${mins}` })
-                        this.toggleModal()
+                        this.setState({ selectedTime: `${hour}:${parseInt(mins) > 0? mins : '00'}` })
+                        this.setSelectedTime(`${hour}:${parseInt(mins) > 0? mins : '00'}`)
                     }}
                   >
                     <Text style={[Style.fontSize(BasicStyles.standardFontSize), Style.fontWeight('bold')]}>GO</Text>
@@ -144,13 +152,13 @@ class OrderSummaryScreen extends Component {
           <View >
             {
               cart && cart.map((cartItem, idx) => {
-                  return <OrderItems key={idx} data={cartItem} editable={true} updateOrder={() => this.updateTotal()}/>
+                  return <OrderItems key={idx} data={cartItem} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>
               })
             }
           </View>
           {
             (
-              <DeliveryDetails {...{ OrderDetails, deliveryDetails, redirect: this.redirect, isSummary: true }} navigate={(route) => this.props.navigation.navigate(route)}/>
+              <DeliveryDetails navigate={(route) => this.props.navigation.navigate(route)} isSummary={false} key={orderDetails}/>
             )
           }
 
@@ -180,6 +188,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setCart: (cart) => dispatch(actions.setCart(cart)),
     setOrderDetails: (details) => dispatch(actions.setOrderDetails(details)),
+    setSelectedDeliveryTime: (time) => dispatch(actions.setSelectedDeliveryTime(time)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(OrderSummaryScreen);

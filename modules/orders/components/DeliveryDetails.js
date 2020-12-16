@@ -56,8 +56,8 @@ class DeliveryDetails extends Component {
   }
 
   render() {
-    let {deliveryDetails, isSummary = false} = this.props;
-    const { orderDetails, userLocation, paymentMethod } = this.props.state;
+    let { isSummary } = this.props;
+    const { orderDetails, userLocation, paymentMethod, deliveryTime } = this.props.state;
     console.log('orderDetails', orderDetails)
     return (
       <View>
@@ -305,6 +305,7 @@ class DeliveryDetails extends Component {
                           fontSize: BasicStyles.standardFontSize
                         },
                       ]}>
+                      {'  '}
                       Click to add address
                     </Text>
                   </Text>
@@ -326,7 +327,7 @@ class DeliveryDetails extends Component {
                   {fontSize: BasicStyles.standardFontSize},
                 ]}>
                 {'  '}
-                {moment(deliveryDetails.time).format('MM-DD-YYYY, hh:mm a')}
+                {'Delivery time: ' + (deliveryTime ? deliveryTime : 'Required')}
               </Text>
             </Text>
 

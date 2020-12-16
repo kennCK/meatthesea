@@ -26,26 +26,11 @@ class OrderItems extends Component {
     let quantity = increment == false ? parseInt(data.quantity) - 1 : parseInt(data.quantity) + 1
     let parameters = '?CustomerId=' + user.id + '&StoreId=' + location.id + '&ProductId=' + data.product_id + '&Quantity=' + quantity + '&CartType=1';
     Api.postRequest(Routes.shoppingCartItemsUpdateCart + parameters, {}, (response) => {
-        this.retrieveCart()
+        this.props.onUpdate()
       }, (error) => {
         console.log(error);
       }
     );
-  }
-
-
-  retrieveCart = () => {
-    const { user } = this.props.state;
-    if(user == null){
-      return
-    }
-    Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
-        const { setCart } = this.props;
-        setCart(response.shopping_carts)
-        this.props.updateOrder()
-      }, (error) => {
-        console.log(error);
-    });
   }
 
   render() {
@@ -66,25 +51,29 @@ class OrderItems extends Component {
                       <>
                       <TouchableOpacity onPress={() => {
                           this.updateCart(data, false)
-                    }}>
-                        <Text style={[
-                            Style.fontSize(BasicStyles.standardFontSize),
-                            { marginHorizontal: 2 }
-                        ]}>-</Text>
+                        }}>
+                        <Text style={{
+                          marginHorizontal: 2,
+                          fontSize: 20,
+                          paddingLeft: 5,
+                          paddingRight: 10
+                        }}>-</Text>
                       </TouchableOpacity>
                       <TouchableOpacity disabled>
-                        <Text style={[
-                            Style.fontSize(BasicStyles.standardFontSize),
-                            { marginHorizontal: 4 }
-                        ]}>{data.quantity > 0 ? data.quantity : 0}</Text>
+                        <Text style={{
+                            fontSize: BasicStyles.standardFontSize,
+                            marginHorizontal: 4,
+                            lineHeight: 25
+                        }}>{data.quantity > 0 ? data.quantity : 0}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => {
                         this.updateCart(data)
                       }}>
-                        <Text style={[
-                            Style.fontSize(BasicStyles.standardFontSize),
-                            { marginHorizontal: 2 }
-                        ]}>+</Text>
+                        <Text style={{
+                          marginHorizontal: 2,
+                          fontSize: 20,
+                          paddingLeft: 10
+                        }}>+</Text>
                       </TouchableOpacity>
                       </>
                     </Text>

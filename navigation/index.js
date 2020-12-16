@@ -20,6 +20,7 @@ import PaymentStack from 'modules/payment/paymentDrawer';
 import AccountStack from 'modules/user/account';
 import ProfileStack from 'modules/user/profile';
 import OrderSummaryStack from 'modules/orders/OrderSummary';
+import OrderPlacedStack from 'modules/orders/OrderPlaced';
 import RequestPickupStack from 'modules/orders/RequestPickup';
 import SavedAddressStack from 'modules/savedAddress/SavedAddressDrawer.js';
 import SettingsStack from 'modules/settings/SettingsDrawer.js';
@@ -132,6 +133,7 @@ const PrimaryNav = createStackNavigator(
     checkoutStack: {screen: CheckoutStack},
     changePasswordStack: {screen: ChangePasswordStack},
     addSubscriptionStack: {screen: AddSubscriptionStack},
+    orderPlacedStack: {screen: OrderPlacedStack},
   },
   {
     // Default config for all screens

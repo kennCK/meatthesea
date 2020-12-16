@@ -7,7 +7,7 @@ import styles from '../Style';
 import { BasicStyles } from 'common';
 import Style from 'modules/accounts/Style';
 import { Color, Routes } from 'common';
-import OrderItems from './OrderItems';
+import OrderItems from './OrderedItems';
 import Separator from '../components/Separator';
 import DeliveryDetails from '../components/DeliveryDetails';
 import { OrderDetails, dummyData, deliveryDetails } from "../DummyData";
@@ -17,7 +17,7 @@ import DatePicker from 'react-native-date-picker'
 import {connect} from 'react-redux';
 import Api from 'services/apiv2/index.js';
 
-class OrderSummaryScreen extends Component {
+class OrderedSummary extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -196,24 +196,8 @@ class OrderSummaryScreen extends Component {
               })
             }
           </View>
-          {
-            (
-              <DeliveryDetails navigate={(route) => this.props.navigation.navigate(route)} isSummary={false} key={orderDetails} errorMessage={errorMessage}/>
-            )
-          }
 
         </ScrollView>
-        <Separator />
-        <View style={styles.MainContainer}>
-          <TouchableHighlight
-            onPress={() => { this.placeOrder() }}
-            style={[BasicStyles.btn, Style.btnPrimary, { borderRadius: 0, width: Style.getWidth() - 30 }]}
-            underlayColor={Color.gray}>
-            <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(BasicStyles.standardFontSize)]}>
-                PLACE ORDER
-            </Text>
-          </TouchableHighlight>
-        </View>
       </View>
     );
   }
@@ -231,4 +215,4 @@ const mapDispatchToProps = (dispatch) => {
     setSelectedDeliveryTime: (time) => dispatch(actions.setSelectedDeliveryTime(time)),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(OrderSummaryScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(OrderedSummary);

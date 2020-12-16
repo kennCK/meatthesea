@@ -56,9 +56,9 @@ class DeliveryDetails extends Component {
   }
 
   render() {
-    let { isSummary } = this.props;
+    let { isSummary, errorMessage } = this.props;
     const { orderDetails, userLocation, paymentMethod, deliveryTime } = this.props.state;
-    console.log('orderDetails', orderDetails)
+    console.log('errorMessage', errorMessage)
     return (
       <View>
         {(orderDetails) && (
@@ -243,6 +243,20 @@ class DeliveryDetails extends Component {
                 ]}>
                 Delivery Details
               </Text>
+              {
+                errorMessage && (
+                  <Text style={{
+                      marginVertical: 2,
+                      marginLeft: 5,
+                      width: '100%',
+                      textAlign: 'center',
+                      color: Color.danger,
+                      fontSize: BasicStyles.standardFontSize
+                  }}>
+                    {errorMessage}
+                  </Text>
+                )
+              }
               {isSummary && (
                 <Text
                   style={{

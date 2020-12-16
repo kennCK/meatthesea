@@ -25,7 +25,8 @@ class OrderSummaryScreen extends Component {
       selectedTime: '',
       hour: '',
       mins: '',
-      key: 1
+      key: 1,
+      errorMessage: null
     };
   }
 
@@ -63,8 +64,46 @@ class OrderSummaryScreen extends Component {
     this.setState({ isVisible: !isVisible })
   }
 
+  placeOrder(){
+    const { user, userLocation, paymentMethod, deliveryTime, cart, orderDetails} = this.props.state;
+    if(user == null){
+      this.setState({
+        errorMessage: 'Invalid Customer Information'
+      })
+      return
+    }
+    if(userLocation == null){
+      this.setState({
+        errorMessage: 'Address is required.'
+      })
+      return
+    }
+    if(paymentMethod == null){
+      this.setState({
+        errorMessage: 'Payment Method is required.'
+      })
+      return
+    }
+    if(deliveryTime == null){
+      this.setState({
+        errorMessage: 'Delivery Time is required.'
+      })
+      return
+    }
+    let parameters = {
+      customerId: user.id,
+      location: userLocation,
+      paymentMethod: paymentMethod,
+      deliveryTime: deliveryTime,
+      carts: cart,
+      orderSummary: orderDetails
+    }
+    this.redirect('requestPickupStack')
+  }
+
   render() {
     const { cart, orderDetails, deliveryTime } = this.props.state;
+    const { errorMessage } = this.state;
     return (
       <View style={{ flex: 1 }} key={this.state.key}>
         <Modal visible={this.state.isVisible} >
@@ -158,7 +197,7 @@ class OrderSummaryScreen extends Component {
           </View>
           {
             (
-              <DeliveryDetails navigate={(route) => this.props.navigation.navigate(route)} isSummary={false} key={orderDetails}/>
+              <DeliveryDetails navigate={(route) => this.props.navigation.navigate(route)} isSummary={false} key={orderDetails} errorMessage={errorMessage}/>
             )
           }
 
@@ -166,7 +205,7 @@ class OrderSummaryScreen extends Component {
         <Separator />
         <View style={styles.MainContainer}>
           <TouchableHighlight
-            onPress={() => { this.redirect('requestPickupStack') }}
+            onPress={() => { this.placeOrder() }}
             style={[BasicStyles.btn, Style.btnPrimary, { borderRadius: 0, width: Style.getWidth() - 30 }]}
             underlayColor={Color.gray}>
             <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(BasicStyles.standardFontSize)]}>

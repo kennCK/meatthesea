@@ -19,21 +19,23 @@ class SavedAddress extends Component {
 
   componentDidMount() {
     const {params} = this.props.navigation.state;
-    if (params.user) {
-      let {addresses} = params.user;
-      if (addresses) {
-        addresses.map(address => {
-          this.setState({
-            addresses: [
-              ...this.state.addresses,
-              {
-                addressType: address.company,
-                address: address.address1 ? address.address1 : address.address2,
-              },
-            ],
-          });
+    const { user } = this.props.state;
+    if(user === null){
+      return
+    }
+    let {addresses} = user;
+    if (addresses) {
+      addresses.map(address => {
+        this.setState({
+          addresses: [
+            ...this.state.addresses,
+            {
+              addressType: address.company,
+              address: address.address1 ? address.address1 : address.address2,
+            },
+          ],
         });
-      }
+      });
     }
     this.getCurrentLocation();
   }
@@ -67,6 +69,8 @@ class SavedAddress extends Component {
 
   selectHandler = index => {
     this.setState({selectedTile: index});
+    const{ setUserLocation } = this.props.state;
+    setUserLocation(this.state.addresses[index])
   };
 
   redirect = route => {
@@ -127,6 +131,7 @@ const mapDispatchToProps = dispatch => {
   const {actions} = require('@redux');
   return {
     setLocation: location => dispatch(actions.setLocation(location)),
+    setUserLocation: location => dispatch(actions.setUserLocation(location)),
   };
 };
 

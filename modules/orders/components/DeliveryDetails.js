@@ -57,7 +57,7 @@ class DeliveryDetails extends Component {
 
   render() {
     let {deliveryDetails, isSummary = false} = this.props;
-    const { orderDetails, userLocation } = this.props.state;
+    const { orderDetails, userLocation, paymentMethod } = this.props.state;
     console.log('orderDetails', orderDetails)
     return (
       <View>
@@ -285,6 +285,28 @@ class DeliveryDetails extends Component {
                 </Text>
               )
             }
+            {
+              userLocation == null && (
+                <TouchableOpacity onPress={() => {
+                  this.props.navigate('savedAddressStack')
+                }}>
+                  <FontAwesomeIcon
+                    style={[styles.DeliveryDetailIcon]}
+                    color={Color.primary}
+                    icon={faMapMarkerAlt}
+                    size={BasicStyles.standardFontSize}
+                  />
+                  <Text
+                    style={[
+                      BasicStyles.titleText,
+                      styles.DeliveryDetailText,
+                      {fontSize: BasicStyles.standardFontSize},
+                    ]}>
+                    Click to add address
+                  </Text>
+                </TouchableOpacity>
+              )
+            }
 
             <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
               <FontAwesomeIcon
@@ -321,7 +343,7 @@ class DeliveryDetails extends Component {
                     {fontSize: BasicStyles.standardFontSize},
                   ]}>
                   {'  '}
-                  {'Payment Method: ' + deliveryDetails.payment}
+                  {'Payment Method: ' + (paymentMethod ? paymentMethod.type + ' ending ' + paymentMethod.last4 : 'Click to add payment method')}
                 </Text>
               </Text>
             </TouchableOpacity>

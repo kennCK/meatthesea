@@ -64,7 +64,7 @@ class OrderSummaryScreen extends Component {
   }
 
   render() {
-    const { cart, orderDetails } = this.props.state;
+    const { cart, orderDetails, deliveryTime } = this.props.state;
     return (
       <View style={{ flex: 1 }} key={this.state.key}>
         <Modal visible={this.state.isVisible} >
@@ -125,7 +125,7 @@ class OrderSummaryScreen extends Component {
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             <Text style={[Style.fontSize(BasicStyles.standardFontSize)]}>Delivery time : </Text>
             <View style={{ paddingHorizontal: 15 }}>
-              <Text style={[Style.fontSize(BasicStyles.standardFontSize), Style.fontWeight('bold'), { color: Color.primary, borderBottomColor: Color.darkGray }]}>As soon as possible
+              <Text style={[Style.fontSize(BasicStyles.standardFontSize), Style.fontWeight('bold'), { color: Color.primary, borderBottomColor: Color.darkGray }]}>{deliveryTime ? deliveryTime : 'As soon as possible'}
                 <TouchableOpacity style={[{ flex: 0 }]} onPress={this.toggleModal} >
                     <FontAwesomeIcon icon={faEdit} style={{ color: Color.darkGray, marginRight: 10, marginLeft: 10 }} size={BasicStyles.standardFontSize} />
                 </TouchableOpacity>

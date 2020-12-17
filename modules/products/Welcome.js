@@ -21,6 +21,7 @@ import {
   faSlidersH,
   faShoppingBasket,
   faHandHolding,
+  faStar
 } from '@fortawesome/free-solid-svg-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import Products from './components/';
@@ -30,6 +31,7 @@ import {Spinner} from 'components';
 import Api from 'services/apiv2/index.js';
 import {Routes} from 'common';
 import {connect} from 'react-redux';
+import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component {
@@ -48,7 +50,9 @@ class Welcome extends Component {
       menu: 0,
       isLoading: false,
       products: null,
-      token: true
+      token: true,
+      showRatings: true,
+      ratingIndex: null
     };
   }
   
@@ -113,9 +117,46 @@ class Welcome extends Component {
       this.setState({menu: index});
     }
   }
+
+  submitRating(index){
+    this.setState({
+      showRatings: false,
+      ratingIndex: index
+    })
+  }
+
+  rating(){
+    let stars = []
+    for(let i = 0; i < 5; i++) {
+      stars.push(
+        <TouchableOpacity onPress={() => this.submitRating(i)}>
+          <FontAwesomeIcon
+          icon={ i <= this.state.ratingIndex ? faStar : faStarRegular}
+          size={40}
+          style={{
+            color: Color.secondary
+          }}
+          key={i}
+          />
+        </TouchableOpacity>
+      )
+    }
+    return(
+      <View style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'row' 
+        }}>
+        {
+          stars
+        }
+      </View>
+    );
+  }
+
   render() {
     const { homepage, search, cart, crockeries } = this.props.state;
-    console.log('homepage', homepage)
+    const { showRatings } = this.state;
     return (
       <View style={Style.MainContainer}>
         <Modal
@@ -180,6 +221,7 @@ class Welcome extends Component {
             </TouchableHighlight>
           </View>
         </Modal>
+
         <DeliveryDetails
           state={this.state.deliveryModal}
           click={() => this.deliveryModal()}
@@ -398,6 +440,39 @@ class Welcome extends Component {
             </View>
           )}
         </View>
+        {
+          showRatings && (
+            <View style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              height: 125,
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+              backgroundColor: Color.primary,
+              width: '100%',
+              zIndex: 10
+            }}>
+              <View style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+                <Text style={{
+                  color: Color.secondary,
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                  paddingTop: 15,
+                  paddingBottom: 15
+                }}>RATE YOUR EXPERIENCE</Text>
+              </View>
+
+              <View>
+                {this.rating()}
+              </View>
+            </View>
+          )
+        }
       </View>
     );
   }

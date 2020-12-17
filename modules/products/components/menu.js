@@ -243,7 +243,9 @@ class Menu extends Component {
               restaurant.map((data, idx) => {
                 return (
                   <TouchableOpacity
-                    style={Style.menuButton}
+                    style={[Style.menuButton, {
+                      backgroundColor: filter && filter.id == data.id ? Color.secondary : Color.white
+                    }]}
                     onPress={() => this.setSelectedFilter(data, 'restaurant')}
                     key={idx}>
                     <Text
@@ -264,7 +266,9 @@ class Menu extends Component {
               deliStore.map((data, idx) => {
                 return (
                   <TouchableOpacity
-                    style={Style.menuButton}
+                    style={[Style.menuButton, {
+                      backgroundColor: filter && filter.id == data.id ? Color.secondary : Color.white
+                    }]}
                     onPress={() => this.setSelectedFilter(data, 'deli')}
                     key={idx}>
                     <Text

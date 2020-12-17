@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Image, ScrollView, TouchableHighlight} from 'react-native';
+import {View, Text, Image, ScrollView, TouchableHighlight, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import styles from '../Style';
 import {BasicStyles} from 'common';
@@ -10,6 +10,9 @@ import Separator from '../components/Separator';
 import DeliveryDetails from '../components/DeliveryDetails';
 import {deliveryDetails} from '../DummyData';
 import Api from 'services/apiv2/index.js';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 
 class OrderHistoryScreen extends Component {
   state = {
@@ -24,6 +27,8 @@ class OrderHistoryScreen extends Component {
     subtotal: 0,
     id: 1,
     allStores: [],
+    showRatings: true,
+    ratingIndex: null
   };
   componentDidMount() {
     let {stores} = this.props.state;
@@ -108,10 +113,49 @@ class OrderHistoryScreen extends Component {
       },
     );
   }
+
   redirect = (route) => {
     this.props.navigation.push(route);
   };
+
+  submitRating(index){
+    this.setState({
+      showRatings: false,
+      ratingIndex: index
+    })
+  }
+
+  rating(){
+    let stars = []
+    for(let i = 0; i < 5; i++) {
+      stars.push(
+        <TouchableOpacity onPress={() => this.submitRating(i)}>
+          <FontAwesomeIcon
+          icon={ i <= this.state.ratingIndex ? faStar : faStarRegular}
+          size={40}
+          style={{
+            color: Color.secondary
+          }}
+          key={i}
+          />
+        </TouchableOpacity>
+      )
+    }
+    return(
+      <View style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'row' 
+        }}>
+        {
+          stars
+        }
+      </View>
+    );
+  }
+
   render() {
+    const { showRatings } = this.state;
     return (
       <View style={{flex: 1}}>
         <View style={styles.MainContainer}>
@@ -160,7 +204,11 @@ class OrderHistoryScreen extends Component {
               Style.btnPrimary,
               {borderRadius: 0, width: Style.getWidth() - 30},
             ]}
-            underlayColor={Color.gray}>
+            underlayColor={Color.gray}
+            onPress={() => this.setState({
+              showRatings: true
+            })}
+            >
             <Text
               style={[
                 {color: Color.tertiary},
@@ -171,6 +219,40 @@ class OrderHistoryScreen extends Component {
             </Text>
           </TouchableHighlight>
         </View>
+
+        {
+          showRatings && (
+            <View style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              height: 125,
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+              backgroundColor: Color.primary,
+              width: '100%',
+              zIndex: 10
+            }}>
+              <View style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+                <Text style={{
+                  color: Color.secondary,
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                  paddingTop: 15,
+                  paddingBottom: 15
+                }}>RATE YOUR EXPERIENCE</Text>
+              </View>
+
+              <View>
+                {this.rating()}
+              </View>
+            </View>
+          )
+        }
       </View>
     );
   }

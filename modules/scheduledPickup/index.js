@@ -13,7 +13,7 @@ class ScheduledPickup extends Component {
   constructor() {
     super();
     this.state = {
-      address: '',
+      address: ''
     };
   }
 

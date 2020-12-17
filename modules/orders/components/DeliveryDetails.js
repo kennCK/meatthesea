@@ -280,7 +280,10 @@ class DeliveryDetails extends Component {
             </View>
             {
               userLocation && (
-                <View style={[BasicStyles.titleText, {marginTop: 10}]}>
+                <View style={{
+                  marginRight: 5,
+                  marginTop: 10
+                }}>
                   <FontAwesomeIcon
                     style={[styles.DeliveryDetailIcon, {
                       marginTop: 2
@@ -307,7 +310,8 @@ class DeliveryDetails extends Component {
                   this.props.navigate('savedAddressStack')
                 }}>
                   <View style={{
-                    marginRight: 5
+                    marginRight: 5,
+                    marginTop: 10
                   }}>
                     <FontAwesomeIcon
                       style={[styles.DeliveryDetailIcon, {
@@ -334,7 +338,8 @@ class DeliveryDetails extends Component {
             }
 
             <View style={{
-                marginRight: 5
+                marginRight: 5,
+                marginTop: 10
               }}>
               <FontAwesomeIcon
                 style={[styles.DeliveryDetailIcon, {
@@ -359,7 +364,8 @@ class DeliveryDetails extends Component {
               this.props.navigate('paymentStack')
             }}>
               <View style={{
-                  flexDirection: 'row'
+                  marginRight: 5,
+                  marginTop: 10
                 }}>
                 <FontAwesomeIcon
                   style={[styles.DeliveryDetailIcon, {

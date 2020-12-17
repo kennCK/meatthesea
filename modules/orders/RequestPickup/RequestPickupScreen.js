@@ -110,7 +110,9 @@ class RequestPickup extends Component {
                 <View style={styles.MainContainer}>
                     <TouchableHighlight
                         style={[BasicStyles.btn, Style.btnPrimary, { borderRadius: 0, width: Style.getWidth() - 30 }]}
-                        underlayColor={Color.gray}>
+                        underlayColor={Color.gray}
+                        onPress={() => this.props.navigation.navigate('scheduledPickupStack')}
+                        >
                         <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(18)]}>
                             COLLECT CROCKERY
                         </Text>

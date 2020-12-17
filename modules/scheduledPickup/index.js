@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, ScrollView, Dimensions} from 'react-native';
 
 import Api from 'services/apiv2/index.js';
 import {Routes} from 'common';
 import Schedule from 'modules/scheduledPickup/Schedule.js';
 import ProgressBar from 'modules/scheduledPickup/ProgressBar.js';
 import styles from 'modules/scheduledPickup/Style.js';
+import {connect} from 'react-redux';
+const height = Math.round(Dimensions.get('window').height);
 
 class ScheduledPickup extends Component {
   constructor() {
     super();
     this.state = {
-      address: '',
+      address: ''
     };
   }
 
@@ -46,18 +48,35 @@ class ScheduledPickup extends Component {
 
   render() {
     return (
-      <View style={styles.MainContainer}>
-        <View style={styles.OrderNumberContainer}>
-          <Text style={styles.OrderNumberStyle}>Order Number 1234</Text>
-        </View>
+      <ScrollView>
+        <View style={[styles.MainContainer, {
+          minHeight: height
+        }]}>
+          <View style={styles.OrderNumberContainer}>
+            <Text style={styles.OrderNumberStyle}>Order Number 1234</Text>
+          </View>
 
-        <View style={styles.ScheduleDetailsContainer}>
-          <ProgressBar />
-          <Schedule address={this.state.address} />
+          <View style={styles.ScheduleDetailsContainer}>
+            <ProgressBar />
+            <Schedule address={this.state.address} />
+          </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
 
-export default ScheduledPickup;
+const mapStateToProps = state => ({state: state});
+
+const mapDispatchToProps = dispatch => {
+  const {actions} = require('@redux');
+  return {
+    setFilter: filter => dispatch(actions.setFilter(filter)),
+    setCart: cart => dispatch(actions.setCart(cart)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ScheduledPickup);

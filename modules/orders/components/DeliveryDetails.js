@@ -280,9 +280,11 @@ class DeliveryDetails extends Component {
             </View>
             {
               userLocation && (
-                <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
+                <View style={[BasicStyles.titleText, {marginTop: 10}]}>
                   <FontAwesomeIcon
-                    style={[styles.DeliveryDetailIcon]}
+                    style={[styles.DeliveryDetailIcon, {
+                      marginTop: 2
+                    }]}
                     color={Color.primary}
                     icon={faMapMarkerAlt}
                     size={BasicStyles.standardFontSize}
@@ -296,7 +298,7 @@ class DeliveryDetails extends Component {
                     {'  '}
                     {userLocation.route + ', ' + userLocation.city + ', ' + userLocation.country}
                   </Text>
-                </Text>
+                </View>
               )
             }
             {
@@ -304,9 +306,13 @@ class DeliveryDetails extends Component {
                 <TouchableOpacity onPress={() => {
                   this.props.navigate('savedAddressStack')
                 }}>
-                  <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
+                  <View style={{
+                    marginRight: 5
+                  }}>
                     <FontAwesomeIcon
-                      style={[styles.DeliveryDetailIcon]}
+                      style={[styles.DeliveryDetailIcon, {
+                        marginTop: 2
+                      }]}
                       color={Color.primary}
                       icon={faMapMarkerAlt}
                       size={BasicStyles.standardFontSize}
@@ -322,14 +328,18 @@ class DeliveryDetails extends Component {
                       {'  '}
                       Click to add address
                     </Text>
-                  </Text>
+                  </View>
                 </TouchableOpacity>
               )
             }
 
-            <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
+            <View style={{
+                marginRight: 5
+              }}>
               <FontAwesomeIcon
-                style={[styles.DeliveryDetailIcon]}
+                style={[styles.DeliveryDetailIcon, {
+                    marginTop: 2
+                  }]}
                 color={Color.primary}
                 icon={faClock}
                 size={BasicStyles.standardFontSize}
@@ -343,14 +353,18 @@ class DeliveryDetails extends Component {
                 {'  '}
                 {'Delivery time: ' + (deliveryTime ? deliveryTime : 'Required')}
               </Text>
-            </Text>
+            </View>
 
             <TouchableOpacity onPress={() => {
               this.props.navigate('paymentStack')
             }}>
-              <Text style={[BasicStyles.titleText, {marginTop: 10}]}>
+              <View style={{
+                  flexDirection: 'row'
+                }}>
                 <FontAwesomeIcon
-                  style={[styles.DeliveryDetailIcon]}
+                  style={[styles.DeliveryDetailIcon, {
+                    marginTop: 2
+                  }]}
                   color={Color.primary}
                   icon={faCreditCard}
                   size={BasicStyles.standardFontSize}
@@ -359,12 +373,14 @@ class DeliveryDetails extends Component {
                   style={[
                     BasicStyles.titleText,
                     styles.DeliveryDetailText,
-                    {fontSize: BasicStyles.standardFontSize},
+                    {
+                      fontSize: BasicStyles.standardFontSize
+                    },
                   ]}>
                   {'  '}
                   {'Payment Method: ' + (paymentMethod ? paymentMethod.type + ' ending ' + paymentMethod.last4 : 'Click to add payment method')}
                 </Text>
-              </Text>
+              </View>
             </TouchableOpacity>
             
           </View>

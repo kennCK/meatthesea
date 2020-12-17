@@ -22,7 +22,8 @@ const types = {
   SET_USER_LOCATION: 'SET_USER_LOCATION',
   SET_PAYMENT_METHOD: 'SET_PAYMENT_METHOD',
   SET_PICKUP_CROCKERIES: 'SET_PICKUP_CROCKERIES',
-  SET_SELECTED_DELIVERY_TIME: 'SET_SELECTED_DELIVERY_TIME'
+  SET_SELECTED_DELIVERY_TIME: 'SET_SELECTED_DELIVERY_TIME',
+  SET_ORDER: 'SET_ORDER',
 };
 
 export const actions = {
@@ -82,7 +83,10 @@ export const actions = {
   },
   setSelectedDeliveryTime(deliveryTime){
     return { type: types.SET_SELECTED_DELIVERY_TIME, deliveryTime };
-  }
+  },
+  setOrder(order){
+    return { type: types.SET_ORDER, order };
+  },
 };
 
 const initialState = {
@@ -102,7 +106,8 @@ const initialState = {
   userLocation: null,
   paymentMethod: null,
   crockeries: null,
-  deliveryTime: null
+  deliveryTime: null,
+  order: null
 };
 
 storeData = async (key, value) => {
@@ -122,7 +127,7 @@ const reducer = (state = initialState, action) => {
   const {stores} = action;
   const { filter, categories, settings, search } = action;
   const { cart, details, payment } = action;
-  const { crockeries, deliveryTime } = action;
+  const { crockeries, deliveryTime, order } = action;
 
   switch (type) {
     case types.LOGOUT:
@@ -275,6 +280,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         deliveryTime
+      }
+    case types.SET_ORDER:
+      return {
+        ...state,
+        order
       }
     default:
       return {...state, nav: state.nav};

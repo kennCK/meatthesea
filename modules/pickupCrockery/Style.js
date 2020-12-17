@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import {BasicStyles} from 'common';
+import {BasicStyles, Color} from 'common';
 
 const styles = StyleSheet.create({
   MainContainer: {
@@ -8,12 +8,12 @@ const styles = StyleSheet.create({
   },
   OrderContainer: {
     width: '100%',
-    elevation: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: 20,
-
+    borderBottomColor: Color.gray,
+    borderBottomWidth: 1,
     backgroundColor: '#F7F7F7',
   },
   OrderNumberStyle: {

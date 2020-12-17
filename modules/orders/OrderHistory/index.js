@@ -6,6 +6,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { BasicStyles } from 'common';
 import OrderHistoryScreen from './OrderHistoryScreen';
 import { connect } from 'react-redux';
+import Pager from './OrderHistoryPager';
 
 class HeaderOptions extends Component {
     constructor(props) {
@@ -58,7 +59,7 @@ let Header = connect(
 
 const StackNavigator = createStackNavigator({
     orderHistoryScreen: {
-        screen: OrderHistoryScreen,
+        screen: Pager,
         navigationOptions: ({ navigation }) => ({
             title: 'Order History',
             headerLeft: () => <Header navigationProps={navigation} />,

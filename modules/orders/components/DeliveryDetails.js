@@ -315,7 +315,7 @@ class DeliveryDetails extends Component {
                   }}>
                     <FontAwesomeIcon
                       style={[styles.DeliveryDetailIcon, {
-                        marginTop: 2
+                        marginTop: 3
                       }]}
                       color={Color.primary}
                       icon={faMapMarkerAlt}
@@ -343,7 +343,7 @@ class DeliveryDetails extends Component {
               }}>
               <FontAwesomeIcon
                 style={[styles.DeliveryDetailIcon, {
-                    marginTop: 2
+                    marginTop: 3
                   }]}
                 color={Color.primary}
                 icon={faClock}
@@ -369,7 +369,7 @@ class DeliveryDetails extends Component {
                 }}>
                 <FontAwesomeIcon
                   style={[styles.DeliveryDetailIcon, {
-                    marginTop: 2
+                    marginTop: 3
                   }]}
                   color={Color.primary}
                   icon={faCreditCard}

@@ -13,6 +13,7 @@ class OrderTile extends Component {
   setSelectedOrder(item){
     const { setOrder } = this.props;
     setOrder(item)
+    console.log('navigate')
     this.props.navigate()
   }
   render() {
@@ -21,7 +22,7 @@ class OrderTile extends Component {
         width: '100%'
       }}
       onPress={() => {
-
+        this.setSelectedOrder(this.props.data)
       }}
       >
          <View style={styles.OrderContainer}>

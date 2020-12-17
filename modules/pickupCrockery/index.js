@@ -71,6 +71,7 @@ class PickupCrockery extends Component {
             handlePagination={this.handlePagination}
             resetPage={this.resetPage}
             isLoading={this.state.isLoading}
+            navigation={this.props.navigation}
           />
         );
         break;
@@ -84,6 +85,7 @@ class PickupCrockery extends Component {
             resetPage={this.resetPage}
             isLoading={this.state.isLoading}
             withIcon={true}
+            navigation={this.props.navigation}
           />
         );
         break;

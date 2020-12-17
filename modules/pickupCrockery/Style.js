@@ -31,26 +31,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   NotificationContainer: {
-    position: 'absolute',
     backgroundColor: '#FF0045',
-    right: '25%',
-    bottom: '25%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 5,
     height: 20,
     width: 20,
-    borderRadius: 20,
-    borderWidth: 0.5,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderColor: '#FF0045',
   },
   NotificationTextStyle: {
-    position: 'relative',
-    bottom: 3,
     color: 'white',
-    fontSize: BasicStyles.standardFontSize,
-    textAlign: 'center',
-    alignSelf: 'center',
+    fontSize: 10
   },
 });
 

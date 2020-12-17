@@ -51,14 +51,17 @@ class Pagination extends Component {
                     }}>
                     {item.title}
                   </Text>
+                  
+                  {item.title === this.props.notificationTitle && (
+                    <View style={[styles.NotificationContainer, {
+                      marginLeft: 10
+                    }]}>
+                      <Text style={styles.NotificationTextStyle}>
+                        {this.props.notificationCount}
+                      </Text>
+                    </View>
+                  )}
                 </View>
-                {item.title === this.props.notificationTitle && (
-                  <View style={styles.NotificationContainer}>
-                    <Text style={styles.NotificationTextStyle}>
-                      {this.props.notificationCount}
-                    </Text>
-                  </View>
-                )}
               </TouchableOpacity>
             ))}
           </ScrollView>

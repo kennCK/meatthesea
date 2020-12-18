@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
     View, Text, TouchableOpacity, ScrollView, TouchableHighlight, Modal,
+    ActivityIndicator
 } from 'react-native';
 // import Modal from 'react-native-modal';
 import styles from '../Style';
@@ -26,7 +27,8 @@ class OrderSummaryScreen extends Component {
       hour: '',
       mins: '',
       key: 1,
-      errorMessage: null
+      errorMessage: null,
+      isSubmit: 0
     };
   }
 
@@ -66,7 +68,15 @@ class OrderSummaryScreen extends Component {
 
   placeOrder(){
     const { user, userLocation, paymentMethod, deliveryTime, cart, orderDetails} = this.props.state;
-    this.redirect('orderPlacedStack')
+    this.setState({
+      isSubmit: 1
+    })
+    setTimeout(() => {
+      this.setState({
+        isSubmit: 0
+      })
+      this.redirect('orderPlacedStack')
+    }, 2000)
     if(user == null){
       this.setState({
         errorMessage: 'Invalid Customer Information'
@@ -107,6 +117,17 @@ class OrderSummaryScreen extends Component {
     const { errorMessage } = this.state;
     return (
       <View style={{ flex: 1 }} key={this.state.key}>
+        <Modal visible={this.state.isSubmit > 0 ? true : false}>
+          <View style={{ flex: 1, backgroundColor: Color.primary, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator
+              size={100}
+              color={Color.secondary}
+              style={[
+                styles.wrapper
+              ]}
+            />
+          </View>
+        </Modal>
         <Modal visible={this.state.isVisible} >
           <View style={{ flex: 1, backgroundColor: Color.primary }}>
           <TouchableOpacity

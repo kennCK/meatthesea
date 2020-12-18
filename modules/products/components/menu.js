@@ -47,12 +47,15 @@ class Menu extends Component {
     }
     if (search == null || search == '' || location == null) {
       console.log('retrieve not search');
+      this.props.load(true)
       Api.getRequest(
         Routes.productsRetrieve + '?categoryid=' + filter.id,
         response => {
+          this.props.load(false)
           this.setState({products: response.products});
         },
         error => {
+          this.props.load(false)
           console.log(error);
         },
       );
@@ -67,9 +70,11 @@ class Menu extends Component {
       Api.getRequest(
         Routes.productSearch + parameters,
         response => {
+          this.props.load(false)
           this.setState({products: response.products});
         },
         error => {
+          this.props.load(false)
           console.log(error);
         },
       );
@@ -81,14 +86,17 @@ class Menu extends Component {
     if (user == null) {
       return;
     }
+    this.props.load(true)
     Api.getRequest(
       Routes.shoppingCartItemsRetrieve + '/' + user.id,
       response => {
+        this.props.load(false)
         const {setCart} = this.props;
         setCart(response.shopping_carts);
         this.retrieveProducts();
       },
       error => {
+        this.props.load(false)
         console.log(error);
       },
     );
@@ -104,6 +112,7 @@ class Menu extends Component {
         this.props.load(false);
       },
       error => {
+        this.props.load(false)
         console.log(error);
       },
     );
@@ -119,6 +128,7 @@ class Menu extends Component {
         this.props.load(false);
       },
       error => {
+        this.props.load(false)
         console.log(error);
       },
     );

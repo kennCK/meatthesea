@@ -25,12 +25,10 @@ class Products extends Component {
     if(location == null){
       return
     }
-    this.props.load(true);
     Api.getRequest(
       Routes.restaurantCategoriesRetrieve + '?storeId=' + location.id,
       response => {
         setRestaurantCategories(response.categories)
-        this.props.load(false);
       },
       error => {
         console.log(error);
@@ -43,12 +41,10 @@ class Products extends Component {
     if(location == null){
       return
     }
-    this.props.load(true);
     Api.getRequest(
       Routes.deliCategoriesRetrieve + '?storeId=' + location.id,
       response => {
         setDeliCategories(response.categories)
-        this.props.load(false);
       },
       error => {
         console.log(error);

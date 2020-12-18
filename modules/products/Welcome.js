@@ -81,10 +81,13 @@ class Welcome extends Component {
     if(user == null){
       return
     }
+    this.isLoading(true);
     Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
+        this.isLoading(false);
         const { setCart } = this.props;
         setCart(response.shopping_carts)
       }, (error) => {
+        this.isLoading(false);
         console.log(error);
     });
   }
@@ -93,7 +96,6 @@ class Welcome extends Component {
     if (data == null) {
       this.setState({products: null});
     } else {
-      this.isLoading(true);
     }
     const { setHomepageSettings } = this.props;
     setHomepageSettings({
@@ -156,7 +158,7 @@ class Welcome extends Component {
 
   render() {
     const { homepage, search, cart, crockeries } = this.props.state;
-    const { showRatings } = this.state;
+    const { showRatings, isLoading } = this.state;
     return (
       <View style={Style.MainContainer}>
         <Modal
@@ -473,6 +475,7 @@ class Welcome extends Component {
             </View>
           )
         }
+        {isLoading ? <Spinner mode="overlay"/> : null }
       </View>
     );
   }

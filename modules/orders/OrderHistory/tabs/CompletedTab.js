@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {Text, FlatList, View, ScrollView} from 'react-native';
-import OrderTile from 'modules/pickupCrockery/OrderTile';
+import OrderTile from '../OrderTile';
 import {ActivityIndicatorComponent} from 'react-native';
 
-class ScheduledTab extends Component {
+class CompletedTab extends Component {
   constructor(props) {
     super(props);
   }
@@ -20,7 +20,7 @@ class ScheduledTab extends Component {
           orderNumber={order.id}
           orderDate={date}
           data={order}
-          navigate={() => this.props.navigation.navigate('scheduledPickupStack')}
+          navigate={() => this.props.navigation.navigate('orderDetailsStack')}
         />
       );
     });
@@ -54,4 +54,4 @@ class ScheduledTab extends Component {
   }
 }
 
-export default ScheduledTab;
+export default CompletedTab;

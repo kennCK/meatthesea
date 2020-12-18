@@ -1,8 +1,8 @@
 export default {
   pagerMenu: [
     {
-      title: 'SCHEDULED',
-      value: 'scheduled',
+      title: 'COMPLETED',
+      value: 'completed',
     },
     {
       title: 'PENDING',

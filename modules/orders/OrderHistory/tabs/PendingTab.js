@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, FlatList, View, ScrollView} from 'react-native';
-import OrderTile from 'modules/pickupCrockery/OrderTile';
+import OrderTile from '../OrderTile';
 import {ActivityIndicatorComponent} from 'react-native';
 
 class PendingTab extends Component {
@@ -9,7 +9,7 @@ class PendingTab extends Component {
   }
 
   displayOrders = () => {
-    console.log('displayOrders');
+    console.log('o r d e r h i s t o r y');
     let orders = this.props.orders;
     return orders.map((order, index) => {
       var date = new Date(order.paid_date_utc).toLocaleDateString();
@@ -20,7 +20,7 @@ class PendingTab extends Component {
           orderNumber={order.id}
           orderDate={date}
           data={order}
-          navigate={() => this.props.navigation.navigate('pendingPickUpStack')}
+          navigate={() => this.props.navigation.navigate('orderDetailsStack')}
         />
       );
     });

@@ -46,11 +46,12 @@ class Menu extends Component {
       return;
     }
     if (search == null || search == '' || location == null) {
-      console.log('retrieve not search');
+      console.log('retrieve not search | ', filter);
       this.props.load(true)
       Api.getRequest(
         Routes.productsRetrieve + '?categoryid=' + filter.id,
         response => {
+          // console.log("---p r o d u c t s--> \n", response.products)
           this.props.load(false)
           this.setState({products: response.products});
         },

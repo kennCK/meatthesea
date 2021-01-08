@@ -41,22 +41,29 @@ export default {
     justifyContent: 'space-between',
     paddingLeft: 15,
     paddingRight: 15,
-    height: 30,
-    marginTop: 10
+    height: 20,
+    marginTop: 10,
+    paddingBottom: 0,
+    marginBottom: 0
   },
   itemName: {
+    paddingBottom: 0,
+    marginBottom: 0,
     fontWeight: 'bold',
     fontSize: BasicStyles.standardFontSize
   },
   itemPrice: {
-    fontSize: BasicStyles.standardFontSize
+    paddingBottom: 0,
+    marginBottom: 0,
+    fontSize: BasicStyles.standardFontSize,
   },
   itemDetails: {
     flexDirection: 'row',
     width: width,
     paddingLeft: 15,
     paddingRight: 15,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginTop: 0
   },
   detailsText: {
     fontSize: BasicStyles.standardFontSize

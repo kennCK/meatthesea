@@ -10,7 +10,7 @@ class OrderTile extends Component {
     super(props);
   }
 
-  setSelectedOrder(item){
+  setSelectedOrder = (item) => {
     const { setOrder } = this.props;
     setOrder(item)
     console.log('navigate')

@@ -33,14 +33,17 @@ class OrderSummaryScreen extends Component {
   }
 
   componentDidMount(){
+    console.log("--------------- order summary screen ------------")
   }
 
   retrieveCart = () => {
+    console.log("retrieving ... ")
     const { user } = this.props.state;
     if(user == null){
       return
     }
     Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
+        console.log("summary ->>>>> ", response)
         const { setCart } = this.props;
         setCart(response.shopping_carts)
         this.setState({
@@ -66,8 +69,8 @@ class OrderSummaryScreen extends Component {
     this.setState({ isVisible: !isVisible })
   }
 
-  placeOrder(){
-    const { user, userLocation, paymentMethod, deliveryTime, cart, orderDetails} = this.props.state;
+  placeOrder = () => {
+    const { user, userLocation, paymentMethod, deliveryTime, cart, orderDetails, location} = this.props.state;
     this.setState({
       isSubmit: 1
     })
@@ -83,33 +86,45 @@ class OrderSummaryScreen extends Component {
       })
       return
     }
-    if(userLocation == null){
-      this.setState({
-        errorMessage: 'Address is required.'
-      })
-      return
-    }
-    if(paymentMethod == null){
-      this.setState({
-        errorMessage: 'Payment Method is required.'
-      })
-      return
-    }
-    if(deliveryTime == null){
-      this.setState({
-        errorMessage: 'Delivery Time is required.'
-      })
-      return
-    }
+    /**
+     * conditions below were disregarded for initial api request
+     */
+    // if(userLocation == null){
+    //   this.setState({
+    //     errorMessage: 'Address is required.'
+    //   })
+    //   return
+    // }
+    // if(paymentMethod == null){
+    //   this.setState({
+    //     errorMessage: 'Payment Method is required.'
+    //   })
+    //   return
+    // }
+    // if(deliveryTime == null){
+    //   this.setState({
+    //     errorMessage: 'Delivery Time is required.'
+    //   })
+    //   return
+    // }
+    // let parameters = {
+    //   customerId: user.id,
+    //   location: userLocation,
+    //   paymentMethod: paymentMethod,
+    //   deliveryTime: deliveryTime,
+    //   carts: cart,
+    //   orderSummary: orderDetails
+    // }
     let parameters = {
-      customerId: user.id,
-      location: userLocation,
-      paymentMethod: paymentMethod,
-      deliveryTime: deliveryTime,
-      carts: cart,
-      orderSummary: orderDetails
+      CustomerId: user.id,
+      StoreId: location.id,
+      AddressId: 1
     }
-    this.redirect('orderPlacedStack')
+    Api.postRequest(Routes.ordersConfirm(user.id, location.id, 1), {}, (response) => {
+       this.redirect('orderPlacedStack')
+      }, (error) => {
+        console.log(error);
+    });
   }
 
   render() {
@@ -211,6 +226,7 @@ class OrderSummaryScreen extends Component {
         <Separator />
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={[styles.OrderHistoryListContainer]}>
           <View >
+            <Text> Testing ... </Text>
             {
               cart && cart.map((cartItem, idx) => {
                   return <OrderItems key={idx} data={cartItem} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>

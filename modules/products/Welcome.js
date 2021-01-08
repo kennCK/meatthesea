@@ -157,7 +157,7 @@ class Welcome extends Component {
   }
 
   render() {
-    const { homepage, search, cart, crockeries } = this.props.state;
+    const { homepage, search, cart, crockeries, user } = this.props.state;
     const { showRatings, isLoading } = this.state;
     return (
       <View style={Style.MainContainer}>
@@ -230,16 +230,31 @@ class Welcome extends Component {
         />
         <View>
           <View style={Style.delivery}>
-            <Text style={[{fontSize: BasicStyles.standardFontSize, flex: 1}]}>
-              Deliver to:{' '}
-            </Text>
-            <Text
-              style={[
-                Style.textPrimary,
-                {flex: 3, fontSize: BasicStyles.standardFontSize},
-              ]}>
-              1a, Centre Stage Tower 1
-            </Text>
+            <View style={
+              {
+                flex: 1,
+                flexDirection: 'row'
+              }
+            }>
+              <Text style={[{fontSize: BasicStyles.standardFontSize}]}>
+                Deliver to:{' '}
+              </Text>
+              <TouchableOpacity 
+                onPress={
+                  () => {
+                    this.props.navigation.navigate('savedAddressStack')
+                  }
+                }
+              >
+                <Text
+                  style={[
+                    Style.textPrimary,
+                    {fontSize: BasicStyles.standardFontSize},
+                  ]}>
+                  1a, Centre Stage Tower 1
+                </Text>
+              </TouchableOpacity>
+            </View>
             <TouchableOpacity
               style={[{flex: 0}]}
               onPress={() => this.deliveryModal()}>

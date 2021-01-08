@@ -91,13 +91,14 @@ export default {
     paddingRight: 10
   },
   delivery: {
-    width: "100%",
+    width: width,
     flexDirection: 'row',
     borderWidth: 1,
     padding: 10,
     borderColor: Color.gray,
     alignItems: 'center',
-    backgroundColor: Color.white
+    backgroundColor: Color.white,
+    justifyContent: 'space-between'
   },
   searchBar: {
     flex: 1, 

@@ -63,7 +63,8 @@ export default {
   ordersDeleteById: id => apiUrl + 'orders/' + id,
   ordersUpdateById: id => apiUrl + 'orders/' + id,
   ordersRetrieveByCustomer: customer_id =>
-    apiUrl + 'orders/customer/' + customer_id,
+    apiUrl + 'orders/customer/' + customer_id + '?customerId=' + customer_id,
+  ordersConfirm: (CustomerId, StoreId, AddressId) => apiUrl + 'confirm_order?' + 'CustomerId=' + CustomerId + '&StoreId=' + StoreId + '&AddressId=' + AddressId,  
 
   // ProductAttributes
   productAttribuesRetrieve: apiUrl + 'productattributes',

@@ -35,7 +35,7 @@ class Pagination extends Component {
   }
 
   async componentDidMount() {
-    console.log("==========u s e r========== " + JSON.stringify(this.props.state.user) + "========= u s e r =========")
+    // console.log("==========u s e r========== " + JSON.stringify(this.props.state.user) + "========= u s e r =========")
     this.getOrders();
   }
 
@@ -43,13 +43,15 @@ class Pagination extends Component {
     this.setState({
       isLoading: true,
     });
+    // console.log("userID ", this.props.state.user)
     Api.getRequest(
-      Routes.ordersRetrieve + '?limit=' + 1 + '&page=' + this.state.pageNumber, // use the route below
-      // Routes.ordersRetrieveByCustomer(this.props.state.user.customer_guid),
+      // Routes.ordersRetrieve + '?limit=' + 1 + '&page=' + this.state.pageNumber, // use the route below
+      Routes.ordersRetrieveByCustomer(this.props.state.user.id),
       response => {
-        console.log("======= order history response =======" + JSON.stringify(response))
+        // console.log("======= order history response =======" + JSON.stringify(response))
         this.setState(prevState => ({
-          orders: _.uniqBy([...this.state.orders, ...response.orders], 'id'),
+          // orders: _.uniqBy([...this.state.orders, ...response.orders], 'id'),
+          orders: response.orders,
           isLoading: false,
         }));
       },

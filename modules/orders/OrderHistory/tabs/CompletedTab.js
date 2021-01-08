@@ -2,14 +2,21 @@ import React, {Component} from 'react';
 import {Text, FlatList, View, ScrollView} from 'react-native';
 import OrderTile from '../OrderTile';
 import {ActivityIndicatorComponent} from 'react-native';
+import { connect } from 'react-redux';
 
 class CompletedTab extends Component {
   constructor(props) {
     super(props);
   }
 
+  seeDetails = (data) => {
+    const { setOrderDetails } = this.props
+    setOrderDetails(data)
+    this.props.navigation.navigate('orderDetailsStack')
+  }
+
   displayOrders = () => {
-    console.log('displayOrders');
+    // console.log('displayOrders');
     let orders = this.props.orders;
     return orders.map((order, index) => {
       var date = new Date(order.paid_date_utc).toLocaleDateString();
@@ -20,7 +27,7 @@ class CompletedTab extends Component {
           orderNumber={order.id}
           orderDate={date}
           data={order}
-          navigate={() => this.props.navigation.navigate('orderDetailsStack')}
+          navigate={() => this.seeDetails(order)}
         />
       );
     });
@@ -54,4 +61,15 @@ class CompletedTab extends Component {
   }
 }
 
-export default CompletedTab;
+const mapStateToProps = (state) => ({
+  state: state
+});
+
+const mapDispatchToProps = (dispatch) => {
+  const {actions} = require('@redux');
+  return {
+    setOrderDetails: (orderDetails) => dispatch(actions.setOrderDetails(orderDetails))
+  };
+};
+
+export default connect( mapStateToProps,mapDispatchToProps)(CompletedTab);

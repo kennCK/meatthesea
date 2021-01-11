@@ -18,6 +18,8 @@ class PickupCrockery extends Component {
       orderLength: 0,
       pageNumber: 1,
       isLoading: false,
+      scheduled: [],
+      pending: []
     };
   }
 
@@ -30,10 +32,21 @@ class PickupCrockery extends Component {
       isLoading: true,
     });
     Api.getRequest(
-      Routes.ordersRetrieve + '?limit=' + 1 + '&page=' + this.state.pageNumber,
+      Routes.ordersRetrieve + '?limit=' + 5 + '&page=' + this.state.pageNumber,
       response => {
+        tempScheduled = []
+        tempPending = []
+        response.orders.forEach(el => {
+          if(el.order_status.toLowerCase() == 'processing') {
+            tempScheduled.push(el)
+          }else if(el.order_status.toLowerCase() == 'pending') {
+            tempPending.push(el)
+          }
+        })
         this.setState(prevState => ({
           orders: _.uniqBy([...this.state.orders, ...response.orders], 'id'),
+          scheduled: _.uniqBy([...this.state.scheduled, ...tempScheduled], 'id'),
+          pending: _.uniqBy([...this.state.pending, ...tempPending], 'id'),
           isLoading: false,
         }));
       },
@@ -67,7 +80,7 @@ class PickupCrockery extends Component {
           <ScheduledTab
             height={height}
             isLoading={this.state.isLoading}
-            orders={this.state.orders}
+            orders={this.state.scheduled}
             handlePagination={this.handlePagination}
             resetPage={this.resetPage}
             isLoading={this.state.isLoading}
@@ -80,7 +93,7 @@ class PickupCrockery extends Component {
           <PendingTab
             height={height}
             isLoading={this.state.isLoading}
-            orders={this.state.orders}
+            orders={this.state.pending}
             handlePagination={this.handlePagination}
             resetPage={this.resetPage}
             isLoading={this.state.isLoading}
@@ -102,7 +115,7 @@ class PickupCrockery extends Component {
           activeIndex={this.state.index}
           onChange={this.onTabChange}
           notificationTitle={'PENDING'}
-          notificationCount={this.state.orders.length}
+          notificationCount={this.state.pending.length}
         />
         <View>{this.getCurrentTab()}</View>
       </View>

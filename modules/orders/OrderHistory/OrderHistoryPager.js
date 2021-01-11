@@ -22,7 +22,7 @@ import { Spinner } from 'components';
 const width = Math.round(Dimensions.get('window').width);
 const height = Math.round(Dimensions.get('window').height);
 
-class Pagination extends Component {
+class Pager extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,11 +31,12 @@ class Pagination extends Component {
       orderLength: 0,
       pageNumber: 1,
       isLoading: false,
+      completed: [],
+      pending: []
     };
   }
 
   async componentDidMount() {
-    // console.log("==========u s e r========== " + JSON.stringify(this.props.state.user) + "========= u s e r =========")
     this.getOrders();
   }
 
@@ -43,14 +44,19 @@ class Pagination extends Component {
     this.setState({
       isLoading: true,
     });
-    // console.log("userID ", this.props.state.user)
     Api.getRequest(
       // Routes.ordersRetrieve + '?limit=' + 1 + '&page=' + this.state.pageNumber, // use the route below
       Routes.ordersRetrieveByCustomer(this.props.state.user.id),
       response => {
-        // console.log("======= order history response =======" + JSON.stringify(response))
+        this.setState({completed: [], pending: []})
+        response.orders.forEach(el => {
+          if(el.order_status.toLowerCase() == 'pending') {
+            this.state.pending.push(el)
+          }else if(el.order_status.toLowerCase() == 'complete') {
+            this.state.completed.push(el)
+          }
+        })
         this.setState(prevState => ({
-          // orders: _.uniqBy([...this.state.orders, ...response.orders], 'id'),
           orders: response.orders,
           isLoading: false,
         }));
@@ -71,20 +77,27 @@ class Pagination extends Component {
     this.setState({activeIndex: index})
   }
 
+  onTabChange = i => {
+    this.setState({activeIndex: i});
+  };
+
   getCurrentTab = () => {
     let tab;
     switch (this.state.activeIndex) {
       case 0:
         tab = (
+          <View>
+            {/* {console.log('===00000===> ', this.filterOrder('completed'))} */}
           <CompletedTab
             height={height}
             isLoading={this.state.isLoading}
-            orders={this.state.orders}
+            orders={this.state.completed}
             handlePagination={this.handlePagination}
             resetPage={this.resetPage}
             isLoading={this.state.isLoading}
             navigation={this.props.navigation}
           />
+          </View>
         );
         break;
       case 1:
@@ -92,7 +105,7 @@ class Pagination extends Component {
           <PendingTab
             height={height}
             isLoading={this.state.isLoading}
-            orders={this.state.orders}
+            orders={this.state.pending}
             handlePagination={this.handlePagination}
             resetPage={this.resetPage}
             isLoading={this.state.isLoading}
@@ -142,12 +155,12 @@ class Pagination extends Component {
                     {item.title}
                   </Text>
                   
-                  {item.title === this.props.notificationTitle && (
+                  {item.title === 'PENDING' && (
                     <View style={[styles.NotificationContainer, {
                       marginLeft: 10
                     }]}>
                       <Text style={styles.NotificationTextStyle}>
-                        {this.props.notificationCount}
+                        {this.state.pending.length}
                       </Text>
                     </View>
                   )}
@@ -172,4 +185,4 @@ const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Pagination);
+export default connect(mapStateToProps, mapDispatchToProps)(Pager);

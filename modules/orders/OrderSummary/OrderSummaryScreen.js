@@ -32,18 +32,12 @@ class OrderSummaryScreen extends Component {
     };
   }
 
-  componentDidMount(){
-    console.log("--------------- order summary screen ------------")
-  }
-
   retrieveCart = () => {
-    console.log("retrieving ... ")
     const { user } = this.props.state;
     if(user == null){
       return
     }
     Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
-        console.log("summary ->>>>> ", response)
         const { setCart } = this.props;
         setCart(response.shopping_carts)
         this.setState({
@@ -226,7 +220,6 @@ class OrderSummaryScreen extends Component {
         <Separator />
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={[styles.OrderHistoryListContainer]}>
           <View >
-            <Text> Testing ... </Text>
             {
               cart && cart.map((cartItem, idx) => {
                   return <OrderItems key={idx} data={cartItem} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>

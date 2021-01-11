@@ -203,7 +203,7 @@ class AppOnBoarding extends Component {
 
             <View style={{marginTop: 70}}>
               <TouchableHighlight
-                style={[Style.btnWhite, Style.btnSm, Style.btnLight]}
+                style={[BasicStyles.btn, Style.btnWhite]}
                 onPress={() => this.redirect('loginStack')}
                 underlayColor={Color.gray}>
                 <Text
@@ -216,7 +216,7 @@ class AppOnBoarding extends Component {
                 </Text>
               </TouchableHighlight>
               <TouchableHighlight
-                style={[Style.btnWhite, Style.btnSm]}
+                style={[Style.btnWhite, BasicStyles.btnSm]}
                 onPress={() => this.redirect('registerStack')}
                 underlayColor={Color.gray}>
                 <Text

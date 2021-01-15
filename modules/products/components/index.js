@@ -3,7 +3,8 @@ import {
   View,
   Image,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Text
 } from 'react-native';
 import Style from './style.js';
 import ProductItem from './productItems.js';
@@ -74,7 +75,7 @@ class Products extends Component {
     ];
     const { restaurant, deliStore } = this.props.state;
     return (
-      <View style={[{flex: 1, backgroundColor:Color.white}]}>
+      <View style={[{flex: 1, backgroundColor:Color.white, padding: 0}]}>
         <Pagination
           menu={menu}
           activeIndex={this.props.active}
@@ -82,8 +83,8 @@ class Products extends Component {
         />
         {this.props.active == 0 && (
           <ScrollView
-            style={this.props.active == 0 ? Style.showScroll : Style.hideScroll}
-            showsVerticalScrollIndicator={false}>
+          style={this.props.active == 0 ? Style.showScroll : Style.hideScroll}
+          showsVerticalScrollIndicator={false}>
             <View style={Style.scrollContainer}>
               <Image source={require('assets/products/res.png')} />
               <View style={Style.imageRow}>

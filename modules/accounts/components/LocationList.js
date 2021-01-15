@@ -16,7 +16,13 @@ export default class LocationsList extends Component {
         return (
             <FlatList
                 data={stores}
-                renderItem={({ item }) => <FlatListItem  {...{ item: item, callback: this.props.callback, selected: this.props.selected }} />}
+                renderItem={
+                    ({ item }) => 
+                        <FlatListItem  
+                            {...{ item: item, callback: this.props.callback, selected: this.props.selected }}
+                        />
+                }
+                keyExtractor={(item, index) => 'locations ' + item.id}
             />
         );
     }

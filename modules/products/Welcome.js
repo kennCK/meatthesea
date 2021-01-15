@@ -131,7 +131,7 @@ class Welcome extends Component {
     let stars = []
     for(let i = 0; i < 5; i++) {
       stars.push(
-        <TouchableOpacity onPress={() => this.submitRating(i)}>
+        <TouchableOpacity onPress={() => this.submitRating(i)} key={'start' + i}>
           <FontAwesomeIcon
           icon={ i <= this.state.ratingIndex ? faStar : faStarRegular}
           size={40}

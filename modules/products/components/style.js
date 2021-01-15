@@ -60,10 +60,12 @@ export default {
     height: 5
   },
   showScroll: {
-    visibility: 'visible'
+    visibility: 'visible',
+    marginTop: -10
   },
   hideScroll: {
-    visibility: 'hidden'
+    visibility: 'hidden',
+    marginTop: -10
   },
   modalBlue: {
     backgroundColor: Color.primary,

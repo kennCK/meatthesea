@@ -90,7 +90,7 @@ class AppOnBoarding extends Component {
     if (this.validate() == false) {
       return;
     }
-    console.log('test2')
+    console.log('test2 -------------------appOnBoarding.js submit() --------------------->')
     login(null, null, null, null)
     this.redirect("homepageStack")
   }
@@ -100,7 +100,7 @@ class AppOnBoarding extends Component {
     if (this.validate() == false) {
       return;
     }
-    console.log('test3')
+    console.log('test3-----------------------appOnBoarding.js directLogin() ------------------------------>')
     const { email, password } = this.state;
     const { login } = this.props;
     if ((email != null && email != '') && (password != null && password != '')) {

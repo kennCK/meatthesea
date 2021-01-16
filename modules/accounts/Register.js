@@ -82,16 +82,20 @@ class Register extends Component {
       location,
       phoneNumber
     } = this.state;
+    const { login } = this.props;
     if(this.validate() == true){
       console.log(true)
         Api.postRequest(
           Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname"+fullName+"&PhoneNumber="+phoneNumber+"&Address1="+location+"&StoreId=1", null,
           response => {
+            let { customer, authorization } = response;
             this.setState({ isLoading: false })
-            this.props.navigation.navigate('loginStack')
+            login(email, password, customer, authorization);
+            this.props.navigation.navigate('homepageStack')
           },
           error => {
             console.log(error)
+            login(null, null, null, null);
             this.setState({ isLoading: false })
             this.setState({ isResponseError: true })
           },
@@ -300,7 +304,7 @@ const mapDispatchToProps = dispatch => {
   const { actions } = require('@redux');
   return {
     setLocation: location => dispatch(actions.setLocation(location)),
-    login: (user, token) => dispatch(actions.login(user, token)),
+    login: (email, password, user, token) => dispatch(actions.login(email, password, user, token)),
     logout: () => dispatch(actions.logout())
   };
 };

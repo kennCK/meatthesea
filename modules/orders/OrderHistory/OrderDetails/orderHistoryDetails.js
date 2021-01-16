@@ -18,12 +18,9 @@ class OrderHistoryDetails extends Component {
     super(props);
     this.state = {
       restaurant: [],
-      store: []
+      store: [],
+      temporary: []
     }
-  }
-
-  componentDidMount(){
-    console.log("====== order details mounted ====== ", this.props.state.orderDetails)
   }
 
   filterOrder = () => {
@@ -33,31 +30,26 @@ class OrderHistoryDetails extends Component {
      * 
      *  */ 
     this.props.state.orderDetails.order_items.forEach(el=> {
-      // if(el.product.full_description.toLowerCase().includes('deli-shop')){
-      //   this.state.store.push(el)
-      // }else {
-      //   this.state.restaurant.push(el)
-      // }
-      let keys = Object.keys(el.product)
-      if(keys.includes('category') && el.product.category == 'restaurant'){
+      /**
+       * categorizes(Restaurant, Deli-Shop) the products response from api
+       */
+      if(el.product.category_type === 1){
         this.state.store.push(el)
-      }else if(keys.includes('category')){
+      }else if(el.product.category_type === 0){
         this.state.restaurant.push(el)
       }
     })
-    console.log("\nrestaturant ", this.state.restaurant.length, "shop ", this.state.store.length, "\n")
   }
 
   itemMenu = (stateVariable) => {
-    // loop the elements
+    const currency = this.props.state.orderDetails.customer_currency_code
     return (
-      // console.log("\nrestaturant ", this.state.restaurant.length, "shop ", this.state.store.length, "\n")
-      this.state[stateVariable].map(el => {
+      this.state[stateVariable].map((el, index) => {
         return (
-          <View style={Style.width}>
+          <View style={Style.width} key={index + 'orderItems ' + el.product.id}>
             <View style={Style.itemRow}> 
               <Text style={Style.itemName}> {el.product.name} </Text> 
-              <Text style={Style.itemPrice}> HK$ {el.product.price} </Text> 
+              <Text style={Style.itemPrice}> {currency} {el.product.price} </Text> 
             </View>
             {/* <View style={Style.itemDetails}> 
               <Text style={Style.detailsText}> + Side Dish</Text> 
@@ -82,31 +74,32 @@ class OrderHistoryDetails extends Component {
           <View style={Style.orderNo}>
             <Text style={Style.orderNoText}> Order number {data.id} </Text>
           </View>
-          {/* {this.state.restaurant.length > 0 && */}
+          {this.state.restaurant.length > 0 &&
             <View style={Style.menuItems}>
               <Text style={Style.menuText}> RESTAURANT MENU ITEMS </Text>
             </View>
-          {/* } */}
+          }
           {this.itemMenu('restaurant')}
-          {/* {this.state.store.length > 0 &&  */}
+          {this.state.store.length > 0 && 
             <View style={Style.menuItems}>
               <Text style={Style.menuText}> DELI-SHOP ITEMS </Text>
             </View>
-          {/* } */}
+          }
           {this.itemMenu('store')}
+          {/* {this.itemMenu('temporary')} */}
           <View style={Style.totalSection}>
             <Text style={Style.deliveryCondition}> Contactless delivery: YES</Text>
             <View style={Style.flexDirectionBetween}>
               <Text> Sub total </Text>
-              <Text> HK$ { data.order_subtotal_incl_tax } </Text>
+              <Text> {data.customer_currency_code} { data.order_subtotal_incl_tax } </Text>
             </View>
             <View style={Style.flexDirectionBetween}>
               <Text> Delivery fee </Text>
-              <Text> HK$ XX </Text>
+              <Text> {data.customer_currency_code} XX </Text>
             </View>
             <View style={Style.flexDirectionBetween}>
               <Text> Total </Text>
-              <Text> HK$ {data.order_total} </Text>
+              <Text> {data.customer_currency_code} {data.order_total} </Text>
             </View>
           </View>
           <View style={Style.rateContainer}>

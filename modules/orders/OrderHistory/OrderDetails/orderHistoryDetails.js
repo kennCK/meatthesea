@@ -18,15 +18,15 @@ class OrderHistoryDetails extends Component {
     super(props);
     this.state = {
       restaurant: [],
-      store: [],
-      temporary: []
+      store: []
     }
   }
 
   filterOrder = () => {
+    console.log('-----> ordered items <----- ', this.props.state.orderDetails)
     /**
      * 
-     * initial categorization for restaurant and deli-shop
+     * categorization of ordered products for restaurant and deli-shop
      * 
      *  */ 
     this.props.state.orderDetails.order_items.forEach(el=> {
@@ -51,10 +51,6 @@ class OrderHistoryDetails extends Component {
               <Text style={Style.itemName}> {el.product.name} </Text> 
               <Text style={Style.itemPrice}> {currency} {el.product.price} </Text> 
             </View>
-            {/* <View style={Style.itemDetails}> 
-              <Text style={Style.detailsText}> + Side Dish</Text> 
-              <Text style={Style.detailsText}> HK$ XX </Text> 
-            </View> */}
             <View style={Style.itemDetails}> 
               <Text style={Style.detailsText}> + {el.product.short_description} </Text> 
               <Text> </Text> 
@@ -86,16 +82,15 @@ class OrderHistoryDetails extends Component {
             </View>
           }
           {this.itemMenu('store')}
-          {/* {this.itemMenu('temporary')} */}
           <View style={Style.totalSection}>
-            <Text style={Style.deliveryCondition}> Contactless delivery: YES</Text>
+            <Text style={Style.deliveryCondition}> Contactless delivery: -^-</Text>
             <View style={Style.flexDirectionBetween}>
               <Text> Sub total </Text>
               <Text> {data.customer_currency_code} { data.order_subtotal_incl_tax } </Text>
             </View>
             <View style={Style.flexDirectionBetween}>
               <Text> Delivery fee </Text>
-              <Text> {data.customer_currency_code} XX </Text>
+              <Text> {data.customer_currency_code} -^- </Text>
             </View>
             <View style={Style.flexDirectionBetween}>
               <Text> Total </Text>
@@ -122,7 +117,7 @@ class OrderHistoryDetails extends Component {
                 size={BasicStyles.iconSize}
                 style={{color: Color.primary, marginRight: 5}}
               />
-              <Text> Delivery time: ASAP </Text>
+              <Text> Delivery time: -^- </Text>
             </View>
             <View style={Style.addressItems}>
               <FontAwesomeIcon

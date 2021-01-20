@@ -105,13 +105,16 @@ class Welcome extends Component {
   }
   redirect(index) {
     let route = this.state.redirects[index];
-    this.props.navigation.navigate(route);
+    if(index === 1 || this.props.state.user !== null){
+      this.props.navigation.navigate(route);
+    }else{
+      this.props.navigation.navigate('loginStack')
+    }
   }
   deliveryModal() {
     this.setState({deliveryModal: this.state.deliveryModal ? false : true});
   }
   changeMenu(index) {
-    console.log('hi')
     this.setState({visibleModal: false});
     if (index == 2) {
       // this.props.navigation.navigate('appOnBoardingStack');

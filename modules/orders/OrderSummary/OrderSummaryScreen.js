@@ -31,7 +31,7 @@ class OrderSummaryScreen extends Component {
       isSubmit: 0
     };
   }
-
+  
   retrieveCart = () => {
     const { user } = this.props.state;
     if(user == null){
@@ -237,6 +237,7 @@ class OrderSummaryScreen extends Component {
         <View style={styles.MainContainer}>
           <TouchableHighlight
             onPress={() => { this.placeOrder() }}
+            disabled={this.props.state.orderDetails === null ? true : false}
             style={[BasicStyles.btn, Style.btnPrimary, { borderRadius: 0, width: Style.getWidth() - 30 }]}
             underlayColor={Color.gray}>
             <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(BasicStyles.standardFontSize)]}>

@@ -1,5 +1,7 @@
-import {StyleSheet} from 'react-native';
-
+import {StyleSheet, Dimensions} from 'react-native';
+import {Color} from 'common';
+const width = Math.round(Dimensions.get('window').width);
+const height = Math.round(Dimensions.get('window').height);
 const styles = StyleSheet.create({
   AddressCardContainer: {
     marginVertical: '0%',
@@ -33,6 +35,48 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'white',
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: Color.white,
+    borderRadius: 20,
+    padding: 10,
+    width: width - 20,
+    height: 150,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flexDirection:'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    textAlign: "left",
+    alignItems: 'center',
+  }
 });
 
 export default styles;

@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, Dimensions, Modal, TouchableHighlight} from 'react-native';
+import {Text, View, StyleSheet, Dimensions, Modal, TouchableHighlight, TouchableOpacity, TextInput } from 'react-native';
 import {connect} from 'react-redux';
 import Geolocation from '@react-native-community/geolocation';
-
+import {Color, BasicStyles} from 'common';
 import AddressCard from './AddressCard';
 import CustomButton from './CustomButton';
 import Style from './Styles';
@@ -16,7 +16,8 @@ class SavedAddress extends Component {
       addresses: [],
       location: {},
       addingAddress: false,
-      isAddingAddressName: false
+      isAddingAddressName: false,
+      value: ''
     };
   }
 
@@ -102,6 +103,16 @@ class SavedAddress extends Component {
 
   render() {
     const { location } = this.props.state
+    const products = [
+      {
+        id: 1,
+        text: 'Home'
+      },
+      {
+        id: 2,
+        text: 'Office'
+      }
+    ];
     return (
       <View style={styles.SavedAddressContainer}>
         <View>
@@ -137,19 +148,88 @@ class SavedAddress extends Component {
               Alert.alert("Modal has been closed.");
             }}
           >
-            <View style={Style.centeredView}>
+            <View style={Style.insideModalCenteredView}>
+              <TouchableHighlight 
+                style={Style.modalCloseContainer}
+                onPress={() => {
+                  this.setState({ isAddingAddressName: false });
+                }}
+              >
+                <Text style={Style.modalClose}>&times;</Text>
+              </TouchableHighlight>
+              {/* <View style={Style.modalCloseContainer}>
+              </View> */}
               <View style={Style.modalView}>
-                <Text style={[{fontWeight: 'bold', textAlign: 'left'}, Style.modalText]}> Address: </Text>
-                <Text style={Style.modalText}>{ location.address }</Text>
-
-                {/* <TouchableHighlight
-                  style={{ ...Style.openButton, backgroundColor: "#2196F3" }}
-                  onPress={() => {
-                    this.setState({ isAddingAddressName: false });
-                  }}
+                <Text style={
+                  [
+                    Style.modalText,
+                    {
+                      fontWeight: 'bold',
+                      marginTop: 0
+                    }
+                  ]
+                }>Address Name: </Text> 
+                <View style={{marginTop: 5, marginBottom: 5}}>
+                  <TextInput
+                    style={
+                      [
+                        {
+                          height: 40,
+                          borderColor: 'gray',
+                          borderWidth: 1
+                        },
+                        Style.textInput
+                      ]
+                    }
+                    onChangeText={value => this.setState({value})}
+                    value={this.state.value}
+                  />
+                </View>
+                <Text style={
+                  [
+                    {
+                      fontWeight: 'bold',
+                      textAlign: 'left'
+                    },
+                    Style.modalText
+                  ]
+                }> Address: </Text>
+                <Text style={
+                  [
+                    Style.modalText,
+                    {
+                      color: Color.darkGray
+                    }
+                  ]
+                }>{ location.address }</Text>
+                <View 
+                  style={
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }
+                  }
                 >
-                  <Text style={Style.textStyle}>Hide Modal</Text>
-                </TouchableHighlight> */}
+                  <TouchableHighlight
+                    // style={{ 
+                    //   ...Style.openButton, backgroundColor: Color.primaryDark }}
+                    style={
+                      [
+                        BasicStyles.btn,
+                        Style.btnWhite,
+                        {
+                          marginTop: 20
+                        }
+                      ]
+                    }
+                    onPress={() => {
+                      this.setState({ isAddingAddressName: false });
+                    }}
+                  >
+                    <Text style={Style.textStyle}>Add</Text>
+                  </TouchableHighlight>
+                </View>
               </View>
             </View>
           </Modal>

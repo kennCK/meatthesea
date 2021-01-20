@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, Dimensions} from 'react-native';
+import {Text, View, StyleSheet, Dimensions, Modal, TouchableHighlight} from 'react-native';
 import {connect} from 'react-redux';
 import Geolocation from '@react-native-community/geolocation';
 
 import AddressCard from './AddressCard';
 import CustomButton from './CustomButton';
+import Style from './Styles';
 const width = Math.round(Dimensions.get('window').width);
 
 class SavedAddress extends Component {
@@ -14,7 +15,19 @@ class SavedAddress extends Component {
       selectedTile: 0,
       addresses: [],
       location: {},
+      addingAddress: false,
+      isAddingAddressName: false
     };
+  }
+
+  onFocusFunction = () => {
+    /**
+     * Executed each time we enter in this component &&
+     * will be executed after going back to this component 
+    */
+    if(this.state.addingAddress) {
+      this.setState({isAddingAddressName: true})
+    }
   }
 
   componentDidMount() {
@@ -38,6 +51,16 @@ class SavedAddress extends Component {
       });
     }
     this.getCurrentLocation();
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount () {
+    /**
+     * removing the event listener added in the componentDidMount()
+     */
+    this.focusListener.remove()
   }
 
   getCurrentLocation = () => {
@@ -78,6 +101,7 @@ class SavedAddress extends Component {
   };
 
   render() {
+    const { location } = this.props.state
     return (
       <View style={styles.SavedAddressContainer}>
         <View>
@@ -100,8 +124,35 @@ class SavedAddress extends Component {
             buttonText="+ ADD ADDRESS"
             onPress={() => {
               this.redirect('locationWithMapStack');
+              this.setState({addingAddress: true})
             }}
           />
+        </View>
+        <View style={Style.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={this.state.isAddingAddressName}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+            }}
+          >
+            <View style={Style.centeredView}>
+              <View style={Style.modalView}>
+                <Text style={[{fontWeight: 'bold', textAlign: 'left'}, Style.modalText]}> Address: </Text>
+                <Text style={Style.modalText}>{ location.address }</Text>
+
+                {/* <TouchableHighlight
+                  style={{ ...Style.openButton, backgroundColor: "#2196F3" }}
+                  onPress={() => {
+                    this.setState({ isAddingAddressName: false });
+                  }}
+                >
+                  <Text style={Style.textStyle}>Hide Modal</Text>
+                </TouchableHighlight> */}
+              </View>
+            </View>
+          </Modal>
         </View>
       </View>
     );
@@ -122,8 +173,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#F3F3F3',
     paddingTop: '3%',
-  },
+  }
 });
+
 
 const mapStateToProps = state => ({state: state});
 

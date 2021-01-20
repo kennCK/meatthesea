@@ -41,14 +41,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 22
   },
+  insideModalCenteredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: 'rgba(0,0,0,0.5)'
+  },
   modalView: {
     margin: 20,
     backgroundColor: Color.white,
     borderRadius: 20,
-    padding: 10,
+    padding: 20,
     width: width - 20,
-    height: 150,
-    alignItems: "center",
+    height: 260,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -57,10 +62,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    flexDirection:'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
+    // flexDirection:'row',
+    // flexWrap: 'wrap',
+    // alignItems: 'center',
+    // justifyContent: 'flex-start'
   },
   openButton: {
     backgroundColor: "#F194FF",
@@ -69,13 +74,54 @@ const styles = StyleSheet.create({
     elevation: 2
   },
   textStyle: {
-    color: "white",
+    color: Color.primaryDark,
     fontWeight: "bold",
     textAlign: "center"
   },
   modalText: {
     textAlign: "left",
     alignItems: 'center',
+    marginTop: 5,
+    color: Color.primaryDark
+  },
+  textInput: {
+    height: 40,
+    borderColor: Color.gray,
+    borderWidth: 1,
+    paddingLeft: 10,
+    marginBottom: 5,
+    borderRadius: 5,
+    color: Color.darkGray
+  },
+  btnWhite: {
+    height: 50,
+    backgroundColor: Color.white,
+    width: width - 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 25,
+    borderColor: Color.primaryDark,
+    borderWidth: 2
+  },
+  modalClose: {
+    color: Color.white,
+    fontSize: 34,
+    lineHeight: 34
+  },
+  modalCloseContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    height: 34,
+    paddingTop: 2,
+    paddingLeft: 7,
+    paddingRight: 7,
+    borderWidth: 1,
+    borderColor: Color.white,
+    borderRadius: 17,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    textAlign: 'left'
   }
 });
 

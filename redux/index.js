@@ -215,7 +215,7 @@ const reducer = (state = initialState, action) => {
       };
     case types.SET_LOCATION:
       console.log('location', location)
-      storeData('store', location.id);
+      storeData('store', String(location.id));
       return {
         ...state,
         location,

@@ -25,7 +25,7 @@ class ReturnInPerson extends Component {
   };
 
   displaySchedule = () => {
-    const schedule = this.props.state.location.store_schedules;
+    const schedule = this.props.state.storeLocation.store_schedules;
     return schedule.map(day => {
       let startTime = this.convertTo12Hour(day.start_time.substring(0, 5));
       let endTime = this.convertTo12Hour(day.end_time.substring(0, 5));

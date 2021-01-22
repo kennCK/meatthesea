@@ -52,7 +52,7 @@ class AppOnBoarding extends Component {
               return item
             }
           })
-          this.props.setLocation(selectedItem)
+          this.props.setStoreLocation(selectedItem)
         }
       },
       (error) => {
@@ -180,7 +180,7 @@ class AppOnBoarding extends Component {
                 iconHeight: 20,
                 stores: this.state.stores,
                 onSelect: (selectedItem) => {
-                  this.props.setLocation(selectedItem);
+                  this.props.setStoreLocation(selectedItem);
                   this.setState({location: selectedItem.name});
                 },
               }}
@@ -248,7 +248,7 @@ const mapStateToProps = (state) => ({state: state});
 const mapDispatchToProps = (dispatch) => {
   const {actions} = require('@redux');
   return {
-    setLocation: (location) => dispatch(actions.setLocation(location)),
+    setStoreLocation: (storeLocation) => dispatch(actions.setStoreLocation(storeLocation)),
     setStores: (stores) => dispatch(actions.setStores(stores)),
     logout: () => dispatch(actions.logout()),
     login: (email, password, user, token) => dispatch(actions.login(email, password, user, token)),

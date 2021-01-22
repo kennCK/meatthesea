@@ -26,7 +26,10 @@ export default {
   customerLogin:apiUrl+'customerlogin',
   customerRegister:apiUrl + 'customer_register/',
   customerForgotPassword:apiUrl + 'customer_forgot_password/',
-
+  customerRetrieveAddresses: id => apiUrl + 'customer_get_addresses?customerId=' + id,
+  customerRetrieveDefaultAddress: (customerId, AddressId) => apiUrl + `customer_default_address?CustomerId=${customerId}&AddressId=${AddressId}`,
+  customerAddAddress: (CustomerId, FullName, PhoneNumber, Address, AddressName) => apiUrl + `customer_add_address?CustomerId=${CustomerId}&Address1=${Address}&AddressName=${AddressName}&FullName=${FullName}&PhoneNumber=${PhoneNumber}`,
+  customerRemoveAddress: (customerId, addressId) => apiUrl + `customer_delete_address?CustomerId=${customerId}&AddressId=${addressId}`,
   // Languages
   languageRetrieve: apiUrl + 'languages',
 

@@ -1,19 +1,20 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, Dimensions, Modal, TouchableHighlight, TouchableOpacity, TextInput } from 'react-native';
+import {Text, View, StyleSheet, Dimensions, Modal, TouchableHighlight, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import {connect} from 'react-redux';
 import Geolocation from '@react-native-community/geolocation';
-import {Color, BasicStyles} from 'common';
+import {Color, BasicStyles, Routes} from 'common';
 import AddressCard from './AddressCard';
 import CustomButton from './CustomButton';
 import Style from './Styles';
+import Api from 'services/apiv2/index.js';
 const width = Math.round(Dimensions.get('window').width);
 
 class SavedAddress extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTile: 0,
-      addresses: [],
+      selectedTile: null,
+      address: [],
       location: {},
       addingAddress: false,
       isAddingAddressName: false,
@@ -37,24 +38,29 @@ class SavedAddress extends Component {
     if(user === null){
       return
     }
-    let {addresses} = user;
-    if (addresses) {
-      addresses.map(address => {
-        this.setState({
-          addresses: [
-            ...this.state.addresses,
-            {
-              addressType: address.company,
-              address: address.address1 ? address.address1 : address.address2,
-            },
-          ],
-        });
-      });
-    }
+    this.fetchAddress();
     this.getCurrentLocation();
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
     })
+  }
+
+  fetchAddress = () => {
+    const { user } = this.props.state
+    Api.getRequest(Routes.customerRetrieveAddresses(user.id), response => {
+      const { address } = response
+      if (address) {
+        console.log('address response: ', address)
+        this.setState({address: address})
+        address.map((el, ndx) => {
+          if(el.default_address) {
+            this.setState({selectedTile: ndx})
+          }
+        });
+      }
+    }, error => {
+      console.log('Retrieve addresses error: ', error);
+    });
   }
 
   componentWillUnmount () {
@@ -62,6 +68,17 @@ class SavedAddress extends Component {
      * removing the event listener added in the componentDidMount()
      */
     this.focusListener.remove()
+  }
+
+  addAddress = () => {
+    const { user } = this.props.state;
+    Api.postRequest(Routes.customerAddAddress(user.id, user.first_name + ' ' + user.last_name, null, this.props.state.location.address, this.state.value), {}, response => {
+      console.log("Adding address response: ", response);
+      this.setState({ isAddingAddressName: false, address: response.address });
+      // this.fetchAddress()
+    }, error => {
+      console.log("Adding address error: ", error);
+    });
   }
 
   getCurrentLocation = () => {
@@ -93,9 +110,32 @@ class SavedAddress extends Component {
 
   selectHandler = index => {
     this.setState({selectedTile: index});
-    const{ setUserLocation } = this.props.state;
-    setUserLocation(this.state.addresses[index])
+    const{ setUserLocation } = this.props;
+    setUserLocation(this.state.address[index])
+    Api.postRequest(
+      Routes.customerRetrieveDefaultAddress(this.props.state.user.id, this.state.address[index].id),
+      {},
+      response => {},
+      error => {
+        console.log('Default address error: ', error)
+      }
+    )
   };
+
+  removeAddress = index => {
+    const { user } = this.props.state;
+    let array = [...this.state.address]
+    Api.deleteRequest(Routes.customerRemoveAddress(user.id, this.state.address[index].id), {}, response => {
+      // this.fetchAddress();
+      if (index !== -1) {
+        array.splice(index, 1);
+        this.setState({address: array, selectedTile: null});
+      }
+      console.log("Removing address response: ", response)
+    }, error => {
+      console.log("Removing address error: ", error)
+    })
+  }
 
   redirect = route => {
     this.props.navigation.push(route);
@@ -115,19 +155,27 @@ class SavedAddress extends Component {
     ];
     return (
       <View style={styles.SavedAddressContainer}>
-        <View>
-          {this.state.addresses.map((data, index) => {
-            return (
-              <AddressCard
-                key={index}
-                id={index}
-                selectedTile={index === this.state.selectedTile ? true : false}
-                addressType={data.addressType}
-                address={data.address}
-                onSelect={this.selectHandler}
-              />
-            );
-          })}
+        <View
+          style={{
+            height: '100%',
+            paddingBottom: 72
+          }}
+        >
+          <ScrollView>
+            {this.state.address.map((data, index) => {
+              return (
+                <AddressCard
+                  key={index}
+                  id={index}
+                  selectedTile={index === this.state.selectedTile ? true : false}
+                  addressType={data.address_name}
+                  address={(data.address1 === '' || data.address1 === null) ? data.address2 : data.address1}
+                  onSelect={this.selectHandler}
+                  toDeleteItem={this.removeAddress}
+                />
+              );
+            })}
+          </ScrollView>
         </View>
         <View style={styles.ButtonContainer}>
           <CustomButton
@@ -149,16 +197,6 @@ class SavedAddress extends Component {
             }}
           >
             <View style={Style.insideModalCenteredView}>
-              <TouchableHighlight 
-                style={Style.modalCloseContainer}
-                onPress={() => {
-                  this.setState({ isAddingAddressName: false });
-                }}
-              >
-                <Text style={Style.modalClose}>&times;</Text>
-              </TouchableHighlight>
-              {/* <View style={Style.modalCloseContainer}>
-              </View> */}
               <View style={Style.modalView}>
                 <Text style={
                   [
@@ -201,7 +239,7 @@ class SavedAddress extends Component {
                       color: Color.darkGray
                     }
                   ]
-                }>{ location.address }</Text>
+                }>{ location != null ? location.address : '' }</Text>
                 <View 
                   style={
                     {
@@ -224,7 +262,7 @@ class SavedAddress extends Component {
                       ]
                     }
                     onPress={() => {
-                      this.setState({ isAddingAddressName: false });
+                      this.addAddress()
                     }}
                   >
                     <Text style={Style.textStyle}>Add</Text>

@@ -38,14 +38,14 @@ class Filter extends Component {
   }
   
   componentDidMount(){
-    const { location } = this.props.state;
-    if(location === null){
+    const { storeLocation } = this.props.state;
+    if(storeLocation === null){
       this.props.navigation.navigate('homepageStack')
       return
     }
-    this.retrieveRestaurant(location.id)
-    this.retrieveDeli(location.id)
-    console.log('store', this.props.state.location.id)
+    this.retrieveRestaurant(storeLocation.id)
+    this.retrieveDeli(storeLocation.id)
+    console.log('store', this.props.state.storeLocation.id)
   }
 
   setSelectedFilter(item, category){

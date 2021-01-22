@@ -48,6 +48,7 @@ class Pager extends Component {
       // Routes.ordersRetrieve + '?limit=' + 1 + '&page=' + this.state.pageNumber, // use the route below
       Routes.ordersRetrieveByCustomer(this.props.state.user.id),
       response => {
+        console.log('orders ', response)
         this.setState({completed: [], pending: []})
         response.orders.forEach(el => {
           if(el.order_status.toLowerCase() == 'pending') {

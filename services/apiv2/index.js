@@ -184,6 +184,51 @@ const Api = {
         }
       });
   },
+  deleteRequest: async (route, parameter, callback, errorCallback = null) => {
+    // const apiRoute = Data.token ? route + '?token=' + Data.token : route;
+    let token = config.authorization;
+    try {
+      const savedToken = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
+      if (savedToken) {
+        token = Data.token;
+      }
+    } catch (error) {
+      token = config.authorization;
+    }
+    const fetchOptions = {
+      // url: route,
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: 'bearer ' + token,
+      },
+      body: JSON.stringify(parameter),
+    };
+    fetch(route, fetchOptions)
+      .then((response) => {
+        console.log(response.status);
+        if (response.ok || response.status == 200) {
+          return response.json();
+        }
+        if (response.status >= 400 && response.status < 500) {
+          console.log('error status :', response.error);
+          errorCallback({
+            response,
+            message: 'Request failed',
+          });
+        }
+      })
+      .then((json) => {
+        console.log('json->', json);
+        callback(json);
+      })
+      .catch((error) => {
+        if (errorCallback) {
+          errorCallback(error);
+        }
+      });
+  },
   upload: (route, parameter, callback, errorCallback = null) => {
     console.log('route', Data.token ? route + '?token=' + Data.token : route);
     const apiRoute = Data.token ? route + '?token=' + Data.token : route;

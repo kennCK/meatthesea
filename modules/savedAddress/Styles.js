@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0FAFF',
   },
   AddressTextContainer: {
-    paddingRight: '45%',
+    paddingLeft: 10,
   },
   AddressTypeTextStyle: {
     fontSize: 15,

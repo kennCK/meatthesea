@@ -33,6 +33,8 @@ class Menu extends Component {
       qty: 0,
       products: null,
       productInCart: null,
+      isAddingAddressName: false,
+      alertText: ""
     };
   }
 
@@ -41,11 +43,11 @@ class Menu extends Component {
   }
 
   retrieveProducts = () => {
-    const {filter, search, location} = this.props.state;
+    const {filter, search, storeLocation} = this.props.state;
     if (filter == null) {
       return;
     }
-    if (search == null || search == '' || location == null) {
+    if (search == null || search == '' || storeLocation == null) {
       this.props.load(true)
       Api.getRequest(
         Routes.productsRetrieve + '?categoryid=' + filter.id,
@@ -63,7 +65,7 @@ class Menu extends Component {
         '?Keyword=' +
         search +
         '&StoreId=' +
-        location.id +
+        storeLocation.id +
         '&CategoryIds=' +
         filter.id;
       Api.getRequest(
@@ -103,9 +105,9 @@ class Menu extends Component {
 
   retrieveRestaurant = () => {
     this.props.load(true);
-    const {location} = this.props.state;
+    const {storeLocation} = this.props.state;
     Api.getRequest(
-      Routes.restaurantCategoriesRetrieve + '?storeId=' + location.id,
+      Routes.restaurantCategoriesRetrieve + '?storeId=' + storeLocation.id,
       response => {
         this.setState({restaurant: response.categories});
         this.props.load(false);
@@ -119,9 +121,9 @@ class Menu extends Component {
 
   retrieveDeli = () => {
     this.props.load(true);
-    const {location} = this.props.state;
+    const {storeLocation} = this.props.state;
     Api.getRequest(
-      Routes.deliCategoriesRetrieve + '?storeId=' + location.id,
+      Routes.deliCategoriesRetrieve + '?storeId=' + storeLocation.id,
       response => {
         this.setState({deli: response.categories});
         this.props.load(false);
@@ -169,33 +171,35 @@ class Menu extends Component {
   }
 
   alertMethod(title, message) {
-    Alert.alert(
-      title,
-      message,
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            this.setState({visibleModal: false});
-            this.retrieveCart();
-          },
-        },
-      ],
-      {cancelable: false},
-    );
+    // Alert.alert(
+    //   title,
+    //   message,
+    //   [
+    //     {
+    //       text: 'OK',
+    //       onPress: () => {
+    //         this.setState({visibleModal: false});
+    //         this.retrieveCart();
+    //       },
+    //     },
+    //   ],
+    //   {cancelable: false},
+    // );
+    this.setState({visibleModal: false});
+    this.setState({isAddingAddressName: true})
   }
 
   addToCart() {
-    const {user, location} = this.props.state;
+    const {user, storeLocation} = this.props.state;
     const {itemID, productInCart} = this.state;
-    if (user == null || location == null || itemID == null) {
+    if (user == null || storeLocation == null || itemID == null) {
       return;
     }
     let parameters =
       '?CustomerId=' +
       user.id +
       '&StoreId=' +
-      location.id +
+      storeLocation.id +
       '&ProductId=' +
       itemID +
       '&Quantity=' +
@@ -207,7 +211,13 @@ class Menu extends Component {
         : Routes.shoppingCartItemsAddToCart) + parameters,
       {},
       response => {
-        this.alertMethod('Success Added!', 'Test');
+        console.log('add to basket response ', response)
+        this.retrieveCart();
+        this.setState({
+          alertText: 'Added to basket successfully!',
+          isAddingAddressName: true
+        })
+        // this.alertMethod('Success Added!', 'Test');
       },
       error => {
         console.log(error);
@@ -396,6 +406,59 @@ class Menu extends Component {
                   : 'ADD TO BASKET'}
               </Text>
             </TouchableHighlight>
+          </View>
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.isAddingAddressName}
+          style={{
+            padding: 0,
+            width: '100%',
+            margin: 0
+          }}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={Style.insideModalCenteredView}>
+            <View style={Style.modalView}>
+              <View
+                style={
+                  Style.iconContainer
+                }
+              >
+              </View>
+              <Text style={[
+                Style.modalText
+              ]}>{this.state.alertText}</Text>
+              <View 
+                style={
+                  {
+                    width: '100%',
+                    position: 'absolute',
+                    bottom: 0,
+                    paddingBottom: 0
+                  }
+                }
+              >
+                <TouchableHighlight
+                  // style={{ 
+                  //   ...Style.openButton, backgroundColor: Color.primaryDark }}
+                  style={
+                    [
+                      BasicStyles.btn,
+                      Style.btnWhite
+                    ]
+                  }
+                  onPress={() => {
+                    this.setState({ isAddingAddressName: false, visibleModal: false, });
+                  }}
+                >
+                  <Text style={Style.textStyle}>Ok</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
           </View>
         </Modal>
       </View>

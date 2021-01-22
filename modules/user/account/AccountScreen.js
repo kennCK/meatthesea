@@ -43,7 +43,7 @@ class AccountScreen extends Component {
   logoutAction = ()=> {
     //clear storage
     this.props.logout();
-    this.props.navigation.navigate('loginStack');
+    this.props.navigation.navigate('appOnBoardingStack');
   }
 
   render() {

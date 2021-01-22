@@ -64,16 +64,16 @@ class OrderSummaryScreen extends Component {
   }
 
   placeOrder = () => {
-    const { user, userLocation, paymentMethod, deliveryTime, cart, orderDetails, location} = this.props.state;
+    const { user, userLocation, paymentMethod, deliveryTime, cart, orderDetails, storeLocation} = this.props.state;
     this.setState({
       isSubmit: 1
     })
-    setTimeout(() => {
-      this.setState({
-        isSubmit: 0
-      })
-      this.redirect('orderPlacedStack')
-    }, 2000)
+    // setTimeout(() => {
+    //   this.setState({
+    //     isSubmit: 0
+    //   })
+    //   this.redirect('orderPlacedStack')
+    // }, 2000)
     if(user == null){
       this.setState({
         errorMessage: 'Invalid Customer Information'
@@ -81,14 +81,14 @@ class OrderSummaryScreen extends Component {
       return
     }
     /**
-     * conditions below were disregarded for initial api request
+     * Should not proceed to confirm order if conditions below meet
      */
-    // if(userLocation == null){
-    //   this.setState({
-    //     errorMessage: 'Address is required.'
-    //   })
-    //   return
-    // }
+    if(userLocation == null){
+      this.setState({
+        errorMessage: 'Address is required.'
+      })
+      return
+    }
     // if(paymentMethod == null){
     //   this.setState({
     //     errorMessage: 'Payment Method is required.'
@@ -111,13 +111,17 @@ class OrderSummaryScreen extends Component {
     // }
     let parameters = {
       CustomerId: user.id,
-      StoreId: location.id,
+      StoreId: storeLocation.id,
       AddressId: 1
     }
-    Api.postRequest(Routes.ordersConfirm(user.id, location.id, 1), {}, (response) => {
+    console.log('testing ---> ', userLocation.id)
+    Api.postRequest(Routes.ordersConfirm(user.id, storeLocation.id, userLocation.id), {}, (response) => {
+      this.setState({
+        isSubmit: 0
+      })
        this.redirect('orderPlacedStack')
       }, (error) => {
-        console.log(error);
+        console.log('Order place error: ', error);
     });
   }
 

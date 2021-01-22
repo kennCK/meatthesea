@@ -105,5 +105,73 @@ export default {
   menuImage: {
     width: (width/2)-30,
     height: (width/2)-30
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+    width: '100%'
+  },
+  insideModalCenteredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: '100%'
+  },
+  modalView: {
+    margin: 50,
+    backgroundColor: Color.white,
+    borderRadius: 20,
+    paddingBottom: 20,
+    width: width - 50,
+    height: 200,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textStyle: {
+    color: Color.primaryDark,
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    textAlign: "center",
+    alignItems: 'center',
+    fontSize: 17,
+    color: Color.darkGray
+  },
+  btnWhite: {
+    height: 65,
+    backgroundColor: Color.white,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // borderRadius: 25,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderTopColor: Color.lightGray,
+    borderTopWidth: 1,
+    marginBottom: -2
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: 0,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    height: 40,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Color.primaryDark
   }
 }

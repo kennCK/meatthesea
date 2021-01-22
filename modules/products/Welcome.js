@@ -160,7 +160,7 @@ class Welcome extends Component {
   }
 
   render() {
-    const { homepage, search, cart, crockeries, user } = this.props.state;
+    const { homepage, search, cart, crockeries, user, userLocation } = this.props.state;
     const { showRatings, isLoading } = this.state;
     return (
       <View style={Style.MainContainer}>
@@ -254,7 +254,16 @@ class Welcome extends Component {
                     Style.textPrimary,
                     {fontSize: BasicStyles.standardFontSize},
                   ]}>
-                  1a, Centre Stage Tower 1
+                  {
+                    userLocation !== null ?
+                      userLocation.address1 !== "" ||
+                      userLocation.address1 !== null ||
+                      userLocation.address1 !== undefined ?
+                      userLocation.address1 :
+                      userLocation.address2
+                    :
+                      ''
+                  }
                 </Text>
               </TouchableOpacity>
             </View>

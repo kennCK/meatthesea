@@ -19,12 +19,12 @@ class OrderedItems extends Component {
   }
 
   updateCart(data, increment = true) {
-    const { user, location } = this.props.state;
-    if(user == null || location == null || data == null){
+    const { user, storeLocation } = this.props.state;
+    if(user == null || storeLocation == null || data == null){
       return
     }
     let quantity = increment == false ? parseInt(data.quantity) - 1 : parseInt(data.quantity) + 1
-    let parameters = '?CustomerId=' + user.id + '&StoreId=' + location.id + '&ProductId=' + data.product_id + '&Quantity=' + quantity + '&CartType=1';
+    let parameters = '?CustomerId=' + user.id + '&StoreId=' + storeLocation.id + '&ProductId=' + data.product_id + '&Quantity=' + quantity + '&CartType=1';
     Api.postRequest(Routes.shoppingCartItemsUpdateCart + parameters, {}, (response) => {
         this.props.onUpdate()
       }, (error) => {

@@ -43,8 +43,21 @@ class Login extends Component {
     }
   }
 
-  componentDidMount(){
-    this.getData()
+  fetchAddress = () => {
+    const { user } = this.props.state
+    Api.getRequest(Routes.customerRetrieveAddresses(user.id), response => {
+      const { address } = response
+      if (address) {
+        this.setState({address: address})
+        address.map((el, ndx) => {
+          if(el.default_address) {
+            this.props.setUserLocation(el)
+          }
+        });
+      }
+    }, error => {
+      console.log('Retrieve addresses error: ', error);
+    });
   }
 
   getData = async () => {
@@ -83,6 +96,7 @@ class Login extends Component {
         let { customer, authorization } = response;
         this.setState({ isLoading: false})
         login(email, password, customer, authorization);
+        this.fetchAddress()
         this.redirect("homepageStack")
       }, error => {
         this.setState({ isLoading: false, error: 2 })
@@ -180,6 +194,7 @@ const mapDispatchToProps = dispatch => {
   return {
     login: (email, password, user, token) => dispatch(actions.login(email, password, user, token)),
     logout: () => dispatch(actions.logout()),
+    setUserLocation: location => dispatch(actions.setUserLocation(location))
   };
 };
 

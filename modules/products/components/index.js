@@ -21,13 +21,13 @@ class Products extends Component {
     };
   }
   retrieveRestaurant = () => {
-    const { location } = this.props.state;
+    const { storeLocation } = this.props.state;
     const { setRestaurantCategories } = this.props;
-    if(location == null){
+    if(storeLocation == null){
       return
     }
     Api.getRequest(
-      Routes.restaurantCategoriesRetrieve + '?storeId=' + location.id,
+      Routes.restaurantCategoriesRetrieve + '?storeId=' + storeLocation.id,
       response => {
         setRestaurantCategories(response.categories)
       },
@@ -37,13 +37,13 @@ class Products extends Component {
     );
   };
   retrieveDeli = () => {
-    const { location } = this.props.state;
+    const { storeLocation } = this.props.state;
     const { setDeliCategories } = this.props;
-    if(location == null){
+    if(storeLocation == null){
       return
     }
     Api.getRequest(
-      Routes.deliCategoriesRetrieve + '?storeId=' + location.id,
+      Routes.deliCategoriesRetrieve + '?storeId=' + storeLocation.id,
       response => {
         setDeliCategories(response.categories)
       },

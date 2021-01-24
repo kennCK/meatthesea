@@ -11,7 +11,7 @@ import { WebView } from 'react-native-webview';
 import axios from "axios";
 import qs from "qs";
 import { decode, encode } from 'base-64';
-import common from '../../common/Color.js';
+import { Color } from 'common';
 
 const Paypal = () => {
   const [isWebViewLoading, SetIsWebViewLoading] = useState(false);
@@ -209,7 +209,7 @@ const Paypal = () => {
       ) : null}
       {isWebViewLoading ? (
         <View style={{ ...StyleSheet.absoluteFill, justifyContent: "center", alignItems: "center", backgroundColor: "#ffffff" }}>
-          <ActivityIndicator size="small" color={common.primary} />
+          <ActivityIndicator size="small" color={Color.primary} />
         </View>
       ) : null}
     </React.Fragment>
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
-    backgroundColor: common.primary,
+    backgroundColor: Color.primary,
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',

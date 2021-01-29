@@ -28,7 +28,8 @@ class OrderSummaryScreen extends Component {
       mins: '',
       key: 1,
       errorMessage: null,
-      isSubmit: 0
+      isSubmit: 0,
+      paypalInfo: {}
     };
   }
   
@@ -46,6 +47,18 @@ class OrderSummaryScreen extends Component {
       }, (error) => {
         console.log(error);
     });
+  }
+
+  componentDidMount() {
+    console.log('::==->Address: ', this.props.state.userLocation.id)
+    console.log('::==->Store Address: ', this.props.state.storeLocation.id)
+    Api.getRequest(Routes.paypalAccountRetrieve, response => {
+      this.setState({paypalInfo: response})
+      console.log('::==->Paypal Account ID ', response.paypal.client_id)
+      console.log('::==->Paypal Account SECRET ', response.paypal.client_secret)
+    }, error => {
+      console.log('Retrieving Paypal Account Error: ', error)
+    })
   }
   
   redirect = (route) => {
@@ -65,9 +78,9 @@ class OrderSummaryScreen extends Component {
 
   placeOrder = () => {
     const { user, userLocation, paymentMethod, deliveryTime, cart, orderDetails, storeLocation} = this.props.state;
-    this.setState({
-      isSubmit: 1
-    })
+    // this.setState({
+    //   isSubmit: 1
+    // })
     // setTimeout(() => {
     //   this.setState({
     //     isSubmit: 0
@@ -114,15 +127,27 @@ class OrderSummaryScreen extends Component {
       StoreId: storeLocation.id,
       AddressId: 1
     }
-    console.log('testing ---> ', userLocation.id)
-    Api.postRequest(Routes.ordersConfirm(user.id, storeLocation.id, userLocation.id), {}, (response) => {
-      this.setState({
-        isSubmit: 0
-      })
-       this.redirect('orderPlacedStack')
-      }, (error) => {
-        console.log('Order place error: ', error);
-    });
+    // this.executeOrderPlacement()
+    // Api.postRequest(Routes.ordersConfirm(user.id, storeLocation.id, userLocation.id), {}, (response) => {
+    //   this.setState({
+    //     isSubmit: 0
+    //   })
+    //    this.redirect('orderPlacedStack')
+    //   }, (error) => {
+    //     console.log('Order place error: ', error);
+    // });
+  }
+  
+  executeOrderPlacement = async () => {
+    let paypalOrder = {}
+    const {userLocation, storeLocation, cart, user} = await this.props.state
+
+    await Api.postRequest(Routes.paypalCreateOrder(this.state.paypalInfo.paypal.client_id, this.state.paypalInfo.paypal.client_secret, 0, true, user.id, userLocation.id, storeLocation.id), {}, response => {
+      paypalOrder = response
+      console.log('Paypal Order ', response)
+    }, error => {
+      console.log('Creating Paypal Order Error: ', error)
+    })
   }
 
   render() {

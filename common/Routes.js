@@ -67,7 +67,10 @@ export default {
   ordersUpdateById: id => apiUrl + 'orders/' + id,
   ordersRetrieveByCustomer: customer_id =>
     apiUrl + 'orders/customer/' + customer_id + '?customerId=' + customer_id,
-  ordersConfirm: (CustomerId, StoreId, AddressId) => apiUrl + 'confirm_order?' + 'CustomerId=' + CustomerId + '&StoreId=' + StoreId + '&AddressId=' + AddressId,  
+  ordersConfirm: (CustomerId, StoreId, AddressId) => apiUrl + 'confirm_order?' + 'CustomerId=' + CustomerId + '&StoreId=' + StoreId + '&AddressId=' + AddressId,
+  
+  paypalAccountRetrieve: apiUrl + 'get_paypal_details',
+  paypalCreateOrder: (ClientId, ClientSecret, paymentType, Sandbox, CustomerId, AddressId, StoreId) => apiUrl + `/paypal_create_order?ClientId=${ClientId}&ClientSecret=${ClientSecret}&PaymentType=${paymentType}&Sandbox=${Sandbox}&CustomerId=${CustomerId}&AddressId=${AddressId}&StoreId=${StoreId}`,
 
   // ProductAttributes
   productAttribuesRetrieve: apiUrl + 'productattributes',

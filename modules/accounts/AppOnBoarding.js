@@ -17,6 +17,7 @@ import CustomError from 'components/Modal/Error.js';
 import Header from './Header';
 import config from 'src/config';
 import LocationWithIcon from './components/LocationInput.js';
+import messaging from '@react-native-firebase/messaging';
 class AppOnBoarding extends Component {
   //Screen1 Component
   constructor(props) {
@@ -60,6 +61,29 @@ class AppOnBoarding extends Component {
         alert('Something went wrong');
       },
     );
+    this.firebaseNotification()
+  }
+
+  firebaseNotification(){
+    console.log('test')
+    messaging().onNotificationOpenedApp(remoteMessage => {
+        console.log(
+          'Notification caused app to open from background state:',
+          remoteMessage.notification,
+        );
+      });
+
+      // Check whether an initial notification is available
+      messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+        }
+      });
   }
 
   getData = async () => {

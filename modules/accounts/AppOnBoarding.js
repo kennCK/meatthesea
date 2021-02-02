@@ -17,7 +17,8 @@ import CustomError from 'components/Modal/Error.js';
 import Header from './Header';
 import config from 'src/config';
 import LocationWithIcon from './components/LocationInput.js';
-import messaging from '@react-native-firebase/messaging';
+import { fcmService } from 'services/FCMServices';
+import { localNotificationService } from 'services/LocalNotificationService';
 class AppOnBoarding extends Component {
   //Screen1 Component
   constructor(props) {
@@ -65,25 +66,39 @@ class AppOnBoarding extends Component {
   }
 
   firebaseNotification(){
-    console.log('test')
-    messaging().onNotificationOpenedApp(remoteMessage => {
-        console.log(
-          'Notification caused app to open from background state:',
-          remoteMessage.notification,
-        );
-      });
+    fcmService.registerAppWithFCM()
+    fcmService.register(this.onRegister, this.onNotification, this.onOpenNotification)
+    localNotificationService.configure(this.onOpenNotification)
+    return () => {
+      console.log("[App] unRegister")
+      fcmService.unRegister()
+      localNotificationService.unRegister()
+    }
+  }
 
-      // Check whether an initial notification is available
-      messaging()
-      .getInitialNotification()
-      .then(remoteMessage => {
-        if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.notification,
-          );
-        }
-      });
+  onRegister = (token) => {
+    console.log("[App] onRegister", token)
+  }
+
+  onNotification = (notify) => {
+    console.log("[App] onNotification", notify)
+    const options = {
+      soundName: 'default',
+      playSound: true
+    }
+
+    localNotificationService.showNotification(
+      0,
+      notify.title,
+      notify.body,
+      notify,
+      options
+    )
+  }
+
+  onOpenNotification = (notify) => {
+    console.log("[App] onOpenNotification", notify )
+
   }
 
   getData = async () => {

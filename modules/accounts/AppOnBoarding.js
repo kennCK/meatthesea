@@ -66,6 +66,7 @@ class AppOnBoarding extends Component {
   }
 
   firebaseNotification(){
+    localNotificationService.createChannel()
     fcmService.registerAppWithFCM()
     fcmService.register(this.onRegister, this.onNotification, this.onOpenNotification)
     localNotificationService.configure(this.onOpenNotification)

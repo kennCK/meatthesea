@@ -17,7 +17,7 @@ import CustomError from 'components/Modal/Error.js';
 import Header from './Header';
 import config from 'src/config';
 import LocationWithIcon from './components/LocationInput.js';
-import { fcmService } from 'services/FCMServices';
+import { fcmService } from 'services/FCMService';
 import { localNotificationService } from 'services/LocalNotificationService';
 class AppOnBoarding extends Component {
   //Screen1 Component
@@ -92,13 +92,13 @@ class AppOnBoarding extends Component {
       notify.title,
       notify.body,
       notify,
-      options
+      options,
+      "test"
     )
   }
 
   onOpenNotification = (notify) => {
     console.log("[App] onOpenNotification", notify )
-
   }
 
   getData = async () => {

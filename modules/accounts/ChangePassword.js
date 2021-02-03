@@ -16,7 +16,6 @@ import Pusher from 'services/Pusher.js';
 import SystemVersion from 'services/System.js';
 import { Player } from '@react-native-community/audio-toolkit';
 import OtpModal from 'components/Modal/Otp.js';
-import { Notifications, NotificationAction, NotificationCategory } from 'react-native-notifications';
 class Login extends Component {
     //Screen1 Component
     constructor(props) {

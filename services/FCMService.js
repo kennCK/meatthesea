@@ -1,13 +1,11 @@
 import messaging from '@react-native-firebase/messaging';
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
-import PushNotification from "react-native-push-notification";
 import { Platform } from 'react-native';
 
 
 class FCMService{
   register = (onRegister, onNotification, onOpenNotification) => {
     this.checkPermission(onRegister)
-    this.createNotificationListener(onRegister, onNotification, onOpenNotification)
+    this.createNotificationListeners(onRegister, onNotification, onOpenNotification)
   }
 
   registerAppWithFCM = async() => {
@@ -18,7 +16,8 @@ class FCMService{
   }
 
   checkPermission = (onRegister) => {
-    messaging().hasPermission().then(enabled => {
+    messaging().hasPermission()
+    .then(enabled => {
       if(enabled){
         this.getToken(onRegister)
       }else{
@@ -59,19 +58,20 @@ class FCMService{
     })
   }
 
-  createNotificationListener = (onRegister, onNotification, onOpenNotification) => {
+  createNotificationListeners = (onRegister, onNotification, onOpenNotification) => {
     messaging()
-    .onNotificationOpenedApp( remoteMessage => {
-      console.log("[FCMServices] onNotificationOpenedApp Notification caused app to open")
+    .onNotificationOpenedApp(remoteMessage  => {
+      console.log("[FCMServices] onNotificationOpenedApp Notification caused app to open", remoteMessage)
       if(remoteMessage){
         const notification = remoteMessage.notification
+        onOpenNotification(notification)
       }
     })
 
     messaging()
     .getInitialNotification()
     .then(remoteMessage => {
-      console.log("[FCMServices] getInitialNotification Notification caused app to open")
+      console.log("[FCMServices] getInitialNotification Notification caused app to open", remoteMessage)
       if (remoteMessage) {
         const notification = remoteMessage.notification
         onOpenNotification(notification)
@@ -82,11 +82,12 @@ class FCMService{
       console.log("[FCMServices] A new FCM message arrived", remoteMessage)
       if(remoteMessage){
         let notification = null
-        if(Platform.OS == 'ios'){
+        if(Platform.OS === 'ios'){
           notification = remoteMessage.data.notification
         }else{
-          notification = remoteMessage.notification
+          notification = remoteMessage
         }
+        console.log("[FCMServices] onNotification", notification)
         onNotification(notification)
       }
     })

@@ -1,4 +1,3 @@
-import messaging from '@react-native-firebase/messaging';
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
 import { Platform } from 'react-native';
@@ -9,30 +8,22 @@ class  LocalNotificationService{
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
       onRegister: function (token) {
-        console.log("TOKEN:", token);
+        console.log("[LocalNotificationService] onRegister", token);
       },
 
       // (required) Called when a remote is received or opened, or local notification is opened
       onNotification: function (notification) {
-        console.log("NOTIFICATION:", notification);
+        console.log("[LocalNotificationService] onNotification", notification);
 
-        // process the notification
+        if(!notification?.data){
+          return
+        }
+        notification.userInteraction = true;
+        onOpenNotification(Platform.OS === 'ios' ?  notification.data.item : notification.data)
 
-        // (required) Called when a remote is received or opened, or local notification is opened
-        notification.finish(PushNotificationIOS.FetchResult.NoData);
-      },
-
-      // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
-      onAction: function (notification) {
-        console.log("ACTION:", notification.action);
-        console.log("NOTIFICATION:", notification);
-
-        // process the action
-      },
-
-      // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
-      onRegistrationError: function(err) {
-        console.error(err.message, err);
+        if(Platform.OS === 'ios'){
+          notification.finish(PushNotificationIOS.FetchResult.NoData)
+        }
       },
 
       // IOS ONLY (optional): default: all - Permissions to register.
@@ -61,8 +52,8 @@ class  LocalNotificationService{
     PushNotification.unregister();
   }
 
-  showNotification = (id, title, message, data = {}, options = {}) => {
-    PushNotification.LocalNotification({
+  showNotification = (id, title, message, data = {}, options = {}, channelId) => {
+    PushNotification.localNotification({
       // Android Only Properties
       ...this.buildAndroidNotification(id, title, message, data, options),
       // iOS and Android Properties
@@ -72,7 +63,8 @@ class  LocalNotificationService{
       message: message || "",
       playSound: options.playSound || false,
       soundName: options.soundName || "default",
-      userInteraction: false // BOOLEAN: If the notification as opened by the usr from the notification
+      userInteraction: false,  // BOOLEAN: If the notification as opened by the usr from the notification,
+      channelId: channelId
     })
   }
 

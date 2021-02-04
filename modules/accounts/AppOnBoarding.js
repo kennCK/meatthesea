@@ -82,6 +82,7 @@ class AppOnBoarding extends Component {
   }
 
   onNotification = (notify) => {
+    const {user} = this.props.state; 
     console.log("[App] onNotification", notify)
     const options = {
       soundName: 'default',

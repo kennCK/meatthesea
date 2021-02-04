@@ -68,6 +68,10 @@ class  LocalNotificationService{
   }
 
   showNotification = (id, title, message, data = {}, options = {}, channelId) => {
+    let options = {
+      soundName: 'default',
+      playSound: true
+    }
     PushNotification.localNotification({
       // Android Only Properties
       ...this.buildAndroidNotification(id, title, message, data, options),

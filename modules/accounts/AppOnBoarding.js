@@ -93,8 +93,7 @@ class AppOnBoarding extends Component {
       notify.title,
       notify.body,
       notify,
-      options,
-      "test"
+      options
     )
   }
 

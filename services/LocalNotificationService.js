@@ -67,7 +67,7 @@ class  LocalNotificationService{
     PushNotification.unregister();
   }
 
-  showNotification = (id, title, message, data = {}, options = {}, channelId) => {
+  showNotification = (id, title, message, data = {}, options = {}) => {
     PushNotification.localNotification({
       // Android Only Properties
       ...this.buildAndroidNotification(id, title, message, data, options),
@@ -78,8 +78,7 @@ class  LocalNotificationService{
       message: message || "",
       playSound: options.playSound || false,
       soundName: options.soundName || "default",
-      userInteraction: false,  // BOOLEAN: If the notification as opened by the usr from the notification,
-      channelId: channelId
+      userInteraction: false,  // BOOLEAN: If the notification as opened by the usr from the notification
     })
   }
 

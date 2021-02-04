@@ -124,9 +124,20 @@ class Welcome extends Component {
   }
 
   submitRating(index){
-    this.setState({
-      showRatings: false,
-      ratingIndex: index
+    const {user, storeLocation} = this.props.state
+    console.log("user : ", this.props.state.user)
+    console.log("store: ", this.props.state.storeLocation)
+    console.log("RATING : ", index)
+    this.setState({isLoading: true})
+    Api.postRequest(Routes.addRatings(user.id, storeLocation.id, index + 1), {}, response => {
+      console.log("ADD RATING RESPONSE: ", response)
+      this.setState({
+        isLoading: false,
+        showRatings: false,
+        ratingIndex: index
+      })
+    }, error => {
+      console.log('Add Ratings Error: ', error)
     })
   }
 

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import {
     View, Text, TouchableOpacity, ScrollView, TouchableHighlight, Modal,
-    ActivityIndicator
+    ActivityIndicator, Linking
 } from 'react-native';
 // import Modal from 'react-native-modal';
 import styles from '../Style';
-import { BasicStyles } from 'common';
 import Style from 'modules/accounts/Style';
-import { Color, Routes } from 'common';
+import { Color, Routes, BasicStyles } from 'common';
 import OrderItems from './OrderItems';
 import Separator from '../components/Separator';
 import DeliveryDetails from '../components/DeliveryDetails';
@@ -17,6 +16,7 @@ import { faEdit, faInfoCircle, faTimesCircle } from '@fortawesome/free-solid-svg
 import DatePicker from 'react-native-date-picker'
 import {connect} from 'react-redux';
 import Api from 'services/apiv2/index.js';
+import {Spinner} from 'components';
 
 class OrderSummaryScreen extends Component {
   constructor(props) {
@@ -50,7 +50,7 @@ class OrderSummaryScreen extends Component {
   }
 
   componentDidMount() {
-    console.log('::==->Address: ', this.props.state.userLocation.id)
+    console.log('::==->Address: ', this.props.state.userLocation)
     console.log('::==->Store Address: ', this.props.state.storeLocation.id)
     Api.getRequest(Routes.paypalAccountRetrieve, response => {
       this.setState({paypalInfo: response})
@@ -69,6 +69,10 @@ class OrderSummaryScreen extends Component {
     const { setSelectedDeliveryTime } = this.props;
     setSelectedDeliveryTime(time)
     this.toggleModal()
+  }
+
+  isLoading(data) {
+    this.setState({isLoading: data});
   }
 
   toggleModal = () => {
@@ -127,7 +131,7 @@ class OrderSummaryScreen extends Component {
       StoreId: storeLocation.id,
       AddressId: 1
     }
-    // this.executeOrderPlacement()
+    this.executeOrderPlacement()
     // Api.postRequest(Routes.ordersConfirm(user.id, storeLocation.id, userLocation.id), {}, (response) => {
     //   this.setState({
     //     isSubmit: 0
@@ -139,22 +143,45 @@ class OrderSummaryScreen extends Component {
   }
   
   executeOrderPlacement = async () => {
-    let paypalOrder = {}
     const {userLocation, storeLocation, cart, user} = await this.props.state
-
-    await Api.postRequest(Routes.paypalCreateOrder(this.state.paypalInfo.paypal.client_id, this.state.paypalInfo.paypal.client_secret, 0, true, user.id, userLocation.id, storeLocation.id), {}, response => {
-      paypalOrder = response
-      console.log('Paypal Order ', response)
+    let paypalOrder = await {}
+    this.isLoading(true)
+    await Api.postRequest(Routes.paypalCreateOrder(
+        this.state.paypalInfo.paypal.client_id,
+        this.state.paypalInfo.paypal.client_secret, 
+        0,
+        true, 
+        user.id, 
+        userLocation.id, 
+        storeLocation.id
+      ), {}, response => {
+        console.log("CREATE PAYPAL ORDER RESPONSE: ", response)
+        // paypalOrder = response
+        // this.isLoading(false)
+        // let approve = response.paypal.links.filter(el => {
+        //   return el.rel.toLowerCase() === 'approve'
+        // })
+        // this.openURL(approve[0].href)
     }, error => {
       console.log('Creating Paypal Order Error: ', error)
     })
   }
 
+  openURL = async (url) => {
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Can't open: ${url}`);
+    }
+  }
+  
   render() {
     const { cart, orderDetails, deliveryTime } = this.props.state;
-    const { errorMessage } = this.state;
+    const { errorMessage, isLoading } = this.state;
     return (
       <View style={{ flex: 1 }} key={this.state.key}>
+        {isLoading ? <Spinner mode="overlay"/> : null }
         <Modal visible={this.state.isSubmit > 0 ? true : false}>
           <View style={{ flex: 1, backgroundColor: Color.primary, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator

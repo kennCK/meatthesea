@@ -5,6 +5,7 @@ import { Platform } from 'react-native';
 
 class  LocalNotificationService{
   configure = (onOpenNotification) => {
+    this.createChannel()
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
       onRegister: function (token) {
@@ -67,11 +68,19 @@ class  LocalNotificationService{
     PushNotification.unregister();
   }
 
-  showNotification = (id, title, message, data = {}, options = {}, channelId) => {
+
+  showNotification = (id, title, message, data, user) => {
+
+    console.log('[showNotification] data', data.data)
+    console.log('[showNotification] user', user)
+    if(user == null){
+      return
+    }
     let options = {
       soundName: 'default',
       playSound: true
     }
+
     PushNotification.localNotification({
       // Android Only Properties
       ...this.buildAndroidNotification(id, title, message, data, options),
@@ -82,8 +91,7 @@ class  LocalNotificationService{
       message: message || "",
       playSound: options.playSound || false,
       soundName: options.soundName || "default",
-      userInteraction: false,  // BOOLEAN: If the notification as opened by the usr from the notification,
-      channelId: channelId
+      userInteraction: false,  // BOOLEAN: If the notification as opened by the usr from the notification
     })
   }
 

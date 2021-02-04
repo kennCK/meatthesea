@@ -66,7 +66,6 @@ class AppOnBoarding extends Component {
   }
 
   firebaseNotification(){
-    localNotificationService.createChannel()
     fcmService.registerAppWithFCM()
     fcmService.register(this.onRegister, this.onNotification, this.onOpenNotification)
     localNotificationService.configure(this.onOpenNotification)
@@ -84,19 +83,14 @@ class AppOnBoarding extends Component {
   onNotification = (notify) => {
     const {user} = this.props.state; 
     console.log("[App] onNotification", notify)
-    const options = {
-      soundName: 'default',
-      playSound: true
-    }
 
-    localNotificationService.showNotification(
-      0,
-      notify.title,
-      notify.body,
-      notify,
-      options,
-      "test"
-    )
+    // localNotificationService.showNotification(
+    //   0,
+    //   notify.title,
+    //   notify.body,
+    //   notify,
+    //   user
+    // )
   }
 
   onOpenNotification = (notify) => {

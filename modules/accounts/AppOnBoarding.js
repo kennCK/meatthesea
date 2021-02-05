@@ -76,15 +76,15 @@ class AppOnBoarding extends Component {
     this.navigate(event.url);
   }
   navigate = (url) => { // E
-    console.log(new Date().toLocaleString(),  ' ------------- R O U T E : ', url)
+    console.log(' ------------- DEEP LINK R O U T E ------------- ', url)
     const { navigate } = this.props.navigation;
-    const route = url.replace(/.*?:\/\//g, '');
-    const routeName = route.split('/')[0];
-  
-    console.log('testing ------- 123--------------------- ', routeName)
-    if (routeName === 'meatthesea.mts') {
-      navigate('orderPlacedStack')
-    };
+    if(url !== null){
+      const route = url.replace(/.*?:\/\//g, '');
+      const routeName = route.split('/')[0];
+      if (routeName === 'mts.meatthesea.com') {
+        navigate('orderPlacedStack')
+      };
+    }
   }
 
   getData = async () => {

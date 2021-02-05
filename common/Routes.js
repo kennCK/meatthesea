@@ -70,7 +70,7 @@ export default {
   ordersConfirm: (CustomerId, StoreId, AddressId) => apiUrl + 'confirm_order?' + 'CustomerId=' + CustomerId + '&StoreId=' + StoreId + '&AddressId=' + AddressId,
   
   paypalAccountRetrieve: apiUrl + 'get_paypal_details',
-  paypalCreateOrder: (ClientId, ClientSecret, paymentType, Sandbox, CustomerId, AddressId, StoreId) => apiUrl + `/paypal_create_order?ClientId=${ClientId}&ClientSecret=${ClientSecret}&PaymentType=${paymentType}&Sandbox=${Sandbox}&CustomerId=${CustomerId}&AddressId=${AddressId}&StoreId=${StoreId}`,
+  paypalCreateOrder: (ClientId, ClientSecret, paymentType, Sandbox, CustomerId, AddressId, StoreId) => apiUrl + `paypal_create_order?ClientId=${ClientId}&ClientSecret=${ClientSecret}&PaymentType=${paymentType}&Sandbox=${Sandbox}&CustomerId=${CustomerId}&AddressId=${AddressId}&StoreId=${StoreId}`,
 
   // ProductAttributes
   productAttribuesRetrieve: apiUrl + 'productattributes',
@@ -120,6 +120,9 @@ export default {
     'productspecificationattributes/' + id,
   productSpecificationAttributesDelete: id =>
     'productspecificationattributes/' + id,
+
+    //Ratings
+  addRatings: (CustomerId, StoreId, Rating) => apiUrl + `customer_add_rating?CustomerId=${CustomerId}&StoreId=${StoreId}&Rating=${Rating}`,
 
   // ShoppingCartItems
   shoppingCartItemsRetrieve: apiUrl + 'shopping_cart_items',

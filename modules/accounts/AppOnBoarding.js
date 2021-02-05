@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
   View,
@@ -8,11 +8,12 @@ import {
   TouchableHighlight,
   Text,
   ScrollView,
+  Linking
 } from 'react-native';
 import Style from './Style.js';
-import {Spinner} from 'components';
+import { Spinner } from 'components';
 import Api from 'services/apiv2/index.js';
-import {Routes, Color, Helper, BasicStyles} from 'common';
+import { Routes, Color, Helper, BasicStyles } from 'common';
 import CustomError from 'components/Modal/Error.js';
 import Header from './Header';
 import config from 'src/config';
@@ -37,20 +38,26 @@ class AppOnBoarding extends Component {
     };
   }
 
-  getLocations() {}
+  getLocations() { }
 
-  componentDidMount() {
-    this.setState({isLoading: true});
-    this.getData();
-    Api.getRequest(
+  async componentDidMount() {
+    Linking.getInitialURL().then(url => {
+      console.log(`from initial url ${url}, call navigate`)
+      this.navigate(url);
+    });
+    Linking.addEventListener('url', this.handleOpenURL);
+
+    await this.setState({ isLoading: true });
+    await this.getData();
+    await Api.getRequest(
       Routes.storeRetrieveAll,
       (response) => {
-        this.setState({isLoading: false});
-        this.setState({stores: response.stores});
+        this.setState({ isLoading: false });
+        this.setState({ stores: response.stores });
         this.props.setStores(response.stores);
-        if(this.state.locationId != null){
+        if (this.state.locationId != null) {
           let selectedItem = response.stores.map((item) => {
-            if(parseInt(item.id) == this.state.locationId){
+            if (parseInt(item.id) == this.state.locationId) {
               return item
             }
           })
@@ -58,7 +65,7 @@ class AppOnBoarding extends Component {
         }
       },
       (error) => {
-        this.setState({isLoading: false});
+        this.setState({ isLoading: false });
         alert('Something went wrong');
       },
     );
@@ -97,6 +104,24 @@ class AppOnBoarding extends Component {
     console.log("[App] onOpenNotification", notify )
   }
 
+  componentWillUnmount() { // C
+    Linking.removeEventListener('url', this.handleOpenURL);
+  }
+  handleOpenURL = (event) => { // D
+    this.navigate(event.url);
+  }
+  navigate = (url) => { // E
+    console.log(new Date().toLocaleString(),  ' ------------- R O U T E : ', url)
+    const { navigate } = this.props.navigation;
+    const route = url.replace(/.*?:\/\//g, '');
+    const routeName = route.split('/')[0];
+  
+    console.log('testing ------- 123--------------------- ', routeName)
+    if (routeName === 'meatthesea.mts') {
+      navigate('orderPlacedStack')
+    };
+  }
+
   getData = async () => {
     try {
       const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
@@ -105,9 +130,9 @@ class AppOnBoarding extends Component {
       const password = await AsyncStorage.getItem(Helper.APP_NAME + 'password');
       const locationId = await AsyncStorage.getItem(Helper.APP_NAME + 'location');
       if (token != null) {
-        this.setState({ email, password, locationId});
+        this.setState({ email, password, locationId });
         setTimeout(() => {
-            this.directLogin()
+          this.directLogin()
         }, 1000)
       }
     } catch (e) {
@@ -119,7 +144,7 @@ class AppOnBoarding extends Component {
     this.props.navigation.navigate(route);
   };
 
-  submit(){
+  submit() {
     // const { location } = this.state;
     const { login } = this.props;
     if (this.validate() == false) {
@@ -140,7 +165,7 @@ class AppOnBoarding extends Component {
       this.setState({ isLoading: true, error: 0 });
       Api.getRequest(Routes.customerLogin + `?Email=${email}&Password=${password}`, response => {
         let { customer, authorization } = response;
-        this.setState({ isLoading: false})
+        this.setState({ isLoading: false })
         login(email, password, customer, authorization);
         this.redirect("homepageStack")
       }, error => {
@@ -154,15 +179,15 @@ class AppOnBoarding extends Component {
   }
 
   validate() {
-    const {locationId, location} = this.state;
+    const { locationId, location } = this.state;
     if (!locationId && !location) {
-      this.setState({errorMessage: 'Please select your location.'});
+      this.setState({ errorMessage: 'Please select your location.' });
       return false;
     }
   }
 
   render() {
-    const {isLoading, errorMessage, isResponseError} = this.state;
+    const { isLoading, errorMessage, isResponseError } = this.state;
 
     return (
       <ScrollView style={Style.ScrollView}>
@@ -193,7 +218,7 @@ class AppOnBoarding extends Component {
           <View
             style={[
               Style.TextContainer,
-              {marginTop: errorMessage != null ? 20 : 50},
+              { marginTop: errorMessage != null ? 20 : 50 },
             ]}>
             <View
               style={{
@@ -209,14 +234,14 @@ class AppOnBoarding extends Component {
             </View>
             <LocationWithIcon
               {...{
-                style: {height: 50, marginTop: 15},
+                style: { height: 50, marginTop: 15 },
                 selected: this.state.location,
                 placeholder: 'Current location',
                 iconHeight: 20,
                 stores: this.state.stores,
                 onSelect: (selectedItem) => {
                   this.props.setStoreLocation(selectedItem);
-                  this.setState({location: selectedItem.name});
+                  this.setState({ location: selectedItem.name });
                 },
               }}
             />
@@ -234,7 +259,7 @@ class AppOnBoarding extends Component {
               </Text>
             </TouchableHighlight>
 
-            <View style={{marginTop: 70}}>
+            <View style={{ marginTop: 70 }}>
               <TouchableHighlight
                 style={[BasicStyles.btn, Style.btnWhite]}
                 onPress={() => this.redirect('loginStack')}
@@ -269,7 +294,7 @@ class AppOnBoarding extends Component {
           <CustomError
             visible={isResponseError}
             onCLose={() => {
-              this.setState({isResponseError: false, isLoading: false});
+              this.setState({ isResponseError: false, isLoading: false });
             }}
           />
         ) : null}
@@ -278,10 +303,10 @@ class AppOnBoarding extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({state: state});
+const mapStateToProps = (state) => ({ state: state });
 
 const mapDispatchToProps = (dispatch) => {
-  const {actions} = require('@redux');
+  const { actions } = require('@redux');
   return {
     setStoreLocation: (storeLocation) => dispatch(actions.setStoreLocation(storeLocation)),
     setStores: (stores) => dispatch(actions.setStores(stores)),

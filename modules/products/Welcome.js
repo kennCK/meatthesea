@@ -55,14 +55,22 @@ class Welcome extends Component {
       ratingIndex: null
     };
   }
+
+  onFocusFunction = () => {
+    /**
+     * Executed each time we enter in this component &&
+     * will be executed after going back to this component 
+    */
+    this.retrieveCart()
+  }
   
   isLoading(data) {
     this.setState({isLoading: data});
   }
+
   componentDidMount() {
     const { filter } = this.props.state;
     const { setHomepageSettings } = this.props;
-    this.retrieveCart()
     if(filter){
       setHomepageSettings({
         type: filter.category == 'restaurant' ? 0 : 1,
@@ -74,7 +82,19 @@ class Welcome extends Component {
         selectedMenu: null
       })
     }
+
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
   }
+
+  componentWillUnmount () {
+    /**
+     * removing the event listener added in the componentDidMount()
+     */
+    this.focusListener.remove()
+  }
+
 
   retrieveCart = () => {
     const { user } = this.props.state;
@@ -112,7 +132,11 @@ class Welcome extends Component {
     }
   }
   deliveryModal() {
-    this.setState({deliveryModal: this.state.deliveryModal ? false : true});
+    if(this.props.state.user !== null){
+      this.setState({deliveryModal: this.state.deliveryModal ? false : true});
+    }else{
+      this.props.navigation.navigate('loginStack')
+    }
   }
   changeMenu(index) {
     this.setState({visibleModal: false});
@@ -481,7 +505,7 @@ class Welcome extends Component {
           )}
         </View>
         {
-          showRatings && (
+          showRatings && user && (
             <View style={{
               position: 'absolute',
               bottom: 0,

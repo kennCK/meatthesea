@@ -27,7 +27,8 @@ class Register extends Component {
       error: 0,
       errorMessage: null,
       isResponseError: false,
-      stores: []
+      stores: [],
+      floor: null
     };
   }
 
@@ -58,7 +59,8 @@ class Register extends Component {
     this.setState({ isLoading: true })
     this.getData();
     Api.getRequest(Routes.storeRetrieveAll,
-        response => {
+      response => {
+            console.log('stores: ', response)
             this.setState({ isLoading: false })
             this.setState({ stores: response.stores })
         },
@@ -86,8 +88,10 @@ class Register extends Component {
     if(this.validate() == true){
       console.log(true)
         Api.postRequest(
-          Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname"+fullName+"&PhoneNumber="+phoneNumber+"&Address1="+location+"&StoreId=1", null,
+          Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname"+fullName+"&PhoneNumber="+phoneNumber+"&Address1="+location+"&StoreId=1",
+          {},
           response => {
+            console.log('Register response: ', response)
             let { customer, authorization } = response;
             this.setState({ isLoading: false })
             login(email, password, customer, authorization);
@@ -241,7 +245,7 @@ class Register extends Component {
               placeholder={'Phone number'}
             />
             <LocationWithIcon {...{
-              style: { height: 50, marginTop: 15 },
+              style: Style.textInput,
               selected: this.state.location,
               placeholder: "Current location",
               iconHeight: 20,
@@ -251,6 +255,13 @@ class Register extends Component {
                 this.setState({ location: selectedItem.name })
               }
             }} />
+            <TextInput
+              style={Style.textInput}
+              {...Style.textPlaceHolder}
+              onChangeText={(floor) => this.setState({ floor })}
+              value={this.state.floor}
+              placeholder={'Floor and unit number'}
+            />
             <View style={[Style.bottomTextContainer, { paddingHorizontal: 3 }]}>
               <Text style={[{
                 textAlign: 'justify',

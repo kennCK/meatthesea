@@ -7,10 +7,12 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import {Color, BasicStyles} from 'common';
+import {Color, BasicStyles, Routes} from 'common';
 import Style from './Style.js';
-import { faMapMarkerAlt, faClock, faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faClock, faCreditCard, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
+import Api from 'services/apiv2/index.js';
 
 class OrderHistoryDetails extends Component {
 
@@ -18,12 +20,13 @@ class OrderHistoryDetails extends Component {
     super(props);
     this.state = {
       restaurant: [],
-      store: []
+      store: [],
+      showRatings: false
     }
   }
 
   filterOrder = () => {
-    console.log('-----> ordered items <----- ', this.props.state.orderDetails)
+    // console.log('-----> ordered items <----- ', this.props.state.orderDetails)
     /**
      * 
      * categorization of ordered products for restaurant and deli-shop
@@ -61,9 +64,60 @@ class OrderHistoryDetails extends Component {
     )
   }
 
+  rate = () => {
+    this.setState({showRatings: !this.state.showRatings})
+  }
+
+  rating = () => {
+    let stars = []
+    for(let i = 0; i < 5; i++) {
+      stars.push(
+        <TouchableOpacity onPress={() => this.submitRating(i)} key={'start' + i}>
+          <FontAwesomeIcon
+          icon={ i <= this.state.ratingIndex ? faStar : faStarRegular}
+          size={40}
+          style={{
+            color: Color.secondary
+          }}
+          key={i}
+          />
+        </TouchableOpacity>
+      )
+    }
+    return(
+      <View style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'row' 
+        }}>
+        {
+          stars
+        }
+      </View>
+    );
+  }
+
+  submitRating(index){
+    const {user, storeLocation} = this.props.state
+    this.setState({isLoading: true})
+    Api.postRequest(Routes.addRatings(user.id, storeLocation.id, index + 1), {}, response => {
+      console.log("ADD RATING RESPONSE: ", response)
+      this.setState({
+        isLoading: false,
+        ratingIndex: index
+      })
+      setTimeout(() => {this.setState({showRatings: false})}, 500)
+    }, error => {
+      console.log('Add Ratings Error: ', error)
+    })
+  }
+
+
   render(){
     this.filterOrder()
     const data = this.props.state.orderDetails
+    const {user} = this.props.state
+    const {showRatings} = this.state
     return (
       <View>
         <ScrollView>
@@ -98,9 +152,13 @@ class OrderHistoryDetails extends Component {
             </View>
           </View>
           <View style={Style.rateContainer}>
-            <View style={Style.rateInsideContainer}> 
-              <Text style={Style.rateText}> RATE ORDER </Text>
-            </View>
+            <TouchableOpacity
+              onPress={() => this.rate()}
+            >
+              <View style={Style.rateInsideContainer}> 
+                <Text style={Style.rateText}> RATE ORDER </Text>
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={Style.deliveryDetailsContainer}>
             <View style={Style.addressItems}>
@@ -129,6 +187,38 @@ class OrderHistoryDetails extends Component {
             </View>
           </View>
         </ScrollView>
+        {
+          showRatings && user && (
+            <View
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                backgroundColor: Color.primary,
+                paddingTop: 20,
+                paddingBottom: 20,
+                width: '100%',
+                borderTopRightRadius: 15,
+                borderTopLeftRadius: 15
+              }}
+            >
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginBottom: 10
+                }}
+              >
+                <Text
+                  style={{
+                    color: Color.warning
+                  }}
+                >RATE YOUR EXPERIENCE</Text>
+              </View>
+              <View>
+                {this.rating()}
+              </View>
+            </View>
+          )
+        }
       </View>
     )
   }

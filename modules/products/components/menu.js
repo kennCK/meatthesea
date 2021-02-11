@@ -38,8 +38,25 @@ class Menu extends Component {
     };
   }
 
+  onFocusFunction = () => {
+    /**
+     * Executed each time we enter in this component &&
+     * will be executed after going back to this component 
+    */
+    this.retrieveCart()
+  }
+
   componentDidMount() {
-    this.retrieveCart();
+    this.focusListener = this.props.router.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount () {
+    /**
+     * removing the event listener added in the componentDidMount()
+     */
+    this.focusListener.remove()
   }
 
   retrieveProducts = () => {
@@ -135,10 +152,10 @@ class Menu extends Component {
     );
   };
 
-  setSelectedFilter(item, category) {
-    const {setFilter} = this.props;
-    setFilter({...item, category: category});
-    this.retrieveProducts();
+  setSelectedFilter = async (item, category) => {
+    const {setFilter} = await this.props;
+    await setFilter({...item, category: category});
+    await this.retrieveProducts();
   }
 
   selectItem(item) {
@@ -166,6 +183,7 @@ class Menu extends Component {
         itemImage: item.images[0].src,
         itemDescription: item.full_description,
         qty: selectedCartItem ? selectedCartItem.quantity : 1,
+        orderMaximumQuantity: item.order_maximum_quantity = 5
       });
     }, 1000);
   }
@@ -258,7 +276,7 @@ class Menu extends Component {
         </View>
         <ScrollView showsHorizontalScrollIndicator={false}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {restaurant != null &&
+            {(homepage && homepage.type == 0 && restaurant != null) &&
               restaurant.map((data, idx) => {
                 return (
                   <TouchableOpacity
@@ -281,7 +299,7 @@ class Menu extends Component {
                   </TouchableOpacity>
                 );
               })}
-            {deliStore != null &&
+            {(homepage && homepage.type == 1 && deliStore != null) && deliStore != null &&
               deliStore.map((data, idx) => {
                 return (
                   <TouchableOpacity
@@ -307,7 +325,7 @@ class Menu extends Component {
           </ScrollView>
           <View style={{alignItems: 'center'}}>
             <View style={Style.imageRow}>
-              {products != null &&
+              {products !== null &&
                 products.map((item, idx) => {
                   return (
                     <TouchableOpacity
@@ -380,10 +398,12 @@ class Menu extends Component {
             <Counter
               count={this.state.qty}
               increment={() => {
-                this.setState({qty: this.state.qty + 1});
+                if(this.state.qty + 1 <= this.state.orderMaximumQuantity){
+                  this.setState({qty: this.state.qty + 1});
+                }
               }}
               decrement={() => {
-                if (this.state.qty > 0) {
+                if (this.state.qty > 1) {
                   this.setState({qty: this.state.qty - 1});
                 }
               }}
@@ -432,7 +452,7 @@ class Menu extends Component {
               <Text style={[
                 Style.modalText
               ]}>{this.state.alertText}</Text>
-              <View 
+              <View
                 style={
                   {
                     width: '100%',
@@ -443,6 +463,8 @@ class Menu extends Component {
                 }
               >
                 <TouchableHighlight
+                  activeOpacity={0.6}
+                  underlayColor={Color.lightGray}
                   // style={{ 
                   //   ...Style.openButton, backgroundColor: Color.primaryDark }}
                   style={

@@ -48,17 +48,17 @@ class Filter extends Component {
     console.log('store', this.props.state.storeLocation.id)
   }
 
-  setSelectedFilter(item, category){
-    const{ setFilter } = this.props;
-    setFilter({...item,
+  setSelectedFilter = async (item, category) => {
+    const{ setFilter } = await this.props;
+    await setFilter({...item,
       category: category
     })
-    const { setHomepageSettings } = this.props;
-    setHomepageSettings({
+    const { setHomepageSettings } = await this.props;
+    await setHomepageSettings({
       type: category == 'restaurant' ? 0 : 1,
       selectedMenu: category == 'restaurant' ? 0 : 1
     })
-    this.props.navigation.navigate('homepageStack')
+    await this.props.navigation.navigate('homepageStack')
   }
 
   render() {

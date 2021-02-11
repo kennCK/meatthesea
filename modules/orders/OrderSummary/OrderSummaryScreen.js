@@ -50,6 +50,7 @@ class OrderSummaryScreen extends Component {
   }
 
   componentDidMount() {
+    console.log('orders : ', this.props.state.orderDetails)
     console.log('::==->Address: ', this.props.state.userLocation)
     console.log('::==->Store Address: ', this.props.state.storeLocation.id)
     Api.getRequest(Routes.paypalAccountRetrieve, response => {

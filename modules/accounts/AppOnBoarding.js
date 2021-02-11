@@ -40,7 +40,12 @@ class AppOnBoarding extends Component {
 
   getLocations() { }
 
-  async componentDidMount() {
+  onFocusFunction = async () => {
+    /**
+     * Executed each time we enter in this component &&
+     * will be executed after going back to this component 
+    */
+   this.setState({location: ''})
     Linking.getInitialURL().then(url => {
       console.log(`from initial url ${url}, call navigate`)
       this.navigate(url);
@@ -70,6 +75,19 @@ class AppOnBoarding extends Component {
       },
     );
     this.firebaseNotification()
+  }
+
+  async componentDidMount() {
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount () {
+    /**
+     * removing the event listener added in the componentDidMount()
+     */
+    this.focusListener.remove()
   }
 
   firebaseNotification(){
@@ -262,7 +280,13 @@ class AppOnBoarding extends Component {
             <View style={{ marginTop: 70 }}>
               <TouchableHighlight
                 style={[BasicStyles.btn, Style.btnWhite]}
-                onPress={() => this.redirect('loginStack')}
+                onPress={() => {
+                  if(this.state.location !== '') {
+                    this.redirect('loginStack')
+                  }else {
+                    this.setState({errorMessage: 'Choose your location'})
+                  }
+                }}
                 underlayColor={Color.gray}>
                 <Text
                   style={[

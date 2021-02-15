@@ -69,6 +69,7 @@ class Welcome extends Component {
   }
 
   componentDidMount() {
+    console.log('\n\nSTORE LOCATION : ', this.props.state.storeLocation, '\n\n')
     const { filter } = this.props.state;
     const { setHomepageSettings } = this.props;
     if(filter){
@@ -97,7 +98,7 @@ class Welcome extends Component {
 
 
   retrieveCart = () => {
-    const { user } = this.props.state;
+    const { user, storeLocation } = this.props.state;
     if(user == null){
       return
     }
@@ -110,6 +111,13 @@ class Welcome extends Component {
         this.isLoading(false);
         console.log(error);
     });
+    Api.getRequest(Routes.crockeryRetrieve(user.id, storeLocation.id), response => {
+      const { setPickupCrockeries } = this.props;
+      setPickupCrockeries(response.crockery)
+      console.log('\n\nRETRIEVING CROCKERY RESPONSE: ', response, '\n\n')
+    }, error => {
+      console.log('\n\nRETRIEVING CROCKERY ERROR: ', error, '\n\n')
+    })
   }
 
   changeSelectedMenu(data, type) {
@@ -553,6 +561,7 @@ const mapDispatchToProps = (dispatch) => {
     setSearch: (search) => dispatch(actions.setSearch(search)),
     setHomepageSettings: (settings) => dispatch(actions.setHomepageSettings(settings)),
     setCart: (cart) => dispatch(actions.setCart(cart)),
+    setPickupCrockeries: (crockeries) => dispatch(actions.setPickupCrockeries(crockeries))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);

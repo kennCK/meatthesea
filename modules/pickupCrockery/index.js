@@ -7,6 +7,7 @@ import ScheduledTab from 'modules/pickupCrockery/tabs/ScheduledTab';
 import PendingTab from 'modules/pickupCrockery/tabs/PendingTab';
 import Api from 'services/apiv2/index.js';
 import {Routes} from 'common';
+import {connect} from 'react-redux';
 const height = Math.round(Dimensions.get('window').height);
 
 class PickupCrockery extends Component {
@@ -14,7 +15,7 @@ class PickupCrockery extends Component {
     super(props);
     this.state = {
       index: 0,
-      orders: [],
+      crockery: [],
       orderLength: 0,
       pageNumber: 1,
       isLoading: false,
@@ -24,7 +25,8 @@ class PickupCrockery extends Component {
   }
 
   async componentDidMount() {
-    this.getOrders();
+    // this.getOrders();
+    this.retrieveCrockery();
   }
 
   getOrders = () => {
@@ -34,8 +36,8 @@ class PickupCrockery extends Component {
     Api.getRequest(
       Routes.ordersRetrieve + '?limit=' + 5 + '&page=' + this.state.pageNumber,
       response => {
-        tempScheduled = []
-        tempPending = []
+        let tempScheduled = []
+        let tempPending = []
         response.orders.forEach(el => {
           if(el.order_status.toLowerCase() == 'processing') {
             tempScheduled.push(el)
@@ -56,9 +58,34 @@ class PickupCrockery extends Component {
     );
   };
 
+  retrieveCrockery = () => {
+    const { user, storeLocation } = this.props.state
+    Api.getRequest(Routes.crockeryRetrieve(), response => {
+      let tempScheduled = []
+      let tempPending = []
+      response.crockery.forEach(el => {
+        if(el.crockery_status.toLowerCase() === 'pending') {
+          tempPending.push(el)
+        }else if(el.crockery_status.toLowerCase() === 'processing') {
+          tempScheduled.push(el)
+        }
+      })
+      this.setState(prevState => ({
+        crockery: _.uniqBy([...this.state.crockery, ...response.crockery], 'id'),
+        scheduled: _.uniqBy([...this.state.scheduled, ...tempScheduled], 'id'),
+        pending: _.uniqBy([...this.state.pending, ...tempPending], 'id'),
+        isLoading: false,
+      }));
+      console.log("RETRIEVING CROCKERY RESPONSE ", response.crockery)
+    }, error => {
+      console.log("RETRIEVING CROCKERY ERROR ", error)
+    })
+  }
+
   handlePagination = () => {
     this.setState({pageNumber: this.state.pageNumber + 1}, () => {
-      this.getOrders();
+      // this.getOrders();
+      this.retrieveCrockery();
     });
   };
 
@@ -123,4 +150,13 @@ class PickupCrockery extends Component {
   }
 }
 
-export default PickupCrockery;
+const mapStateToProps = (state) => ({
+  state: state
+});
+
+const mapDispatchToProps = (dispatch) => {
+  const {actions} = require('@redux');
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PickupCrockery);

@@ -12,7 +12,7 @@ class OrderTile extends Component {
 
   setSelectedOrder(item){
     const { setOrder } = this.props;
-    setOrder(item)
+    setRequestPickUpCrockery(item)
     this.props.navigate()
   }
   render() {
@@ -49,7 +49,7 @@ const mapStateToProps = state => ({state: state});
 const mapDispatchToProps = dispatch => {
   const {actions} = require('@redux');
   return {
-    setOrder: order => dispatch(actions.setOrder(order))
+    setRequestPickUpCrockery: requestPickUpCrockery => dispatch(actions.setRequestPickUpCrockery(requestPickUpCrockery))
   };
 };
 

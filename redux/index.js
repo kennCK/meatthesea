@@ -24,7 +24,8 @@ const types = {
   SET_PICKUP_CROCKERIES: 'SET_PICKUP_CROCKERIES',
   SET_SELECTED_DELIVERY_TIME: 'SET_SELECTED_DELIVERY_TIME',
   SET_ORDER: 'SET_ORDER',
-  SET_STORE_LOCATION: 'SET_STORE_LOCATION'
+  SET_STORE_LOCATION: 'SET_STORE_LOCATION',
+  SET_REQUEST_PICKUP_CROCKERY: 'SET_REQUEST_PICKUP_CROCKERY'
 };
 
 export const actions = {
@@ -90,6 +91,9 @@ export const actions = {
   },
   setStoreLocation(storeLocation) {
     return { type: types.SET_STORE_LOCATION, storeLocation}
+  },
+  setRequestPickUpCrockery(requestPickUpCrockery) {
+    return { type: types.SET_REQUEST_PICKUP_CROCKERY, requestPickUpCrockery}
   }
 };
 
@@ -112,7 +116,8 @@ const initialState = {
   crockeries: null,
   deliveryTime: null,
   order: null,
-  storeLocation: null
+  storeLocation: null,
+  requestPickUpCrockery: null
 };
 
 storeData = async (key, value) => {
@@ -133,6 +138,7 @@ const reducer = (state = initialState, action) => {
   const { filter, categories, settings, search } = action;
   const { cart, details, payment } = action;
   const { crockeries, deliveryTime, order, storeLocation } = action;
+  const { requestPickUpCrockery } = action;
 
   switch (type) {
     case types.LOGOUT:
@@ -295,6 +301,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         storeLocation
+      }
+    case types.SET_REQUEST_PICKUP_CROCKERY:
+      return {
+        ...state,
+        requestPickUpCrockery
       }
     default:
       return {...state, nav: state.nav};

@@ -72,6 +72,8 @@ export default {
   paypalAccountRetrieve: apiUrl + 'get_paypal_details',
   paypalCreateOrder: (ClientId, ClientSecret, paymentType, Sandbox, CustomerId, AddressId, StoreId) => apiUrl + `paypal_create_order?ClientId=${ClientId}&ClientSecret=${ClientSecret}&PaymentType=${paymentType}&Sandbox=${Sandbox}&CustomerId=${CustomerId}&AddressId=${AddressId}&StoreId=${StoreId}`,
 
+  crockeryRetrieve: (CustomerID, StoreID, optional = '') => apiUrl + `get_crockery?CustomerId=${CustomerID}&StoreId=${StoreID}` + optional,
+
   // ProductAttributes
   productAttribuesRetrieve: apiUrl + 'productattributes',
   productAttribuesAdd: apiUrl + 'productattributes',

@@ -16,6 +16,7 @@ export default {
   black: '#000',
   success: '#4BB543',
   goldenYellow: '#FFDF00',
+  lightYellow: '#F3E4A7',
   tertiary: tertiary,
   setPrimary(color) {
     this.primary = color

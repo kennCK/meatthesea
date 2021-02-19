@@ -9,11 +9,12 @@ class PendingPickupScreen extends Component {
         console.log(route)
     }
     render() {
+      const { requestPickUpCrockery } = this.props.state;
         return (
           <ScrollView>
             <View style={styles.MainContainer}>
               <View style={styles.TopContainer}>
-                  <Text style={[styles.DescriptionContainer]}>Order number 1234</Text>
+                  <Text style={[styles.DescriptionContainer]}>Order number {requestPickUpCrockery.order_id}</Text>
               </View>
               <View style={styles.BottomContainer}>
                 <View style={styles.SubtitleContainer}>

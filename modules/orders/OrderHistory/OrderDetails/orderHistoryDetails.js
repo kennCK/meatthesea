@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  TextInput
 } from 'react-native';
 import {Color, BasicStyles, Routes} from 'common';
 import Style from './Style.js';
@@ -21,8 +22,15 @@ class OrderHistoryDetails extends Component {
     this.state = {
       restaurant: [],
       store: [],
-      showRatings: false
+      showRatings: false,
+      ratingIndex: null,
+      isAddingComment: false,
+      value: ''
     }
+  }
+
+  componentDidMount() {
+    this.filterOrder()
   }
 
   filterOrder = () => {
@@ -68,7 +76,35 @@ class OrderHistoryDetails extends Component {
     this.setState({showRatings: !this.state.showRatings})
   }
 
-  rating = () => {
+  submitRating(index){
+    const {user, storeLocation} = this.props.state
+    this.setState({isLoading: true})
+    Api.postRequest(Routes.addRatings(user.id, storeLocation.id, index + 1), {}, response => {
+      console.log("ADD RATING RESPONSE: ", response)
+      this.setState({isAddingComment: true})
+      this.setState({
+        isLoading: false,
+        ratingIndex: index,
+        isAddingComment: true
+      })
+    }, error => {
+      console.log('Add Ratings Error: ', error)
+    })
+  }
+
+  submitFeedBack() {
+    const {user, storeLocation} = this.props.state
+    console.log("Comment : ", this.state.value)
+    this.setState({isLoading: true})
+    Api.postRequest(Routes.addFeedback(user.id, storeLocation.id, this.state.value), {}, response => {
+      console.log('Add Feedback Response: ', response)
+      this.setState({isLoading: false, showRatings: false})
+    }, error => {
+      console.log('Add Feedback error')
+    })
+  }
+
+  rating(){
     let stars = []
     for(let i = 0; i < 5; i++) {
       stars.push(
@@ -88,33 +124,81 @@ class OrderHistoryDetails extends Component {
       <View style={{
           alignItems: 'center',
           justifyContent: 'center',
-          flexDirection: 'row' 
+          flexDirection: 'row'
         }}>
-        {
+        { !this.state.isAddingComment &&
           stars
+        }
+        { this.state.isAddingComment &&
+          <View
+            style={{
+              width: '100%'
+            }}
+          >
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'center'
+              }}
+            >
+              <TextInput 
+                style={
+                  [
+                    {
+                      height: 40,
+                      borderWidth: 1,
+                      height: 40,
+                      borderColor: Color.gray,
+                      borderWidth: 1,
+                      paddingLeft: 10,
+                      marginBottom: 5,
+                      borderRadius: 5,
+                      color: Color.lightYellow,
+                      width: '90%'
+                    }
+                  ]
+                }
+                onChangeText={value => this.setState({value})}
+                value={this.state.value}
+                placeholder={'Write here...'}
+                placeholderTextColor={Color.lightYellow}
+              />
+            </View>
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'center',
+                marginTop: 5
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  backgroundColor: Color.lightYellow,
+                  width: '90%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: 20
+                }}
+                onPress={ () => {
+                  this.submitFeedBack()
+                }}
+              >
+                <Text
+                  style={{
+                    color: Color.primary,
+                    fontSize: BasicStyles.standardFontSize,
+                    fontWeight: 'bold'
+                  }}
+                >SEND</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         }
       </View>
     );
   }
 
-  submitRating(index){
-    const {user, storeLocation} = this.props.state
-    this.setState({isLoading: true})
-    Api.postRequest(Routes.addRatings(user.id, storeLocation.id, index + 1), {}, response => {
-      console.log("ADD RATING RESPONSE: ", response)
-      this.setState({
-        isLoading: false,
-        ratingIndex: index
-      })
-      setTimeout(() => {this.setState({showRatings: false})}, 500)
-    }, error => {
-      console.log('Add Ratings Error: ', error)
-    })
-  }
-
-
   render(){
-    this.filterOrder()
     const data = this.props.state.orderDetails
     const {user} = this.props.state
     const {showRatings} = this.state
@@ -189,29 +273,74 @@ class OrderHistoryDetails extends Component {
         </ScrollView>
         {
           showRatings && user && (
-            <View
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                backgroundColor: Color.primary,
-                paddingTop: 20,
-                paddingBottom: 20,
-                width: '100%',
-                borderTopRightRadius: 15,
-                borderTopLeftRadius: 15
-              }}
-            >
-              <View
-                style={{
-                  alignItems: 'center',
-                  marginBottom: 10
-                }}
-              >
-                <Text
+            <View style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              minHeight: 125,
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+              backgroundColor: Color.primary,
+              width: '100%',
+              zIndex: 10,
+              paddingBottom: 10
+            }}>
+              { this.state.isAddingComment && 
+                <TouchableOpacity
                   style={{
-                    color: Color.warning
+                    position: 'absolute',
+                    top: 7,
+                    left: '5%',
                   }}
-                >RATE YOUR EXPERIENCE</Text>
+                  onPress={() => {
+                    this.setState({showRatings: false})
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: BasicStyles.standardFontSize + 12,
+                      color: Color.lightYellow
+                    }}
+                  >&times;</Text>
+                </TouchableOpacity>
+              }
+              <View style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+                { !this.state.isAddingComment && 
+                  <Text style={{
+                    color: Color.secondary,
+                    fontWeight: 'bold',
+                    fontSize: 16,
+                    paddingTop: 15,
+                    paddingBottom: 15
+                  }}>RATE YOUR EXPERIENCE</Text>
+                }
+                { this.state.isAddingComment &&
+                  <View
+                    style={{
+                      width: '70%',
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text
+                      style={{
+                        paddingBottom: 15,
+                        paddingTop: 15,
+                        fontSize: BasicStyles.standardFontSize,
+                        textAlign: 'center',
+                        color: Color.lightYellow
+                      }}
+                    >
+                      Please help us improve our services and send us your feedback
+                    </Text>
+                </View>
+                }
               </View>
               <View>
                 {this.rating()}

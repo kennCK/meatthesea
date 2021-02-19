@@ -66,7 +66,7 @@ class PickupCrockery extends Component {
       response.crockery.forEach(el => {
         if(el.crockery_status.toLowerCase() === 'pending') {
           tempPending.push(el)
-        }else if(el.crockery_status.toLowerCase() === 'processing') {
+        }else if(el.crockery_status.toLowerCase() === 'pickup') {
           tempScheduled.push(el)
         }
       })

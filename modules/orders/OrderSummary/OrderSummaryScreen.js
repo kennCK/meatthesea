@@ -29,7 +29,8 @@ class OrderSummaryScreen extends Component {
       key: 1,
       errorMessage: null,
       isSubmit: 0,
-      paypalInfo: {}
+      paypalInfo: {},
+      isLoading: false
     };
   }
   
@@ -50,7 +51,7 @@ class OrderSummaryScreen extends Component {
   }
 
   componentDidMount() {
-    console.log('orders : ', this.props.state.orderDetails)
+    // console.log('cart : ', this.props.state.cart)
     console.log('::==->Address: ', this.props.state.userLocation)
     console.log('::==->Store Address: ', this.props.state.storeLocation.id)
     Api.getRequest(Routes.paypalAccountRetrieve, response => {
@@ -133,20 +134,11 @@ class OrderSummaryScreen extends Component {
       AddressId: 1
     }
     this.executeOrderPlacement()
-    // Api.postRequest(Routes.ordersConfirm(user.id, storeLocation.id, userLocation.id), {}, (response) => {
-    //   this.setState({
-    //     isSubmit: 0
-    //   })
-    //    this.redirect('orderPlacedStack')
-    //   }, (error) => {
-    //     console.log('Order place error: ', error);
-    // });
   }
   
   executeOrderPlacement = async () => {
-    const {userLocation, storeLocation, cart, user} = await this.props.state
-    let paypalOrder = await {}
-    this.isLoading(true)
+    const {userLocation, storeLocation, cart, user} = await this.props.state;
+    this.setState({isLoading: true});
     await Api.postRequest(Routes.paypalCreateOrder(
         this.state.paypalInfo.paypal.client_id,
         this.state.paypalInfo.paypal.client_secret, 
@@ -157,13 +149,15 @@ class OrderSummaryScreen extends Component {
         storeLocation.id
       ), {}, response => {
         console.log("CREATE PAYPAL ORDER RESPONSE: ", response)
-        // paypalOrder = response
-        // this.isLoading(false)
-        // let approve = response.paypal.links.filter(el => {
-        //   return el.rel.toLowerCase() === 'approve'
-        // })
-        // this.openURL(approve[0].href)
+        const { setPaypalSuccessData } = this.props;
+        setPaypalSuccessData(response);
+        this.setState({isLoading: false});
+        let approve = response.paypal.links.filter(el => {
+          return el.rel.toLowerCase() === 'approve';
+        })
+        this.openURL(approve[0].href);
     }, error => {
+      this.setState({isLoading: false});
       console.log('Creating Paypal Order Error: ', error)
     })
   }
@@ -182,7 +176,6 @@ class OrderSummaryScreen extends Component {
     const { errorMessage, isLoading } = this.state;
     return (
       <View style={{ flex: 1 }} key={this.state.key}>
-        {isLoading ? <Spinner mode="overlay"/> : null }
         <Modal visible={this.state.isSubmit > 0 ? true : false}>
           <View style={{ flex: 1, backgroundColor: Color.primary, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator
@@ -191,7 +184,7 @@ class OrderSummaryScreen extends Component {
               style={[
                 styles.wrapper
               ]}
-            />
+              />
           </View>
         </Modal>
         <Modal visible={this.state.isVisible} >
@@ -199,22 +192,22 @@ class OrderSummaryScreen extends Component {
           <TouchableOpacity
               style={[{ marginTop: 40, marginLeft: 20 }]} onPress={this.toggleModal}>
               <FontAwesomeIcon icon={faTimesCircle} style={{
-                  color: Color.gray
+                color: Color.gray
               }} size={BasicStyles.iconSize} />
             </TouchableOpacity>
             <View style={{
-                flex: 1,
-                justifyContent: "center",
-                backgroundColor: Color.primary,
-                alignItems: "center",
+              flex: 1,
+              justifyContent: "center",
+              backgroundColor: Color.primary,
+              alignItems: "center",
             }}>
 
               <View style={{
-                  backgroundColor: Color.white,
-                  borderRadius: 10,
-                  padding: 35,
-                  width: Style.getWidth() - 100,
-                  alignItems: "center",
+                backgroundColor: Color.white,
+                borderRadius: 10,
+                padding: 35,
+                width: Style.getWidth() - 100,
+                alignItems: "center",
               }}>
                 <Text style={[Style.fontSize(BasicStyles.standardFontSize), { textAlign: 'center', color: Color.darkGray }]}>Available delivery slots from :</Text>
                 <DatePicker
@@ -223,10 +216,10 @@ class OrderSummaryScreen extends Component {
                     is24hourSource="locale"
                     minuteInterval={15}
                     onDateChange={(e) => {
-                        this.setState({ hour: e.getHours() })
-                        this.setState({ mins: e.getMinutes() })
+                      this.setState({ hour: e.getHours() })
+                      this.setState({ mins: e.getMinutes() })
                     }}
-                />
+                    />
                 <View style={{ marginTop: 40 }}>
                   <TouchableOpacity style={{
                     backgroundColor: Color.secondary,
@@ -234,11 +227,11 @@ class OrderSummaryScreen extends Component {
                     paddingVertical: 10,
                     borderRadius: 10
                   }}
-                    onPress={() => {
-                        const { hour, mins } = this.state
-                        this.setState({ selectedTime: `${hour}:${parseInt(mins) > 0? mins : '00'}` })
-                        this.setSelectedTime(`${hour}:${parseInt(mins) > 0? mins : '00'}`)
-                    }}
+                  onPress={() => {
+                    const { hour, mins } = this.state
+                    this.setState({ selectedTime: `${hour}:${parseInt(mins) > 0? mins : '00'}` })
+                    this.setSelectedTime(`${hour}:${parseInt(mins) > 0? mins : '00'}`)
+                  }}
                   >
                     <Text style={[Style.fontSize(BasicStyles.standardFontSize), Style.fontWeight('bold')]}>GO</Text>
                   </TouchableOpacity>
@@ -259,11 +252,11 @@ class OrderSummaryScreen extends Component {
               </Text>
               <View
                 style={{
-                    height: 1,
-                    width: Style.getWidth() - 190,
-                    backgroundColor: Color.black,
+                  height: 1,
+                  width: Style.getWidth() - 190,
+                  backgroundColor: Color.black,
                 }}
-              />
+                />
             </View>
           </View>
           <View style={[{ marginTop: 15 },]}>
@@ -279,15 +272,15 @@ class OrderSummaryScreen extends Component {
           <View >
             {
               cart && cart.map((cartItem, idx) => {
-                  return <OrderItems key={idx} data={cartItem} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>
+                return <OrderItems key={idx} data={cartItem} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>
               })
             }
           </View>
           {
             (
               <DeliveryDetails navigate={(route) => this.props.navigation.navigate(route)} isSummary={false} key={orderDetails} errorMessage={errorMessage}/>
-            )
-          }
+              )
+            }
 
         </ScrollView>
         <Separator />
@@ -298,10 +291,11 @@ class OrderSummaryScreen extends Component {
             style={[BasicStyles.btn, Style.btnPrimary, { borderRadius: 0, width: Style.getWidth() - 30 }]}
             underlayColor={Color.gray}>
             <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(BasicStyles.standardFontSize)]}>
-                PLACE ORDER
+              PLACE ORDER
             </Text>
           </TouchableHighlight>
         </View>
+        {isLoading ? <Spinner mode="overlay"/> : null }
       </View>
     );
   }
@@ -317,6 +311,7 @@ const mapDispatchToProps = (dispatch) => {
     setCart: (cart) => dispatch(actions.setCart(cart)),
     setOrderDetails: (details) => dispatch(actions.setOrderDetails(details)),
     setSelectedDeliveryTime: (time) => dispatch(actions.setSelectedDeliveryTime(time)),
+    setPaypalSuccessData: (paypalSuccessData) => dispatch(actions.setPaypalSuccessData(paypalSuccessData))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(OrderSummaryScreen);

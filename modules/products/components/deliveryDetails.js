@@ -107,7 +107,9 @@ class DeliveryDetails extends Component{
                     ))
                   }  
                   </RadioForm>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={this.props.click}
+                  >
                     <View style={[{flexDirection: 'row', justifyContent: 'center', width: '100%', marginTop: 10}]}>
                       <FontAwesomeIcon icon={ faPlus } style={{ color: Color.primary }} />
                       <Text style={[{marginLeft: 10, color: Color.primary}]}>add new address</Text>

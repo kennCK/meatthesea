@@ -134,7 +134,9 @@ class AppOnBoarding extends Component {
     if(url !== null){
       const route = url.replace(/.*?:\/\//g, '');
       const routeName = route.split('/')[0];
-      if (routeName === 'mts.meatthesea.com') {
+      console.log(routeName)
+      if (routeName === 'mts.meatthesea.com' && route.split('/')[2] === 'paypalSuccess') {
+        console.log('\n\ntesting ============================================================================== \n\n')
         navigate('orderPlacedStack')
       };
     }

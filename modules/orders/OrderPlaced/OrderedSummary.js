@@ -16,6 +16,7 @@ import { faEdit, faInfoCircle, faTimesCircle } from '@fortawesome/free-solid-svg
 import DatePicker from 'react-native-date-picker'
 import {connect} from 'react-redux';
 import Api from 'services/apiv2/index.js';
+import {Spinner} from 'components';
 
 class OrderedSummary extends Component {
   constructor(props) {
@@ -26,11 +27,38 @@ class OrderedSummary extends Component {
       hour: '',
       mins: '',
       key: 1,
-      errorMessage: null
+      errorMessage: null,
+      isLoading: false,
+      isRendered: false
     };
   }
 
+  onFocusFunction = () => {
+    const {paypalSuccessData, user, storeLocation, userLocation} = this.props.state
+    if(paypalSuccessData !== null) {
+      this.setState({isLoading: true, isRendered: false})
+      Api.postRequest(Routes.paypalConfirmOrder(user.id, storeLocation.id, userLocation.id, paypalSuccessData.order_guid, paypalSuccessData.paypal.paypal_id), {}, response=> {
+        console.log('CONFIRM ORDER PAYPAL RESPONSE: ', response)
+        this.setState({isLoading: false, isRendered: true})
+      }, error => {
+        console.log('CONFIRM PAYPAL ORDER ERROR: ', error)
+      })
+    }else {
+      this.props.navigation.navigate('orderSummaryStack')
+    }
+  }
+
   componentDidMount(){
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount () {
+    /**
+     * removing the event listener added in the componentDidMount()
+     */
+    this.focusListener.remove()
   }
 
   retrieveCart = () => {
@@ -97,14 +125,15 @@ class OrderedSummary extends Component {
       paymentMethod: paymentMethod,
       deliveryTime: deliveryTime,
       carts: cart,
-      orderSummary: orderDetails
+      orderSummary: orderDetails,
+      isRendered: true
     }
     this.redirect('orderPlacedStack')
   }
 
   render() {
     const { cart, orderDetails, deliveryTime } = this.props.state;
-    const { errorMessage } = this.state;
+    const { errorMessage, isLoading, isRendered } = this.state;
     return (
       <View style={{ flex: 1 }} key={this.state.key}>
         <Modal visible={this.state.isVisible} >
@@ -160,44 +189,52 @@ class OrderedSummary extends Component {
             </View>
           </View>
         </Modal>
-        <View style={styles.HeaderContainer}>
-          {/* */}
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            <Text style={[Style.fontSize(BasicStyles.standardFontSize)]}>Delivery time : </Text>
-            <View style={{ paddingHorizontal: 15 }}>
-              <Text style={[Style.fontSize(BasicStyles.standardFontSize), Style.fontWeight('bold'), { color: Color.primary, borderBottomColor: Color.darkGray }]}>{deliveryTime ? deliveryTime : 'As soon as possible'}
-                <TouchableOpacity style={[{ flex: 0 }]} onPress={this.toggleModal} >
-                    <FontAwesomeIcon icon={faEdit} style={{ color: Color.darkGray, marginRight: 10, marginLeft: 10 }} size={BasicStyles.standardFontSize} />
-                </TouchableOpacity>
+        {
+          isRendered && 
+        
+          <View style={styles.HeaderContainer}>
+            {/* */}
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              <Text style={[Style.fontSize(BasicStyles.standardFontSize)]}>Delivery time : </Text>
+              <View style={{ paddingHorizontal: 15 }}>
+                <Text style={[Style.fontSize(BasicStyles.standardFontSize), Style.fontWeight('bold'), { color: Color.primary, borderBottomColor: Color.darkGray }]}>{deliveryTime ? deliveryTime : 'As soon as possible'}
+                  <TouchableOpacity style={[{ flex: 0 }]} onPress={this.toggleModal} >
+                      <FontAwesomeIcon icon={faEdit} style={{ color: Color.darkGray, marginRight: 10, marginLeft: 10 }} size={BasicStyles.standardFontSize} />
+                  </TouchableOpacity>
+                </Text>
+                <View
+                  style={{
+                      height: 1,
+                      width: Style.getWidth() - 190,
+                      backgroundColor: Color.black,
+                  }}
+                />
+              </View>
+            </View>
+            <View style={[{ marginTop: 15 },]}>
+              <Text style={[{ color: Color.darkGray }, Style.fontSize(BasicStyles.standardFontSize)]}>Current wait time: around 30 mins
+              <View style={{ marginTop: 10 }}>
+                      <FontAwesomeIcon style={{ marginLeft: 10 }} color={Color.darkGray} icon={faInfoCircle} size={BasicStyles.standardFontSize} />
+                  </View>
               </Text>
-              <View
-                style={{
-                    height: 1,
-                    width: Style.getWidth() - 190,
-                    backgroundColor: Color.black,
-                }}
-              />
             </View>
           </View>
-          <View style={[{ marginTop: 15 },]}>
-            <Text style={[{ color: Color.darkGray }, Style.fontSize(BasicStyles.standardFontSize)]}>Current wait time: around 30 mins
-            <View style={{ marginTop: 10 }}>
-                    <FontAwesomeIcon style={{ marginLeft: 10 }} color={Color.darkGray} icon={faInfoCircle} size={BasicStyles.standardFontSize} />
-                </View>
-            </Text>
-          </View>
-        </View>
+        }
         <Separator />
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={[styles.OrderHistoryListContainer]}>
-          <View >
-            {
-              cart && cart.map((cartItem, idx) => {
+        {
+          isRendered && 
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={[styles.OrderHistoryListContainer]}>
+            <View >
+              {
+                cart && cart.map((cartItem, idx) => {
                   return <OrderItems key={idx} data={cartItem} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>
-              })
-            }
-          </View>
+                })
+              }
+            </View>
 
-        </ScrollView>
+          </ScrollView>
+        }
+        {isLoading ? <Spinner mode="overlay"/> : null }
       </View>
     );
   }

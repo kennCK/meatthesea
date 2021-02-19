@@ -61,6 +61,7 @@ class Menu extends Component {
 
   retrieveProducts = () => {
     const {filter, search, storeLocation} = this.props.state;
+    const { setMenuProducts } = this.props
     if (filter == null) {
       return;
     }
@@ -70,7 +71,7 @@ class Menu extends Component {
         Routes.productsRetrieve + '?categoryid=' + filter.id,
         response => {
           this.props.load(false)
-          this.setState({products: response.products});
+          setMenuProducts(response.products);
         },
         error => {
           this.props.load(false)
@@ -89,7 +90,7 @@ class Menu extends Component {
         Routes.productSearch + parameters,
         response => {
           this.props.load(false)
-          this.setState({products: response.products});
+          setMenuProducts(response.products);
         },
         error => {
           this.props.load(false)
@@ -244,8 +245,7 @@ class Menu extends Component {
   }
 
   render() {
-    const {restaurant, deliStore, filter, homepage} = this.props.state;
-    const {products} = this.state;
+    const {restaurant, deliStore, filter, homepage, menuProducts} = this.props.state;
     return (
       <View style={{flex: 1}}>
         <View
@@ -325,8 +325,8 @@ class Menu extends Component {
           </ScrollView>
           <View style={{alignItems: 'center'}}>
             <View style={Style.imageRow}>
-              {products !== null &&
-                products.map((item, idx) => {
+              {menuProducts !== null &&
+                menuProducts.map((item, idx) => {
                   return (
                     <TouchableOpacity
                       onPress={() => this.selectItem(item)}
@@ -495,6 +495,7 @@ const mapDispatchToProps = dispatch => {
   return {
     setFilter: filter => dispatch(actions.setFilter(filter)),
     setCart: cart => dispatch(actions.setCart(cart)),
+    setMenuProducts: (menuProducts) => dispatch(actions.setMenuProducts(menuProducts))
   };
 };
 

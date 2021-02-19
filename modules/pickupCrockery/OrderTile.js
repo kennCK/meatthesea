@@ -11,7 +11,7 @@ class OrderTile extends Component {
   }
 
   setSelectedOrder(item){
-    const { setOrder } = this.props;
+    const { setRequestPickUpCrockery } = this.props;
     setRequestPickUpCrockery(item)
     this.props.navigate()
   }

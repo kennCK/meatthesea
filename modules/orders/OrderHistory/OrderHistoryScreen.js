@@ -31,7 +31,7 @@ class OrderHistoryScreen extends Component {
     ratingIndex: null
   };
   componentDidMount() {
-    let {stores} = this.props.state;
+    let {stores, user} = this.props.state;
     this.setState({allStores: stores});
     if (stores.length == 0) {
       Api.getRequest(
@@ -48,7 +48,7 @@ class OrderHistoryScreen extends Component {
     }
 
     Api.getRequest(
-      Routes.ordersRetrieveById('1'),
+      Routes.ordersRetrieveById(user.id),
       (response) => {
         let {orders} = response;
         let items = [];

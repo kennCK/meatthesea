@@ -12,7 +12,7 @@ class PendingTab extends Component {
     let orders = this.props.orders;
     if(orders.length > 0) {
       return orders.map((order, index) => {
-        var date = new Date(order.paid_date_utc).toLocaleDateString();
+        var date = new Date(order.created_date_utc).toLocaleDateString();
         return (
           <OrderTile
             key={index}

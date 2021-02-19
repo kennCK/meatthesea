@@ -52,7 +52,9 @@ class Welcome extends Component {
       products: null,
       token: true,
       showRatings: true,
-      ratingIndex: null
+      ratingIndex: null,
+      isAddingComment: false,
+      value: ''
     };
   }
 
@@ -63,12 +65,51 @@ class Welcome extends Component {
     */
     this.retrieveCart()
   }
+
+  retrieveProducts = () => {
+    const {filter, search, storeLocation} = this.props.state;
+    const { setMenuProducts } = this.props
+    if (filter == null) {
+      return;
+    }
+    if (search == null || search == '' || storeLocation == null) {
+      Api.getRequest(
+        Routes.productsRetrieve + '?categoryid=' + filter.id,
+        response => {
+          setMenuProducts(response.products);
+        },
+        error => {
+          this.props.load(false)
+          console.log(error);
+        },
+      );
+    } else {
+      let parameters =
+        '?Keyword=' +
+        search +
+        '&StoreId=' +
+        storeLocation.id +
+        '&CategoryIds=' +
+        filter.id;
+      Api.getRequest(
+        Routes.productSearch + parameters,
+        response => {
+          setMenuProducts(response.products);
+        },
+        error => {
+          this.props.load(false)
+          console.log(error);
+        },
+      );
+    }
+  };
   
   isLoading(data) {
     this.setState({isLoading: data});
   }
 
   componentDidMount() {
+    console.log('\n\nSTORE LOCATION : ', this.props.state.storeLocation, '\n\n')
     const { filter } = this.props.state;
     const { setHomepageSettings } = this.props;
     if(filter){
@@ -97,7 +138,7 @@ class Welcome extends Component {
 
 
   retrieveCart = () => {
-    const { user } = this.props.state;
+    const { user, storeLocation } = this.props.state;
     if(user == null){
       return
     }
@@ -110,6 +151,13 @@ class Welcome extends Component {
         this.isLoading(false);
         console.log(error);
     });
+    Api.getRequest(Routes.crockeryRetrieve(user.id, storeLocation.id), response => {
+      const { setPickupCrockeries } = this.props;
+      setPickupCrockeries(response.crockery)
+      console.log('\n\nRETRIEVING CROCKERY RESPONSE: ', response, '\n\n')
+    }, error => {
+      console.log('\n\nRETRIEVING CROCKERY ERROR: ', error, '\n\n')
+    })
   }
 
   changeSelectedMenu(data, type) {
@@ -134,6 +182,7 @@ class Welcome extends Component {
   deliveryModal() {
     if(this.props.state.user !== null){
       this.setState({deliveryModal: this.state.deliveryModal ? false : true});
+      this.props.navigation.navigate('savedAddressStack')
     }else{
       this.props.navigation.navigate('loginStack')
     }
@@ -149,19 +198,29 @@ class Welcome extends Component {
 
   submitRating(index){
     const {user, storeLocation} = this.props.state
-    console.log("user : ", this.props.state.user)
-    console.log("store: ", this.props.state.storeLocation)
-    console.log("RATING : ", index)
     this.setState({isLoading: true})
     Api.postRequest(Routes.addRatings(user.id, storeLocation.id, index + 1), {}, response => {
       console.log("ADD RATING RESPONSE: ", response)
+      this.setState({isAddingComment: true})
       this.setState({
         isLoading: false,
-        showRatings: false,
-        ratingIndex: index
+        ratingIndex: index,
+        isAddingComment: true
       })
     }, error => {
       console.log('Add Ratings Error: ', error)
+    })
+  }
+
+  submitFeedBack() {
+    const {user, storeLocation} = this.props.state
+    console.log("Comment : ", this.state.value)
+    this.setState({isLoading: true})
+    Api.postRequest(Routes.addFeedback(user.id, storeLocation.id, this.state.value), {}, response => {
+      console.log('Add Feedback Response: ', response)
+      this.setState({isLoading: false, showRatings: false})
+    }, error => {
+      console.log('Add Feedback error')
     })
   }
 
@@ -185,10 +244,75 @@ class Welcome extends Component {
       <View style={{
           alignItems: 'center',
           justifyContent: 'center',
-          flexDirection: 'row' 
+          flexDirection: 'row'
         }}>
-        {
+        { !this.state.isAddingComment &&
           stars
+        }
+        { this.state.isAddingComment &&
+          <View
+            style={{
+              width: '100%'
+            }}
+          >
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'center'
+              }}
+            >
+              <TextInput 
+                style={
+                  [
+                    {
+                      height: 40,
+                      borderWidth: 1,
+                      height: 40,
+                      borderColor: Color.gray,
+                      borderWidth: 1,
+                      paddingLeft: 10,
+                      marginBottom: 5,
+                      borderRadius: 5,
+                      color: Color.lightYellow,
+                      width: '90%'
+                    }
+                  ]
+                }
+                onChangeText={value => this.setState({value})}
+                value={this.state.value}
+                placeholder={'Write here...'}
+                placeholderTextColor={Color.lightYellow}
+              />
+            </View>
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'center',
+                marginTop: 5
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  backgroundColor: Color.lightYellow,
+                  width: '90%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: 20
+                }}
+                onPress={ () => {
+                  this.submitFeedBack()
+                }}
+              >
+                <Text
+                  style={{
+                    color: Color.primary,
+                    fontSize: BasicStyles.standardFontSize,
+                    fontWeight: 'bold'
+                  }}
+                >SEND</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         }
       </View>
     );
@@ -375,7 +499,10 @@ class Welcome extends Component {
             <Products
               active={this.state.menu}
               click={(index) => this.changeMenu(index)}
-              choose={(data, type) => this.changeSelectedMenu(data, type)}
+              choose={async (data, type) => {
+                await this.changeSelectedMenu(data, type)
+                await this.retrieveProducts()
+              }}
               load={(data) => this.isLoading(data)}
             />
           )}
@@ -510,27 +637,71 @@ class Welcome extends Component {
               position: 'absolute',
               bottom: 0,
               left: 0,
-              height: 125,
+              minHeight: 125,
               borderTopLeftRadius: 15,
               borderTopRightRadius: 15,
               backgroundColor: Color.primary,
               width: '100%',
-              zIndex: 10
+              zIndex: 10,
+              paddingBottom: 10
             }}>
+              { this.state.isAddingComment && 
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    top: 7,
+                    left: '5%',
+                  }}
+                  onPress={() => {
+                    this.setState({showRatings: false})
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: BasicStyles.standardFontSize + 12,
+                      color: Color.lightYellow
+                    }}
+                  >&times;</Text>
+                </TouchableOpacity>
+              }
               <View style={{
                 width: '100%',
                 justifyContent: 'center',
                 alignItems: 'center'
               }}>
-                <Text style={{
-                  color: Color.secondary,
-                  fontWeight: 'bold',
-                  fontSize: 16,
-                  paddingTop: 15,
-                  paddingBottom: 15
-                }}>RATE YOUR EXPERIENCE</Text>
+                { !this.state.isAddingComment && 
+                  <Text style={{
+                    color: Color.secondary,
+                    fontWeight: 'bold',
+                    fontSize: 16,
+                    paddingTop: 15,
+                    paddingBottom: 15
+                  }}>RATE YOUR EXPERIENCE</Text>
+                }
+                { this.state.isAddingComment &&
+                  <View
+                    style={{
+                      width: '70%',
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text
+                      style={{
+                        paddingBottom: 15,
+                        paddingTop: 15,
+                        fontSize: BasicStyles.standardFontSize,
+                        textAlign: 'center',
+                        color: Color.lightYellow
+                      }}
+                    >
+                      Please help us improve our services and send us your feedback
+                    </Text>
+                </View>
+                }
               </View>
-
               <View>
                 {this.rating()}
               </View>
@@ -553,6 +724,8 @@ const mapDispatchToProps = (dispatch) => {
     setSearch: (search) => dispatch(actions.setSearch(search)),
     setHomepageSettings: (settings) => dispatch(actions.setHomepageSettings(settings)),
     setCart: (cart) => dispatch(actions.setCart(cart)),
+    setPickupCrockeries: (crockeries) => dispatch(actions.setPickupCrockeries(crockeries)),
+    setMenuProducts: (menuProducts) => dispatch(actions.setMenuProducts(menuProducts))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);

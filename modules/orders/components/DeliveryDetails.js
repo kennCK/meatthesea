@@ -57,7 +57,7 @@ class DeliveryDetails extends Component {
 
   render() {
     let { isSummary, errorMessage } = this.props;
-    const { orderDetails, userLocation, paymentMethod, deliveryTime } = this.props.state;
+    const { orderDetails, userLocation, paymentMethod, deliveryTime, cart } = this.props.state;
     console.log('errorMessage', errorMessage)
     return (
       <View>
@@ -145,7 +145,7 @@ class DeliveryDetails extends Component {
                 top: 5,
                 fontSize: BasicStyles.standardFontSize,
               }}>
-              HK$ {orderDetails ? parseFloat(orderDetails.subtotal).toFixed(2) : 0}
+              HK$ {orderDetails && cart.length > 0? parseFloat(orderDetails.subtotal).toFixed(2) : 0}
             </Text>
           </View>
           {isSummary && (
@@ -187,7 +187,7 @@ class DeliveryDetails extends Component {
                         Style.fontSize(BasicStyles.standardFontSize),
                         {marginHorizontal: 4},
                       ]}>
-                      {orderDetails ? orderDetails.tip : 0}
+                      {orderDetails && cart.length > 0 ? orderDetails.tip : 0}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -226,7 +226,7 @@ class DeliveryDetails extends Component {
                 top: 5,
                 fontWeight: 'bold'
               }}>
-              HK$ {orderDetails ? parseFloat(orderDetails.total).toFixed(2) : 0.00}
+              HK$ {orderDetails && cart.length > 0? parseFloat(orderDetails.total).toFixed(2) : 0.00}
             </Text>
           </View>
         </View>

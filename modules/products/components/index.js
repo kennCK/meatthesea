@@ -92,9 +92,9 @@ class Products extends Component {
                   restaurant.map((data, idx) => {
                     return (
                       <TouchableOpacity
-                        onPress={() => {
-                          this.props.choose(data.id, 0)
-                          this.setSelectedFilter(data, 'restaurant')
+                        onPress={async () => {
+                          await this.setSelectedFilter(data, 'restaurant')
+                          await this.props.choose(data.id, 0)
                         }}
                         key={idx}>
                         <ProductItem
@@ -119,9 +119,9 @@ class Products extends Component {
                   deliStore.map((data, idx) => {
                     return (
                       <TouchableOpacity
-                        onPress={() => {
-                          this.props.choose(data.id, 1)
-                          this.setSelectedFilter(data, 'deli')
+                        onPress={async () => {
+                          await this.setSelectedFilter(data, 'deli')
+                          await this.props.choose(data.id, 1)
                         }}
                         key={idx}>
                         <ProductItem

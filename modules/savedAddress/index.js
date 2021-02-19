@@ -27,7 +27,7 @@ class SavedAddress extends Component {
      * Executed each time we enter in this component &&
      * will be executed after going back to this component 
     */
-    if(this.state.addingAddress) {
+    if(this.state.addingAddress && this.props.state.location !== null) {
       this.setState({isAddingAddressName: true})
     }
   }
@@ -39,10 +39,10 @@ class SavedAddress extends Component {
       return
     }
     this.fetchAddress();
-    this.getCurrentLocation();
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
     })
+    // await this.getCurrentLocation();
   }
 
   fetchAddress = () => {
@@ -50,7 +50,7 @@ class SavedAddress extends Component {
     Api.getRequest(Routes.customerRetrieveAddresses(user.id), response => {
       const { address } = response
       if (address) {
-        console.log('address response: ', address)
+        // console.log('address response: ', address)
         this.setState({address: address})
         address.map((el, ndx) => {
           if(el.default_address) {
@@ -71,10 +71,14 @@ class SavedAddress extends Component {
   }
 
   addAddress = () => {
-    const { user } = this.props.state;
-    Api.postRequest(Routes.customerAddAddress(user.id, user.first_name + ' ' + user.last_name, null, this.props.state.location.address, this.state.value), {}, response => {
+    const { user, location } = this.props.state;
+    Api.postRequest(Routes.customerAddAddress(user.id, user.first_name + ' ' + user.last_name, null, location.address, this.state.value, location.latitude, location.longtitude), {}, response => {
       console.log("Adding address response: ", response);
       this.setState({ isAddingAddressName: false, address: response.address });
+      const {setLocation} = this.props
+      setTimeout(() => {
+        setLocation(null)
+      }, 2000)
       // this.fetchAddress()
     }, error => {
       console.log("Adding address error: ", error);
@@ -131,7 +135,7 @@ class SavedAddress extends Component {
         array.splice(index, 1);
         this.setState({address: array, selectedTile: null});
       }
-      console.log("Removing address response: ", response)
+      // console.log("Removing address response: ", response)
     }, error => {
       console.log("Removing address error: ", error)
     })
@@ -192,9 +196,6 @@ class SavedAddress extends Component {
             animationType="slide"
             transparent={true}
             visible={this.state.isAddingAddressName}
-            onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
-            }}
           >
             <View style={Style.insideModalCenteredView}>
               <View style={Style.modalView}>
@@ -250,6 +251,8 @@ class SavedAddress extends Component {
                   }
                 >
                   <TouchableHighlight
+                    activeOpacity={0.6}
+                    underlayColor={Color.lightGray}
                     // style={{ 
                     //   ...Style.openButton, backgroundColor: Color.primaryDark }}
                     style={

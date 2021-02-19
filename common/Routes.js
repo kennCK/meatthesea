@@ -28,7 +28,7 @@ export default {
   customerForgotPassword:apiUrl + 'customer_forgot_password/',
   customerRetrieveAddresses: id => apiUrl + 'customer_get_addresses?customerId=' + id,
   customerRetrieveDefaultAddress: (customerId, AddressId) => apiUrl + `customer_default_address?CustomerId=${customerId}&AddressId=${AddressId}`,
-  customerAddAddress: (CustomerId, FullName, PhoneNumber, Address, AddressName) => apiUrl + `customer_add_address?CustomerId=${CustomerId}&Address1=${Address}&AddressName=${AddressName}&FullName=${FullName}&PhoneNumber=${PhoneNumber}`,
+  customerAddAddress: (CustomerId, FullName, PhoneNumber, Address, AddressName, Latitude, Longitude) => apiUrl + `customer_add_address?CustomerId=${CustomerId}&Address1=${Address}&AddressName=${AddressName}&FullName=${FullName}&PhoneNumber=${PhoneNumber}&Latitude=${Latitude}&Longitude=${Longitude}`,
   customerRemoveAddress: (customerId, addressId) => apiUrl + `customer_delete_address?CustomerId=${customerId}&AddressId=${addressId}`,
   // Languages
   languageRetrieve: apiUrl + 'languages',
@@ -71,6 +71,12 @@ export default {
   
   paypalAccountRetrieve: apiUrl + 'get_paypal_details',
   paypalCreateOrder: (ClientId, ClientSecret, paymentType, Sandbox, CustomerId, AddressId, StoreId) => apiUrl + `paypal_create_order?ClientId=${ClientId}&ClientSecret=${ClientSecret}&PaymentType=${paymentType}&Sandbox=${Sandbox}&CustomerId=${CustomerId}&AddressId=${AddressId}&StoreId=${StoreId}`,
+
+  paypalConfirmOrder: (CustomerId, StoreId, AddressId, OrderGuid, PayPalOrderId) => apiUrl + `confirm_order_paypal?CustomerId=${CustomerId}&StoreId=${StoreId}&AddressId=${AddressId}&OrderGuid=${OrderGuid}&PayPalOrderId=${PayPalOrderId}`,
+
+  crockeryRetrieve: (CustomerID, StoreID, optional = '') => apiUrl + `get_crockery?CustomerId=${CustomerID}&StoreId=${StoreID}` + optional,
+
+  crockeryUpdate: (CrockeryID, AddressID, CrockeryStatusID) => apiUrl + `update_crockery?CrockeryId=${CrockeryID}&AddressId=${AddressID}&CrockeryStatusId=${CrockeryStatusID}`,
 
   // ProductAttributes
   productAttribuesRetrieve: apiUrl + 'productattributes',
@@ -123,6 +129,8 @@ export default {
 
     //Ratings
   addRatings: (CustomerId, StoreId, Rating) => apiUrl + `customer_add_rating?CustomerId=${CustomerId}&StoreId=${StoreId}&Rating=${Rating}`,
+  // FeedBack
+  addFeedback: (CustomerId, StoreId, Comment) => apiUrl + `customer_add_feedback?CustomerId=${CustomerId}&StoreId=${StoreId}&Comment=${Comment}`, 
 
   // ShoppingCartItems
   shoppingCartItemsRetrieve: apiUrl + 'shopping_cart_items',

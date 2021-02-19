@@ -24,7 +24,10 @@ const types = {
   SET_PICKUP_CROCKERIES: 'SET_PICKUP_CROCKERIES',
   SET_SELECTED_DELIVERY_TIME: 'SET_SELECTED_DELIVERY_TIME',
   SET_ORDER: 'SET_ORDER',
-  SET_STORE_LOCATION: 'SET_STORE_LOCATION'
+  SET_STORE_LOCATION: 'SET_STORE_LOCATION',
+  SET_REQUEST_PICKUP_CROCKERY: 'SET_REQUEST_PICKUP_CROCKERY',
+  SET_PAYPAL_SUCCESS_DATA: 'SET_PAYPAL_SUCCESS_DATA',
+  SET_MENU_PRODUCTS: 'SET_MENU_PRODUCTS'
 };
 
 export const actions = {
@@ -90,6 +93,15 @@ export const actions = {
   },
   setStoreLocation(storeLocation) {
     return { type: types.SET_STORE_LOCATION, storeLocation}
+  },
+  setRequestPickUpCrockery(requestPickUpCrockery) {
+    return { type: types.SET_REQUEST_PICKUP_CROCKERY, requestPickUpCrockery}
+  },
+  setPaypalSuccessData(paypalSuccessData) {
+    return { type: types.SET_PAYPAL_SUCCESS_DATA, paypalSuccessData}
+  },
+  setMenuProducts(menuProducts) {
+    return { type: types.SET_MENU_PRODUCTS, menuProducts}
   }
 };
 
@@ -112,7 +124,10 @@ const initialState = {
   crockeries: null,
   deliveryTime: null,
   order: null,
-  storeLocation: null
+  storeLocation: null,
+  requestPickUpCrockery: null,
+  paypalSuccessData: null,
+  menuProducts: null
 };
 
 storeData = async (key, value) => {
@@ -133,6 +148,7 @@ const reducer = (state = initialState, action) => {
   const { filter, categories, settings, search } = action;
   const { cart, details, payment } = action;
   const { crockeries, deliveryTime, order, storeLocation } = action;
+  const { requestPickUpCrockery, paypalSuccessData, menuProducts } = action;
 
   switch (type) {
     case types.LOGOUT:
@@ -220,7 +236,7 @@ const reducer = (state = initialState, action) => {
       };
     case types.SET_LOCATION:
       console.log('location', location)
-      storeData('store', String(location.id));
+      // storeData('store', String(location.id));
       return {
         ...state,
         location,
@@ -292,9 +308,25 @@ const reducer = (state = initialState, action) => {
         order
       }
     case types.SET_STORE_LOCATION:
+      // storeData('store', String(storeLocation.id));
       return {
         ...state,
         storeLocation
+      }
+    case types.SET_REQUEST_PICKUP_CROCKERY:
+      return {
+        ...state,
+        requestPickUpCrockery
+      }
+    case types.SET_PAYPAL_SUCCESS_DATA:
+      return {
+        ...state,
+        paypalSuccessData
+      }
+    case types.SET_MENU_PRODUCTS:
+      return {
+        ...state,
+        menuProducts
       }
     default:
       return {...state, nav: state.nav};

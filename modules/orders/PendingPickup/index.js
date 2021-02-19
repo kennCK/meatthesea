@@ -8,74 +8,74 @@ import PendingPickupScreen from './PendingPickupScreen';
 import { connect } from 'react-redux';
 
 class HeaderOptions extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loginState: true,
-        };
-    }
-    goBack = () => {
-        let { navigationProps } = this.props
-        navigationProps.goBack(null);
+  constructor(props) {
+    super(props);
+    this.state = {
+      loginState: true,
     };
-    render() {
-        return (
-            <View style={{ flexDirection: 'row' }}>
-                {this.state.loginState === true && (
-                    <TouchableOpacity onPress={this.goBack.bind(this)}>
-                        {/*Donute Button Image */}
-                        <FontAwesomeIcon
-                            icon={faArrowLeft}
-                            size={BasicStyles.iconSize}
-                            style={styles.iconStyle}
-                        />
-                    </TouchableOpacity>
-                )}
-            </View>
-        );
-    }
+  }
+  goBack = () => {
+    let { navigationProps } = this.props
+    navigationProps.goBack(null);
+  };
+  render() {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        {this.state.loginState === true && (
+          <TouchableOpacity onPress={this.goBack.bind(this)}>
+            {/*Donute Button Image */}
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              size={BasicStyles.iconSize}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  }
 }
 const styles = StyleSheet.create({
-    iconStyle: {
-        paddingLeft: 20,
-        paddingRight: 20,
-    },
+  iconStyle: {
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
 });
 
 const mapStateToProps = (state) => ({ state: state });
 
 const mapDispatchToProps = (dispatch) => {
-    const { actions } = require('@redux');
-    return {
-        setActiveRoute: (route) => dispatch(actions.setActiveRoute(route)),
-    };
+  const { actions } = require('@redux');
+  return {
+    setActiveRoute: (route) => dispatch(actions.setActiveRoute(route)),
+  };
 };
 
 let Header = connect(
-    mapStateToProps,
-    mapDispatchToProps,
+  mapStateToProps,
+  mapDispatchToProps,
 )(HeaderOptions);
 
 const StackNavigator = createStackNavigator({
-    pendingPickupScreen: {
-        screen: PendingPickupScreen,
-        navigationOptions: ({ navigation }) => ({
-            title: 'Pending Pickup',
-            headerLeft: () => <Header navigationProps={navigation} />,
-            headerTintColor: 'black',
-            headerTitleContainerStyle: {
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: 60,
-            },
-            headerTitleStyle: {
-                fontWeight: 'bold',
-            },
-        }),
-    },
+  pendingPickupScreen: {
+    screen: PendingPickupScreen,
+    navigationOptions: ({ navigation }) => ({
+      title: 'Pending Pickup',
+      headerLeft: () => <Header navigationProps={navigation} />,
+      headerTintColor: 'black',
+      headerTitleContainerStyle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 60,
+      },
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }),
+  },
 }, {
-        title: 'Main',
-        initialRouteName: 'pendingPickupScreen',
-    });
+  title: 'Main',
+  initialRouteName: 'pendingPickupScreen',
+});
 
 export default StackNavigator;

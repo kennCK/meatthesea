@@ -28,7 +28,7 @@ class Register extends Component {
       errorMessage: null,
       isResponseError: false,
       stores: [],
-      floor: null
+      // floor: null
     };
   }
 
@@ -85,10 +85,12 @@ class Register extends Component {
       phoneNumber
     } = this.state;
     const { login } = this.props;
+    const { storeLocation } = this.props.state;
+    console.log('------------------------- location --- ', storeLocation)
     if(this.validate() == true){
       console.log(true)
         Api.postRequest(
-          Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname"+fullName+"&PhoneNumber="+phoneNumber+"&Address1="+location+"&StoreId=1",
+          Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname"+fullName+"&PhoneNumber="+phoneNumber+"&StoreId=" + storeLocation.id,
           {},
           response => {
             console.log('Register response: ', response)
@@ -247,21 +249,22 @@ class Register extends Component {
             <LocationWithIcon {...{
               style: Style.textInput,
               selected: this.state.location,
-              placeholder: "Current location",
+              placeholder: "Select location",
               iconHeight: 20,
               stores: this.state.stores,
               onSelect: (selectedItem) => {
-                this.props.setLocation(selectedItem)
+                // this.props.setLocation(selectedItem)
+                this.props.setStoreLocation(selectedItem);
                 this.setState({ location: selectedItem.name })
               }
             }} />
-            <TextInput
+            {/* <TextInput
               style={Style.textInput}
               {...Style.textPlaceHolder}
               onChangeText={(floor) => this.setState({ floor })}
               value={this.state.floor}
               placeholder={'Floor and unit number'}
-            />
+            /> */}
             <View style={[Style.bottomTextContainer, { paddingHorizontal: 3 }]}>
               <Text style={[{
                 textAlign: 'justify',
@@ -314,7 +317,8 @@ const mapStateToProps = state => ({ state: state });
 const mapDispatchToProps = dispatch => {
   const { actions } = require('@redux');
   return {
-    setLocation: location => dispatch(actions.setLocation(location)),
+    // setLocation: location => dispatch(actions.setLocation(location)),
+    setStoreLocation: (storeLocation) => dispatch(actions.setStoreLocation(storeLocation)),
     login: (email, password, user, token) => dispatch(actions.login(email, password, user, token)),
     logout: () => dispatch(actions.logout())
   };

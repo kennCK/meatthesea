@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { BasicStyles, Color } from 'common';
+import { BasicStyles, Color, Routes } from 'common';
 import Modal from "react-native-modal";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTimes, faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 import Style from './style.js';
 import {Picker} from '@react-native-community/picker';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
-
-var radio_props = [
-  {label: 'home', value: 0, address: '1a, 1 Main Street, Hong.....' },
-  {label: 'office', value: 1, address: '2b, 2 Main Street, Hong.....' },
-];
+import Api from 'services/apiv2/index.js';
+import AddressCard from './addressCard';
 
 class DeliveryDetails extends Component{
   constructor(props){
@@ -19,10 +16,12 @@ class DeliveryDetails extends Component{
     this.state={
       selectedItem: 0,
       value3Index: 0,
-      radio: radio_props[0],
-      radio_open: false
+      radio: [],
+      radio_open: false,
+      selectedTile: ''
     }
   }
+
   click(ndx){
     this.setState({value3Index: ndx})
     this.setState({radio: radio_props[ndx]})
@@ -31,6 +30,8 @@ class DeliveryDetails extends Component{
   show(){
     this.setState({radio_open: this.state.radio_open?false:true})
   }
+
+
   render() {
     return (
       <View>
@@ -49,21 +50,24 @@ class DeliveryDetails extends Component{
               <Picker.Item label="11:00" value={3} />
             </Picker>
             <Text>Address:</Text>
+            <TouchableOpacity style={[{marginLeft: 'auto'}]} onPress={() => this.show()} >
+              <FontAwesomeIcon icon={ faEdit } style={{color: Color.darkGray}} size={BasicStyles.iconSize}/>
+            </TouchableOpacity>
             {
               !this.state.radio_open &&
               <View style={[{width:'100%', padding: 10}]}>
-                <View style={[{flexDirection:'row'}]} >
+                {/* <View style={[{flexDirection:'row'}]} >
                   <RadioButton labelHorizontal={true}>
                     <RadioButtonInput
-                      obj={this.state.radio}
-                      index={0}
+                      obj={this.props.addresses}
+                      index={this.props.defaultIndex}
                       isSelected={true}
                       buttonSize={10}
                       buttonInnerColor={Color.primary}
                       buttonOuterColor={Color.primary}
                     />
                     <RadioButtonLabel
-                      obj={this.state.radio}
+                      obj={this.props.addresses}
                       index={0}
                       labelWrapStyle={{marginLeft: 10}}
                     />
@@ -72,43 +76,74 @@ class DeliveryDetails extends Component{
                     <FontAwesomeIcon icon={ faEdit } style={{color: Color.darkGray}} size={BasicStyles.iconSize}/>
                   </TouchableOpacity>
                 </View>
-                <Text>{this.state.radio.address}</Text>
+                <Text>{this.props.addresses[this.props.defaultIndex].address1}</Text> */}
+                {
+
+                  this.props.addresses.map((obj, index) => {
+                    return this.props.defaultIndex === index && <AddressCard
+                      key={index}
+                      id={index}
+                      selectedTile={true}
+                      addressType={obj.address_name}
+                      address={(obj.address1 === '' || obj.address1 === null) ? obj.address2 : obj.address1}
+                      onSelect={() => {
+                          this.props.selectHandler(index)
+                        }
+                      }
+                    />
+                  })
+                }
               </View>
             }
             {
               this.state.radio_open &&
               <View style={[{marginTop: 10, width: '100%'}]}>
                 <Text style={[{alignSelf: 'center'}]}>Choose Address</Text>
-                <RadioForm animation={true} style={[{alignItems: 'center', marginTop: 10}]}>
+                {/* <RadioForm animation={true} style={[{alignItems: 'center', marginTop: 10}]}>
                   {
-                    radio_props.map((obj, i) => (
+                    this.props.addresses.map((obj, i) => (
                       <View style={[{width:'100%', padding: 10}]}key={i}>
                         <View style={[{flexDirection:'row'}]} >
                           <RadioButton labelHorizontal={true}>
                             <RadioButtonInput
-                              obj={obj}
+                              obj={this.props.addresses}
                               index={i}
-                              isSelected={this.state.value3Index === i}
+                              isSelected={this.props.defaultIndex === i}
                               onPress={() => this.click(i)}
                               buttonSize={10}
                               buttonInnerColor={Color.primary}
                               buttonOuterColor={Color.primary}
                             />
                             <RadioButtonLabel
-                              obj={obj}
+                              obj={this.props.addresses}
                               index={i}
                               onPress={() => this.click(i)}
                               labelWrapStyle={{marginLeft: 10}}
                             />
                           </RadioButton>
                         </View>
-                        <Text>{obj.address}</Text>
+                        <Text>{obj.address1}</Text>
                       </View>
                     ))
                   }  
-                  </RadioForm>
+                  </RadioForm> */}
+                  {
+                    this.props.addresses.map((obj, index) => {
+                      return <AddressCard
+                        key={index}
+                        id={index}
+                        selectedTile={index === this.props.defaultIndex ? true : false}
+                        addressType={obj.address_name}
+                        address={(obj.address1 === '' || obj.address1 === null) ? obj.address2 : obj.address1}
+                        onSelect={() => {
+                            this.props.selectHandler(index)
+                          }
+                        }
+                      />
+                    })
+                  }
                   <TouchableOpacity
-                    onPress={this.props.click}
+                    onPress={() => this.props.click('redirecting')}
                   >
                     <View style={[{flexDirection: 'row', justifyContent: 'center', width: '100%', marginTop: 10}]}>
                       <FontAwesomeIcon icon={ faPlus } style={{ color: Color.primary }} />
@@ -123,4 +158,6 @@ class DeliveryDetails extends Component{
     );
   }
 }
-export default DeliveryDetails; 
+
+
+export default DeliveryDetails;

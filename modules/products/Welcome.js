@@ -54,7 +54,9 @@ class Welcome extends Component {
       showRatings: true,
       ratingIndex: null,
       isAddingComment: false,
-      value: ''
+      value: '',
+      addresses: [],
+      defaultIndex: null
     };
   }
 
@@ -64,6 +66,7 @@ class Welcome extends Component {
      * will be executed after going back to this component 
     */
     this.retrieveCart()
+    this.fetchAddress()
   }
 
   retrieveProducts = () => {
@@ -136,6 +139,25 @@ class Welcome extends Component {
     this.focusListener.remove()
   }
 
+  fetchAddress = () => {
+    const { user } = this.props.state
+    Api.getRequest(Routes.customerRetrieveAddresses(user.id), response => {
+      const { address } = response
+      if (address) {
+        console.log('address response: ', address)
+        address.map((el, ndx) => {
+          address['label'] = el.address_name
+          if(el.default_address) {
+            this.setState({defaultIndex: ndx})
+          }
+        });
+        this.setState({addresses: address})
+      }
+    }, error => {
+      console.log('Retrieve addresses error: ', error);
+    });
+  }
+
 
   retrieveCart = () => {
     const { user, storeLocation } = this.props.state;
@@ -179,10 +201,12 @@ class Welcome extends Component {
       this.props.navigation.navigate('loginStack')
     }
   }
-  deliveryModal() {
+  deliveryModal(payload) {
     if(this.props.state.user !== null){
       this.setState({deliveryModal: this.state.deliveryModal ? false : true});
-      this.props.navigation.navigate('savedAddressStack')
+      if(payload === 'redirecting') {
+        this.props.navigation.navigate('savedAddressStack')
+      }
     }else{
       this.props.navigation.navigate('loginStack')
     }
@@ -223,6 +247,25 @@ class Welcome extends Component {
       console.log('Add Feedback error')
     })
   }
+
+  selectHandler = index => {
+    this.setState({defaultIndex: index});
+    console.log('========================testing ========================== ', index)
+    Api.postRequest(
+      Routes.customerRetrieveDefaultAddress(this.props.state.user.id, this.state.addresses[index].id),
+      {},
+      response => {
+        const {setLocation, setUserLocation} = this.props
+        setUserLocation(this.state.addresses[index])
+        setTimeout(() => {
+          setLocation(null)
+        }, 2000)
+      },
+      error => {
+        console.log('Default address error: ', error)
+      }
+    )
+  };
 
   rating(){
     let stars = []
@@ -388,7 +431,12 @@ class Welcome extends Component {
 
         <DeliveryDetails
           state={this.state.deliveryModal}
-          click={() => this.deliveryModal()}
+          click={(payload) => this.deliveryModal(payload)}
+          user={user}
+          navigation={this.props.navigation}
+          defaultIndex={this.state.defaultIndex}
+          addresses={this.state.addresses}
+          selectHandler={this.selectHandler}
         />
         <View>
           <View style={Style.delivery}>
@@ -725,7 +773,8 @@ const mapDispatchToProps = (dispatch) => {
     setHomepageSettings: (settings) => dispatch(actions.setHomepageSettings(settings)),
     setCart: (cart) => dispatch(actions.setCart(cart)),
     setPickupCrockeries: (crockeries) => dispatch(actions.setPickupCrockeries(crockeries)),
-    setMenuProducts: (menuProducts) => dispatch(actions.setMenuProducts(menuProducts))
+    setMenuProducts: (menuProducts) => dispatch(actions.setMenuProducts(menuProducts)),
+    setUserLocation: (userLocation) => dispatch(actions.setUserLocation(userLocation))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);

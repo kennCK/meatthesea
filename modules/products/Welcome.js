@@ -145,13 +145,19 @@ class Welcome extends Component {
       const { address } = response
       if (address) {
         console.log('address response: ', address)
-        address.map((el, ndx) => {
+        address.forEach((el, ndx) => {
           address['label'] = el.address_name
           if(el.default_address) {
             this.setState({defaultIndex: ndx})
           }
         });
         this.setState({addresses: address})
+        const {setUserLocation} = this.props
+        if(this.state.addresses[this.state.defaultIndex] !== undefined && this.state.addresses[this.state.defaultIndex] !== null) {
+          setUserLocation(this.state.addresses[this.state.defaultIndex])
+        }else {
+          setUserLocation(null);
+        }
       }
     }, error => {
       console.log('Retrieve addresses error: ', error);

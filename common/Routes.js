@@ -28,7 +28,7 @@ export default {
   customerForgotPassword:apiUrl + 'customer_forgot_password/',
   customerRetrieveAddresses: id => apiUrl + 'customer_get_addresses?customerId=' + id,
   customerRetrieveDefaultAddress: (customerId, AddressId) => apiUrl + `customer_default_address?CustomerId=${customerId}&AddressId=${AddressId}`,
-  customerAddAddress: (CustomerId, FullName, PhoneNumber, Address, AddressName, Latitude, Longitude) => apiUrl + `customer_add_address?CustomerId=${CustomerId}&Address1=${Address}&AddressName=${AddressName}&FullName=${FullName}&PhoneNumber=${PhoneNumber}&Latitude=${Latitude}&Longitude=${Longitude}`,
+  customerAddAddress: (CustomerId, FullName, PhoneNumber, Address, AddressName, Latitude, Longitude, City, PostalCode, CountryId) => apiUrl + `customer_add_address?CustomerId=${CustomerId}&Address1=${Address}&AddressName=${AddressName}&FullName=${FullName}&PhoneNumber=${PhoneNumber}&Latitude=${Latitude}&Longitude=${Longitude}&City=${City}&PostalCode=${PostalCode}&CountryId=${CountryId}`,
   customerRemoveAddress: (customerId, addressId) => apiUrl + `customer_delete_address?CustomerId=${customerId}&AddressId=${addressId}`,
   // Languages
   languageRetrieve: apiUrl + 'languages',
@@ -154,4 +154,7 @@ export default {
   storeRetrieveCurrent: apiUrl + 'current_store',
   storeRetrieveAll: apiUrl + 'stores',
   getAccessToken: apiUrl + 'getaccesstoken',
+
+  // countries
+  getCountries: apiUrl + 'countries'
 };

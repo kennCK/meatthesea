@@ -18,7 +18,9 @@ class SavedAddress extends Component {
       location: {},
       addingAddress: false,
       isAddingAddressName: false,
-      value: ''
+      value: '',
+      postalCode: '',
+      countries: []
     };
   }
 
@@ -30,6 +32,7 @@ class SavedAddress extends Component {
     if(this.state.addingAddress && this.props.state.location !== null) {
       this.setState({isAddingAddressName: true})
     }
+
   }
 
   componentDidMount() {
@@ -40,9 +43,18 @@ class SavedAddress extends Component {
     }
     this.fetchAddress();
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
-      this.onFocusFunction()
+      this.onFocusFunction();
     })
+    this.retrieveCountries();
     // await this.getCurrentLocation();
+  }
+
+  retrieveCountries = () => {
+    Api.getRequest(Routes.getCountries, response => {
+      this.setState({countries: response.countries})
+    }, error => {
+      console.log('RETRIEVE COUNTRIES ERROR: ', error)
+    })
   }
 
   fetchAddress = () => {
@@ -72,9 +84,19 @@ class SavedAddress extends Component {
 
   addAddress = () => {
     const { user, location } = this.props.state;
-    Api.postRequest(Routes.customerAddAddress(user.id, user.first_name + ' ' + user.last_name, null, location.address, this.state.value, location.latitude, location.longtitude), {}, response => {
+    const { countries } = this.state
+    let temp = location.address.replace(/ /g, '');
+
+    let countryObject = countries.find(el => {
+      console.log('|' + temp.split(',')[temp.split(',').length - 1].toLowerCase() + '|')
+      return el.country_name.toLowerCase() == temp.split(',')[temp.split(',').length - 1].toLowerCase()
+    })
+
+    console.log("| <<< TESTING >>> | user: ", user.id, ' | fullname: ' , user.first_name + ' ' + user.last_name,' | ' , null,' | address: ' , location.address,' | ' , this.state.value,' | ' , location.latitude,' | ' , location.longtitude,' | city: ' , location.locality,' | postal code: ' , this.state.postalCode,' | countryId: ' , countryObject !== null && countryObject !== undefined ? countryObject.id : 131)
+    
+    Api.postRequest(Routes.customerAddAddress(user.id, user.first_name + ' ' + user.last_name, null, location.address, this.state.value, location.latitude, location.longtitude, location.locality, this.state.postalCode, countryObject !== null && countryObject !== undefined ? countryObject.id : 131), {}, response => {
       console.log("Adding address response: ", response);
-      this.setState({ isAddingAddressName: false, address: response.address });
+      this.setState({ isAddingAddressName: false, address: response.address, value: '', postalCode: '' });
       const {setLocation} = this.props
       setTimeout(() => {
         setLocation(null)
@@ -157,6 +179,7 @@ class SavedAddress extends Component {
         text: 'Office'
       }
     ];
+    const {value, postalCode} = this.state
     return (
       <View style={styles.SavedAddressContainer}>
         <View
@@ -226,6 +249,31 @@ class SavedAddress extends Component {
                 </View>
                 <Text style={
                   [
+                    Style.modalText,
+                    {
+                      fontWeight: 'bold',
+                      marginTop: 0
+                    }
+                  ]
+                }>Postal Code: </Text> 
+                <View style={{marginTop: 5, marginBottom: 5}}>
+                  <TextInput
+                    style={
+                      [
+                        {
+                          height: 40,
+                          borderColor: 'gray',
+                          borderWidth: 1
+                        },
+                        Style.textInput
+                      ]
+                    }
+                    onChangeText={postalCode => this.setState({postalCode})}
+                    value={this.state.postalCode}
+                  />
+                </View>
+                <Text style={
+                  [
                     {
                       fontWeight: 'bold',
                       textAlign: 'left'
@@ -253,6 +301,7 @@ class SavedAddress extends Component {
                   <TouchableHighlight
                     activeOpacity={0.6}
                     underlayColor={Color.lightGray}
+                    disabled ={value === '' || postalCode === ''}
                     // style={{ 
                     //   ...Style.openButton, backgroundColor: Color.primaryDark }}
                     style={

@@ -241,7 +241,6 @@ class OrderSummaryScreen extends Component {
           </View>
         </Modal>
         <View style={styles.HeaderContainer}>
-          {/* */}
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             <Text style={[Style.fontSize(BasicStyles.standardFontSize)]}>Delivery time : </Text>
             <View style={{ paddingHorizontal: 15 }}>
@@ -279,8 +278,8 @@ class OrderSummaryScreen extends Component {
           {
             (
               <DeliveryDetails navigate={(route) => this.props.navigation.navigate(route)} isSummary={false} key={orderDetails} errorMessage={errorMessage}/>
-              )
-            }
+            )
+          }
 
         </ScrollView>
         <Separator />

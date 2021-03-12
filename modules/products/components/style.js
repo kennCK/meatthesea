@@ -68,7 +68,7 @@ export default {
     marginTop: -10
   },
   modalBlue: {
-    backgroundColor: Color.primary,
+    backgroundColor: 'transparent',
     alignItems: 'center',
     margin: 0,
     height: '100%'

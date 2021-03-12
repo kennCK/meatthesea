@@ -37,7 +37,14 @@ class OrderedSummary extends Component {
     const {paypalSuccessData, user, storeLocation, userLocation} = this.props.state
     if(paypalSuccessData !== null) {
       this.setState({isLoading: true, isRendered: false})
-      Api.postRequest(Routes.paypalConfirmOrder(user.id, storeLocation.id, userLocation.id, paypalSuccessData.order_guid, paypalSuccessData.paypal.paypal_id), {}, response=> {
+      Api.postRequest(Routes.paypalConfirmOrder(
+          user.id, 
+          storeLocation.id, 
+          userLocation.id, 
+          paypalSuccessData.order_guid, 
+          paypalSuccessData.paypal.paypal_id
+        ),
+      {}, response=> {
         console.log('CONFIRM ORDER PAYPAL RESPONSE: ', response)
         this.setState({isLoading: false, isRendered: true})
       }, error => {

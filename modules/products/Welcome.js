@@ -261,11 +261,8 @@ class Welcome extends Component {
       Routes.customerRetrieveDefaultAddress(this.props.state.user.id, this.state.addresses[index].id),
       {},
       response => {
-        const {setLocation, setUserLocation} = this.props
+        const {setUserLocation} = this.props
         setUserLocation(this.state.addresses[index])
-        setTimeout(() => {
-          setLocation(null)
-        }, 2000)
       },
       error => {
         console.log('Default address error: ', error)
@@ -445,11 +442,17 @@ class Welcome extends Component {
           selectHandler={this.selectHandler}
         />
         <View>
-          <View style={Style.delivery}>
+          <View style={[
+            Style.delivery,
+            {
+              padding: 10
+            }
+          ]}>
             <View style={
               {
                 flex: 1,
-                flexDirection: 'row'
+                flexDirection: 'row',
+                width: '100%'
               }
             }>
               <Text style={[{fontSize: BasicStyles.standardFontSize}]}>
@@ -490,7 +493,12 @@ class Welcome extends Component {
               />
             </TouchableOpacity>
           </View>
-          <View style={Style.delivery}>
+          <View style={[
+            Style.delivery,
+            {
+              padding: 10
+            }
+          ]}>
             <View style={Style.searchBar}>
               <TouchableOpacity style={[{flex: 1}]}>
                 <FontAwesomeIcon

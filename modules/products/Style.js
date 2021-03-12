@@ -94,7 +94,7 @@ export default {
     width: width,
     flexDirection: 'row',
     borderWidth: 1,
-    padding: 10,
+    padding: 0,
     borderColor: Color.gray,
     alignItems: 'center',
     backgroundColor: Color.white,

@@ -72,7 +72,7 @@ export default {
   paypalAccountRetrieve: apiUrl + 'get_paypal_details',
   paypalCreateOrder: (ClientId, ClientSecret, paymentType, Sandbox, CustomerId, AddressId, StoreId) => apiUrl + `paypal_create_order?ClientId=${ClientId}&ClientSecret=${ClientSecret}&PaymentType=${paymentType}&Sandbox=${Sandbox}&CustomerId=${CustomerId}&AddressId=${AddressId}&StoreId=${StoreId}`,
 
-  paypalConfirmOrder: (CustomerId, StoreId, AddressId, OrderGuid, PayPalOrderId) => apiUrl + `confirm_order_paypal?CustomerId=${CustomerId}&StoreId=${StoreId}&AddressId=${AddressId}&OrderGuid=${OrderGuid}&PayPalOrderId=${PayPalOrderId}`,
+  paypalConfirmOrder: (CustomerId, StoreId, AddressId, OrderGuid, PayPalOrderId, DeliveryTimeRequested, LocalTimeCreated) => apiUrl + `confirm_order_paypal?CustomerId=${CustomerId}&StoreId=${StoreId}&AddressId=${AddressId}&OrderGuid=${OrderGuid}&PayPalOrderId=${PayPalOrderId}&DeliveryTimeRequested=${DeliveryTimeRequested}&LocalTimeCreated=${LocalTimeCreated}`,
 
   crockeryRetrieve: (CustomerID, StoreID, optional = '') => apiUrl + `get_crockery?CustomerId=${CustomerID}&StoreId=${StoreID}` + optional,
 

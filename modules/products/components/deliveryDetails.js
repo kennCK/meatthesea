@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableHighlight, Dimensions } from 'react-native';
 import { BasicStyles, Color, Routes } from 'common';
 import Modal from "react-native-modal";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faTimes, faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faPlus, faEdit, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import Style from './style.js';
 import {Picker} from '@react-native-community/picker';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import Api from 'services/apiv2/index.js';
 import AddressCard from './addressCard';
+import moment from 'moment';
+import ModalStyle from './modalStyle';
+import { color } from 'react-native-reanimated';
+import DatePicker from 'react-native-date-picker'
+
+const height = Math.round(Dimensions.get('window').height);
+const width = Math.round(Dimensions.get('window').width);
 
 class DeliveryDetails extends Component{
   constructor(props){
@@ -18,8 +25,16 @@ class DeliveryDetails extends Component{
       value3Index: 0,
       radio: [],
       radio_open: false,
-      selectedTile: ''
+      selectedTile: '',
+      time: '',
+      isEditingTime: false,
+      date: ''
     }
+  }
+
+  componentDidMount() {
+    console.log('TEsting: ',new Date().toLocaleString() )
+    this.setState({date: new Date().toLocaleString()})
   }
 
   click(ndx){
@@ -31,24 +46,85 @@ class DeliveryDetails extends Component{
     this.setState({radio_open: this.state.radio_open?false:true})
   }
 
+  setDate = (data) => {
+    console.log("DATE EVENT: ", new Date(data).toLocaleTimeString())
+    this.setState({date: data})
+  }
 
   render() {
+    const {isEditingTime, date} = this.state;
     return (
       <View>
-        <Modal isVisible={this.props.state} style={Style.modalBlue}>
-          <View style={{ width: '30%', marginRight: 200 , marginBottom: 15}}>
-            <TouchableOpacity style={[{ marginTop: 40 }]} onPress={this.props.click}>
-              <FontAwesomeIcon icon={ faTimes } style={{ color: Color.gray }} size={BasicStyles.iconSize} />
-            </TouchableOpacity>
-          </View>
-          <View style={Style.modalBox}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.props.state}
+          style={{
+            height: height
+          }}
+          >
+          <View style={ModalStyle.insideModalCenteredView}>
+            <TouchableHighlight
+              activeOpacity={0.6}
+              underlayColor={Color.lightGray}
+              style={{
+                borderWidth: 1,
+                paddingTop: 0,
+                borderColor: Color.white,
+                borderRadius: 20,
+                position: 'absolute',
+                top: 30,
+                left: 20,
+                backgroundColor: Color.white
+              }}
+              onPress={this.props.click}
+              >
+              <Text
+                style={[
+                  {
+                    color: 'rgba(0,100,177,.9)',
+                    fontSize: BasicStyles.standardFontSize + 15,
+                    lineHeight: 21,
+                    marginBottom: -10,
+                    paddingTop: 7.5,
+                    paddingBottom: 7.5,
+                    paddingRight: 6,
+                    paddingLeft: 6
+                  }
+                ]}
+                >&times;</Text>
+            </TouchableHighlight>
+            <View style={Style.modalBox}>
             <Text>Delivery time:</Text>
-            <Picker selectedValue={this.state.selectedItem} style={{height: 50, width: 100}} onValueChange={(itemValue, itemIndex) => this.setState({selectedItem: itemValue})} style={[{width: '100%'}]}>
+            {/* <Picker selectedValue={this.state.selectedItem} style={{height: 50, width: 100}} onValueChange={(itemValue, itemIndex) => this.setState({selectedItem: itemValue})} style={[{width: '100%'}]}>
               <Picker.Item label="10:00" value={0} />
               <Picker.Item label="10:15" value={1} />
               <Picker.Item label="10:30" value={2} />
               <Picker.Item label="11:00" value={3} />
-            </Picker>
+            </Picker> */}
+            <View
+              style={{
+                marginTop: 10,
+                marginBottom: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Text>{moment().format('HH : mm')}</Text>
+              <TouchableOpacity
+                onPress={() => { 
+                  this.props.click(true); 
+                  setTimeout(() => {
+                    this.setState({isEditingTime: true})
+                  }, 300)
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faSortDown}
+                />
+              </TouchableOpacity>
+            </View>
             <Text>Address:</Text>
             <TouchableOpacity style={[{marginLeft: 'auto'}]} onPress={() => this.show()} >
               <FontAwesomeIcon icon={ faEdit } style={{color: Color.darkGray}} size={BasicStyles.iconSize}/>
@@ -152,6 +228,76 @@ class DeliveryDetails extends Component{
                   </TouchableOpacity>
                 </View>
             }
+          </View>
+          </View>
+        </Modal>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={isEditingTime}
+          style={{
+            height: height
+          }}
+          >
+          <View style={ModalStyle.insideModalCenteredView}>
+            <TouchableHighlight
+              activeOpacity={0.6}
+              underlayColor={Color.lightGray}
+              style={{
+                borderWidth: 1,
+                paddingTop: 0,
+                borderColor: Color.white,
+                borderRadius: 20,
+                position: 'absolute',
+                top: 30,
+                left: 20,
+                backgroundColor: Color.white
+              }}
+              onPress={() => {
+                this.setState({isEditingTime: false})
+              }}
+              >
+              <Text
+                style={[
+                  {
+                    color: 'rgba(0,100,177,.9)',
+                    fontSize: BasicStyles.standardFontSize + 15,
+                    lineHeight: 21,
+                    marginBottom: -10,
+                    paddingTop: 7.5,
+                    paddingBottom: 7.5,
+                    paddingRight: 6,
+                    paddingLeft: 6
+                  }
+                ]}
+                >&times;</Text>
+            </TouchableHighlight>
+            <View style={ModalStyle.modalView}>
+              <DatePicker
+                date={new Date(date)}
+                mode="time"
+                androidVariant="nativeAndroid"
+                onDateChange={this.setDate.bind(this)}
+                minuteInterval={15}
+              />
+              <TouchableHighlight
+                style={{
+                  backgroundColor: Color.lightYellow,
+                  color: Color.darkGray,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  paddingTop: 8,
+                  paddingBottom: 8,
+                  borderRadius: 5
+                }}
+              >
+                <Text
+                  style={[
+                    BasicStyles.headerTitleStyle
+                  ]}
+                >GO</Text>
+              </TouchableHighlight>
+            </View>
           </View>
         </Modal>
       </View>

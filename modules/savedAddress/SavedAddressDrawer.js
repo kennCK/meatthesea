@@ -12,6 +12,8 @@ class HeaderOptions extends Component {
     super(props);
   }
   back = () => {
+    const {setLocation} = this.props;
+    setLocation(null);
     this.props.navigationProps.pop();
   };
   render() {
@@ -36,6 +38,7 @@ const mapDispatchToProps = dispatch => {
   const {actions} = require('@redux');
   return {
     logout: () => dispatch(actions.logout()),
+    setLocation: location => dispatch(actions.setLocation(location)),
   };
 };
 

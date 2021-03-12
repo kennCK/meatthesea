@@ -7,6 +7,7 @@ import AddressCard from './AddressCard';
 import CustomButton from './CustomButton';
 import Style from './Styles';
 import Api from 'services/apiv2/index.js';
+import {Spinner} from 'components';
 const width = Math.round(Dimensions.get('window').width);
 
 class SavedAddress extends Component {
@@ -20,19 +21,23 @@ class SavedAddress extends Component {
       isAddingAddressName: false,
       value: '',
       postalCode: '',
-      countries: []
+      countries: [],
+      isLoading: false
     };
   }
 
-  onFocusFunction = () => {
+   onFocusFunction = () => {
     /**
      * Executed each time we enter in this component &&
      * will be executed after going back to this component 
     */
     if(this.state.addingAddress && this.props.state.location !== null) {
+      this.setState({postalCode: this.props.state.location.postal})
       this.setState({isAddingAddressName: true})
     }
-
+    this.retrieveCountries();
+    this.fetchAddress();
+    // this.getCurrentLocation();
   }
 
   componentDidMount() {
@@ -41,12 +46,9 @@ class SavedAddress extends Component {
     if(user === null){
       return
     }
-    this.fetchAddress();
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction();
     })
-    this.retrieveCountries();
-    // await this.getCurrentLocation();
   }
 
   retrieveCountries = () => {
@@ -59,7 +61,9 @@ class SavedAddress extends Component {
 
   fetchAddress = () => {
     const { user } = this.props.state
+    this.setState({isLoading: true});
     Api.getRequest(Routes.customerRetrieveAddresses(user.id), response => {
+      this.setState({isLoading: false});
       const { address } = response
       if (address) {
         // console.log('address response: ', address)
@@ -88,15 +92,14 @@ class SavedAddress extends Component {
     let temp = location.address.replace(/ /g, '');
 
     let countryObject = countries.find(el => {
-      console.log('|' + temp.split(',')[temp.split(',').length - 1].toLowerCase() + '|')
-      return el.country_name.toLowerCase() == temp.split(',')[temp.split(',').length - 1].toLowerCase()
+      return el.country_name.toLowerCase() === location.country
     })
 
     console.log("| <<< TESTING >>> | user: ", user.id, ' | fullname: ' , user.first_name + ' ' + user.last_name,' | ' , null,' | address: ' , location.address,' | ' , this.state.value,' | ' , location.latitude,' | ' , location.longtitude,' | city: ' , location.locality,' | postal code: ' , this.state.postalCode,' | countryId: ' , countryObject !== null && countryObject !== undefined ? countryObject.id : 131)
     
     Api.postRequest(Routes.customerAddAddress(user.id, user.first_name + ' ' + user.last_name, null, location.address, this.state.value, location.latitude, location.longtitude, location.locality, this.state.postalCode, countryObject !== null && countryObject !== undefined ? countryObject.id : 131), {}, response => {
       console.log("Adding address response: ", response);
-      this.setState({ isAddingAddressName: false, address: response.address, value: '', postalCode: '' });
+      this.setState({ isAddingAddressName: false, address: response.address, value: '', postalCode: '', addingAddress: false });
       const {setLocation} = this.props
       setTimeout(() => {
         setLocation(null)
@@ -179,9 +182,10 @@ class SavedAddress extends Component {
         text: 'Office'
       }
     ];
-    const {value, postalCode} = this.state
+    const {value, postalCode, isLoading} = this.state
     return (
       <View style={styles.SavedAddressContainer}>
+        {isLoading ? <Spinner mode="overlay"/> : null }
         <View
           style={{
             height: '100%',
@@ -216,11 +220,44 @@ class SavedAddress extends Component {
         </View>
         <View style={Style.centeredView}>
           <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={true}
             visible={this.state.isAddingAddressName}
           >
             <View style={Style.insideModalCenteredView}>
+              <TouchableHighlight
+                activeOpacity={0.6}
+                underlayColor={Color.lightGray}
+                style={{
+                  borderWidth: 1,
+                  paddingTop: 0,
+                  borderColor: Color.lightGray,
+                  borderRadius: 20,
+                  position: 'absolute',
+                  top: 20,
+                  right: 10
+                }}
+                onPress={() => {
+                  this.setState({isAddingAddressName: false, addingAddress: false});
+                  const {setLocation} = this.props;
+                  setLocation(null);
+                }}
+              >
+                <Text
+                  style={[
+                    {
+                      color: Color.white,
+                      fontSize: BasicStyles.standardFontSize + 15,
+                      lineHeight: 21,
+                      marginBottom: -10,
+                      paddingTop: 7.5,
+                      paddingBottom: 7.5,
+                      paddingRight: 6,
+                      paddingLeft: 6
+                    }
+                  ]}
+                >&times;</Text>
+              </TouchableHighlight>
               <View style={Style.modalView}>
                 <Text style={
                   [
@@ -269,7 +306,7 @@ class SavedAddress extends Component {
                       ]
                     }
                     onChangeText={postalCode => this.setState({postalCode})}
-                    value={this.state.postalCode}
+                    value={postalCode}
                   />
                 </View>
                 <Text style={
@@ -301,7 +338,7 @@ class SavedAddress extends Component {
                   <TouchableHighlight
                     activeOpacity={0.6}
                     underlayColor={Color.lightGray}
-                    disabled ={value === '' || postalCode === ''}
+                    disabled={value === '' || postalCode === ''}
                     // style={{ 
                     //   ...Style.openButton, backgroundColor: Color.primaryDark }}
                     style={

@@ -60,7 +60,7 @@ class Menu extends Component {
   }
 
   retrieveProducts = () => {
-    const {filter, search, storeLocation} = this.props.state;
+    const {filter, search, storeLocation, menuProducts} = this.props.state;
     const { setMenuProducts } = this.props
     if (filter == null) {
       return;
@@ -333,7 +333,7 @@ class Menu extends Component {
                       key={idx}>
                       <View style={Style.menuContainer}>
                         <Image
-                          source={{uri: item.images[0].src}}
+                          source={{uri: item.images[0] !== undefined && item.images[0] !== null ? item.images[0].src : '#'}}
                           style={Style.menuImage}
                         />
                         <Text style={{fontWeight: 'bold'}}>

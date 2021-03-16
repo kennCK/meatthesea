@@ -32,6 +32,7 @@ import Api from 'services/apiv2/index.js';
 import {Routes} from 'common';
 import {connect} from 'react-redux';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
+import moment from 'moment';
 
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component {
@@ -364,6 +365,11 @@ class Welcome extends Component {
     );
   }
 
+  deliveryTimeHandler = (data) => {
+    const {setSelectedDeliveryTime} = this.props
+    let deliveryTime = moment(data).format('HH:mm')
+    setSelectedDeliveryTime(deliveryTime)
+  }
   render() {
     const { homepage, search, cart, crockeries, user, userLocation } = this.props.state;
     const { showRatings, isLoading } = this.state;
@@ -440,6 +446,7 @@ class Welcome extends Component {
           defaultIndex={this.state.defaultIndex}
           addresses={this.state.addresses}
           selectHandler={this.selectHandler}
+          deliveryTimeHandler={this.deliveryTimeHandler}
         />
         <View>
           <View style={[
@@ -788,7 +795,8 @@ const mapDispatchToProps = (dispatch) => {
     setCart: (cart) => dispatch(actions.setCart(cart)),
     setPickupCrockeries: (crockeries) => dispatch(actions.setPickupCrockeries(crockeries)),
     setMenuProducts: (menuProducts) => dispatch(actions.setMenuProducts(menuProducts)),
-    setUserLocation: (userLocation) => dispatch(actions.setUserLocation(userLocation))
+    setUserLocation: (userLocation) => dispatch(actions.setUserLocation(userLocation)),
+    setSelectedDeliveryTime: (deliveryTime) => dispatch(actions.setSelectedDeliveryTime(deliveryTime))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);

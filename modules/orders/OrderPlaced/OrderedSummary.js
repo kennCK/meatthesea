@@ -17,6 +17,7 @@ import DatePicker from 'react-native-date-picker'
 import {connect} from 'react-redux';
 import Api from 'services/apiv2/index.js';
 import {Spinner} from 'components';
+import moment from 'moment';
 
 class OrderedSummary extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class OrderedSummary extends Component {
   }
 
   onFocusFunction = () => {
-    const {paypalSuccessData, user, storeLocation, userLocation} = this.props.state
+    const {paypalSuccessData, user, storeLocation, userLocation, deliveryTime} = this.props.state
     if(paypalSuccessData !== null) {
       this.setState({isLoading: true, isRendered: false})
       Api.postRequest(Routes.paypalConfirmOrder(
@@ -42,7 +43,9 @@ class OrderedSummary extends Component {
           storeLocation.id, 
           userLocation.id, 
           paypalSuccessData.order_guid, 
-          paypalSuccessData.paypal.paypal_id
+          paypalSuccessData.paypal.paypal_id,
+          deliveryTime,
+          moment().format('HH:mm')
         ),
       {}, response=> {
         console.log('CONFIRM ORDER PAYPAL RESPONSE: ', response)

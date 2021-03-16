@@ -47,8 +47,12 @@ class DeliveryDetails extends Component{
   }
 
   setDate = (data) => {
-    console.log("DATE EVENT: ", new Date(data).toLocaleTimeString())
     this.setState({date: data})
+  }
+
+  setDeliveryTime() {
+    let deliveryTimeRequested = this.state.date
+    this.props.deliveryTimeHandler(deliveryTimeRequested)
   }
 
   render() {
@@ -275,12 +279,20 @@ class DeliveryDetails extends Component{
             <View style={ModalStyle.modalView}>
               <DatePicker
                 date={new Date(date)}
-                mode="time"
-                androidVariant="nativeAndroid"
+                mode={"time"}
+                androidVariant={"nativeAndroid"}
                 onDateChange={this.setDate.bind(this)}
                 minuteInterval={15}
+                locale={'fr-ca'}
+                is24hourSource={'locale'}
               />
               <TouchableHighlight
+                activeOpacity={0.6}
+                underlayColor={Color.lightGray}
+                onPress={() => {
+                  this.setDeliveryTime()
+                  this.setState({isEditingTime: false})
+                }}
                 style={{
                   backgroundColor: Color.lightYellow,
                   color: Color.darkGray,

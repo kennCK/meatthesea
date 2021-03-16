@@ -122,12 +122,12 @@ const initialState = {
   userLocation: null,
   paymentMethod: null,
   crockeries: null,
-  deliveryTime: null,
+  deliveryTime: 'ASAP',
   order: null,
   storeLocation: null,
   requestPickUpCrockery: null,
   paypalSuccessData: null,
-  menuProducts: null
+  menuProducts: null,
 };
 
 storeData = async (key, value) => {

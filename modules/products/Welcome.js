@@ -143,6 +143,9 @@ class Welcome extends Component {
 
   fetchAddress = () => {
     const { user } = this.props.state
+    if(user == null){
+      return
+    }
     Api.getRequest(Routes.customerRetrieveAddresses(user.id), response => {
       const { address } = response
       if (address) {

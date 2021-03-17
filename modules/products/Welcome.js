@@ -9,6 +9,7 @@ import {
   TextInput,
   ScrollView,
   Dimensions,
+  SafeAreaView
 } from 'react-native';
 import {BasicStyles, Color} from 'common';
 import Modal from 'react-native-modal';
@@ -142,6 +143,9 @@ class Welcome extends Component {
 
   fetchAddress = () => {
     const { user } = this.props.state
+    if(user == null){
+      return
+    }
     Api.getRequest(Routes.customerRetrieveAddresses(user.id), response => {
       const { address } = response
       if (address) {
@@ -374,7 +378,7 @@ class Welcome extends Component {
     const { homepage, search, cart, crockeries, user, userLocation } = this.props.state;
     const { showRatings, isLoading } = this.state;
     return (
-      <View style={Style.MainContainer}>
+      <SafeAreaView style={Style.MainContainer}>
         <Modal
           isVisible={this.state.visibleModal}
           style={Style.modal}
@@ -778,7 +782,7 @@ class Welcome extends Component {
           )
         }
         {isLoading ? <Spinner mode="overlay"/> : null }
-      </View>
+      </SafeAreaView>
     );
   }
 }

@@ -67,6 +67,7 @@ const StackNavigator = createStackNavigator({
       headerRight: <OptionRight navigationProps={navigation} />,
       headerStyle: {
         backgroundColor: Color.white,
+        height: 50
       },
       headerTintColor: Color.primary,
     }),

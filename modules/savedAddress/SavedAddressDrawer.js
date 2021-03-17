@@ -42,12 +42,14 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+let HeaderOptionsConnect = connect(mapStateToProps, mapDispatchToProps)(HeaderOptions);
+
 const SavedAddressStack = createStackNavigator({
   savedAddressScreen: {
     screen: SavedAddress,
     navigationOptions: ({navigation}) => ({
       title: 'SAVED ADDRESSES',
-      headerLeft: <HeaderOptions navigationProps={navigation} />,
+      headerLeft: <HeaderOptionsConnect navigationProps={navigation} />,
 
       headerTintColor: BasicStyles.headerTintColor,
       headerTitleContainerStyle: BasicStyles.headerTitleContainerStyle,

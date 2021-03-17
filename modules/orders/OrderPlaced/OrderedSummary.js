@@ -48,8 +48,10 @@ class OrderedSummary extends Component {
           moment().format('HH:mm')
         ),
       {}, response=> {
-        console.log('CONFIRM ORDER PAYPAL RESPONSE: ', response)
-        this.setState({isLoading: false, isRendered: true})
+        console.log('CONFIRM ORDER PAYPAL RESPONSE: ', response);
+        this.setState({isLoading: false, isRendered: true});
+        const {setShowRating} = this.props;
+        setShowRating(true);
       }, error => {
         console.log('CONFIRM PAYPAL ORDER ERROR: ', error)
       })
@@ -260,6 +262,7 @@ const mapDispatchToProps = (dispatch) => {
     setCart: (cart) => dispatch(actions.setCart(cart)),
     setOrderDetails: (details) => dispatch(actions.setOrderDetails(details)),
     setSelectedDeliveryTime: (time) => dispatch(actions.setSelectedDeliveryTime(time)),
+    setShowRating: (showRating) => dispatch(actions.setShowRating(showRating))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(OrderedSummary);

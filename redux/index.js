@@ -27,7 +27,8 @@ const types = {
   SET_STORE_LOCATION: 'SET_STORE_LOCATION',
   SET_REQUEST_PICKUP_CROCKERY: 'SET_REQUEST_PICKUP_CROCKERY',
   SET_PAYPAL_SUCCESS_DATA: 'SET_PAYPAL_SUCCESS_DATA',
-  SET_MENU_PRODUCTS: 'SET_MENU_PRODUCTS'
+  SET_MENU_PRODUCTS: 'SET_MENU_PRODUCTS',
+  SET_SHOW_RATING: 'SET_SHOW_RATING'
 };
 
 export const actions = {
@@ -102,6 +103,9 @@ export const actions = {
   },
   setMenuProducts(menuProducts) {
     return { type: types.SET_MENU_PRODUCTS, menuProducts}
+  },
+  setShowRating(showRating) {
+    return { type: types.SET_SHOW_RATING, showRating}
   }
 };
 
@@ -128,6 +132,7 @@ const initialState = {
   requestPickUpCrockery: null,
   paypalSuccessData: null,
   menuProducts: null,
+  showRating: false
 };
 
 storeData = async (key, value) => {
@@ -144,7 +149,7 @@ const reducer = (state = initialState, action) => {
   const {notification} = action;
   const {theme} = action;
   const {location} = action;
-  const {stores} = action;
+  const {stores, showRating} = action;
   const { filter, categories, settings, search } = action;
   const { cart, details, payment } = action;
   const { crockeries, deliveryTime, order, storeLocation } = action;
@@ -327,6 +332,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         menuProducts
+      }
+    case types.SET_SHOW_RATING:
+      return {
+        ...state,
+        showRating
       }
     default:
       return {...state, nav: state.nav};

@@ -53,7 +53,6 @@ class Welcome extends Component {
       isLoading: false,
       products: null,
       token: true,
-      showRatings: true,
       ratingIndex: null,
       isAddingComment: false,
       value: '',
@@ -253,7 +252,8 @@ class Welcome extends Component {
     this.setState({isLoading: true})
     Api.postRequest(Routes.addFeedback(user.id, storeLocation.id, this.state.value), {}, response => {
       console.log('Add Feedback Response: ', response)
-      this.setState({isLoading: false, showRatings: false})
+      const {setShowRating} = this.props
+      setShowRating(false)
     }, error => {
       console.log('Add Feedback error')
     })
@@ -375,8 +375,8 @@ class Welcome extends Component {
     setSelectedDeliveryTime(deliveryTime)
   }
   render() {
-    const { homepage, search, cart, crockeries, user, userLocation } = this.props.state;
-    const { showRatings, isLoading } = this.state;
+    const { homepage, search, cart, crockeries, user, userLocation, showRating } = this.props.state;
+    const { isLoading } = this.state;
     return (
       <SafeAreaView style={Style.MainContainer}>
         <Modal
@@ -705,7 +705,7 @@ class Welcome extends Component {
           )}
         </View>
         {
-          showRatings && user && (
+          showRating && user && (
             <View style={{
               position: 'absolute',
               bottom: 0,
@@ -726,7 +726,8 @@ class Welcome extends Component {
                     left: '5%',
                   }}
                   onPress={() => {
-                    this.setState({showRatings: false})
+                    const {setShowRating} = this.props
+                    setShowRating(false)
                   }}
                 >
                   <Text
@@ -800,7 +801,8 @@ const mapDispatchToProps = (dispatch) => {
     setPickupCrockeries: (crockeries) => dispatch(actions.setPickupCrockeries(crockeries)),
     setMenuProducts: (menuProducts) => dispatch(actions.setMenuProducts(menuProducts)),
     setUserLocation: (userLocation) => dispatch(actions.setUserLocation(userLocation)),
-    setSelectedDeliveryTime: (deliveryTime) => dispatch(actions.setSelectedDeliveryTime(deliveryTime))
+    setSelectedDeliveryTime: (deliveryTime) => dispatch(actions.setSelectedDeliveryTime(deliveryTime)),
+    setShowRating: (showRating) => dispatch(actions.setShowRating(showRating))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);

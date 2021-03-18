@@ -53,7 +53,6 @@ class Welcome extends Component {
       isLoading: false,
       products: null,
       token: true,
-      showRatings: true,
       ratingIndex: null,
       isAddingComment: false,
       value: '',
@@ -253,7 +252,8 @@ class Welcome extends Component {
     this.setState({isLoading: true})
     Api.postRequest(Routes.addFeedback(user.id, storeLocation.id, this.state.value), {}, response => {
       console.log('Add Feedback Response: ', response)
-      this.setState({isLoading: false, showRatings: false})
+      const {setShowRating} = this.props
+      setShowRating(false)
     }, error => {
       console.log('Add Feedback error')
     })
@@ -375,8 +375,8 @@ class Welcome extends Component {
     setSelectedDeliveryTime(deliveryTime)
   }
   render() {
-    const { homepage, search, cart, crockeries, user, userLocation } = this.props.state;
-    const { showRatings, isLoading } = this.state;
+    const { homepage, search, cart, crockeries, user, userLocation, showRating } = this.props.state;
+    const { isLoading } = this.state;
     return (
       <SafeAreaView style={Style.MainContainer}>
         <Modal
@@ -385,24 +385,39 @@ class Welcome extends Component {
           onRequestClose={() => {
             this.setState({visibleModal: false});
           }}>
-          <View
+          <TouchableHighlight
+            activeOpacity={0.6}
+            underlayColor={Color.lightGray}
             style={{
-              marginRight: -300,
-            }}>
-            <TouchableOpacity
+              borderWidth: 1,
+              paddingTop: 0,
+              borderColor: Color.white,
+              borderRadius: 20,
+              position: 'absolute',
+              top: 30,
+              left: 20,
+              backgroundColor: Color.white
+            }}
+            onPress={() => {
+              this.changeMenu(2)
+            }}
+            >
+            <Text
               style={[
-                {marginTop: 40, backgroundColor: Color.white, borderRadius: 10},
+                {
+                  color: 'rgba(0,100,177,.9)',
+                  fontSize: BasicStyles.standardFontSize + 15,
+                  lineHeight: 21,
+                  marginBottom: -10,
+                  paddingTop: 7.5,
+                  paddingBottom: 7.5,
+                  paddingRight: 5,
+                  paddingLeft: 6,
+                  fontWeight: 'bold'
+                }
               ]}
-              onPress={() => this.changeMenu(2)}>
-              <FontAwesomeIcon
-                icon={faTimes}
-                style={{
-                  color: Color.primary,
-                }}
-                size={BasicStyles.iconSize}
-              />
-            </TouchableOpacity>
-          </View>
+              >&times;</Text>
+          </TouchableHighlight>
           <View style={Style.circle}>
             <View style={Style.LogoContainer}>
               <Image
@@ -416,7 +431,9 @@ class Welcome extends Component {
               </Text>
             </View>
             <TouchableOpacity
-              style={[BasicStyles.btn, Style.btnWhite, {marginTop: 70}]}
+              style={[
+                Style.btnWhite
+              ]}
               onPress={() => this.changeMenu(1)}>
               <Text style={[Style.textPrimary]}>GO TO GROCERIES</Text>
             </TouchableOpacity>
@@ -435,7 +452,9 @@ class Welcome extends Component {
               </Text>
             </View>
             <TouchableHighlight
-              style={[BasicStyles.btn, Style.btnWhite, {marginTop: 70}]}
+              style={[
+                Style.btnWhite
+              ]}
               onPress={() => this.changeMenu(0)}>
               <Text style={[Style.textPrimary]}>GO TO RESTAURANTS</Text>
             </TouchableHighlight>
@@ -485,8 +504,16 @@ class Welcome extends Component {
                     userLocation !== null ?
                       userLocation.address1 !== "" ||
                       userLocation.address1 !== null ||
-                      userLocation.address1 !== undefined ?
-                      userLocation.address1 :
+                      userLocation.address1 !== undefined 
+                    ?
+                      userLocation.address1.length > 40 ?
+                        userLocation.address1.substring(0, 40) + '...'
+                      :
+                      userLocation.address1
+                    :
+                      userLocation.address2.length > 40 ?
+                        userLocation.address2.substring(0, 40) + '...'
+                      :
                       userLocation.address2
                     :
                       ''
@@ -705,7 +732,7 @@ class Welcome extends Component {
           )}
         </View>
         {
-          showRatings && user && (
+          showRating && user && (
             <View style={{
               position: 'absolute',
               bottom: 0,
@@ -726,7 +753,8 @@ class Welcome extends Component {
                     left: '5%',
                   }}
                   onPress={() => {
-                    this.setState({showRatings: false})
+                    const {setShowRating} = this.props
+                    setShowRating(false)
                   }}
                 >
                   <Text
@@ -800,7 +828,8 @@ const mapDispatchToProps = (dispatch) => {
     setPickupCrockeries: (crockeries) => dispatch(actions.setPickupCrockeries(crockeries)),
     setMenuProducts: (menuProducts) => dispatch(actions.setMenuProducts(menuProducts)),
     setUserLocation: (userLocation) => dispatch(actions.setUserLocation(userLocation)),
-    setSelectedDeliveryTime: (deliveryTime) => dispatch(actions.setSelectedDeliveryTime(deliveryTime))
+    setSelectedDeliveryTime: (deliveryTime) => dispatch(actions.setSelectedDeliveryTime(deliveryTime)),
+    setShowRating: (showRating) => dispatch(actions.setShowRating(showRating))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);

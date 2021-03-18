@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
     View, Text, TouchableOpacity, ScrollView, TouchableHighlight, Modal,
-    ActivityIndicator, Linking
+    ActivityIndicator, Linking, Dimensions
 } from 'react-native';
 // import Modal from 'react-native-modal';
 import styles from '../Style';
@@ -16,7 +16,12 @@ import { faEdit, faInfoCircle, faTimesCircle } from '@fortawesome/free-solid-svg
 import DatePicker from 'react-native-date-picker'
 import {connect} from 'react-redux';
 import Api from 'services/apiv2/index.js';
+import ModalStyle from '../components/style';
 import {Spinner} from 'components';
+import moment from 'moment';
+
+const width = Math.round(Dimensions.get('window').width);
+const height = Math.round(Dimensions.get('window').height);
 
 class OrderSummaryScreen extends Component {
   constructor(props) {
@@ -30,7 +35,8 @@ class OrderSummaryScreen extends Component {
       errorMessage: null,
       isSubmit: 0,
       paypalInfo: {},
-      isLoading: false
+      isLoading: false,
+      date: ''
     };
   }
   
@@ -52,8 +58,8 @@ class OrderSummaryScreen extends Component {
 
   componentDidMount() {
     // console.log('cart : ', this.props.state.cart)
-    console.log('::==->Address: ', this.props.state.userLocation)
-    console.log('::==->Store Address: ', this.props.state.storeLocation.id)
+    this.setState({date: new Date().toLocaleString()})
+
     Api.getRequest(Routes.paypalAccountRetrieve, response => {
       this.setState({paypalInfo: response})
       console.log('::==->Paypal Account ID ', response.paypal.client_id)
@@ -114,12 +120,12 @@ class OrderSummaryScreen extends Component {
     //   })
     //   return
     // }
-    // if(deliveryTime == null){
-    //   this.setState({
-    //     errorMessage: 'Delivery Time is required.'
-    //   })
-    //   return
-    // }
+    if(deliveryTime == null){
+      this.setState({
+        errorMessage: 'Delivery Time is required.'
+      })
+      return
+    }
     // let parameters = {
     //   customerId: user.id,
     //   location: userLocation,
@@ -139,6 +145,22 @@ class OrderSummaryScreen extends Component {
   executeOrderPlacement = async () => {
     const {userLocation, storeLocation, cart, user} = await this.props.state;
     this.setState({isLoading: true});
+    console.log('\n===================================================================\n',
+      'clientId: ',
+      this.state.paypalInfo.paypal.client_id,
+      ', clientSecret: ',
+      this.state.paypalInfo.paypal.client_secret, 
+      ', paymentType: ',
+      0,
+      ', isSandbox: ',
+      true, 
+      ', userId: ',
+      user.id, 
+      ', userLocationId: ',
+      userLocation.id,
+      ', store_id: ',
+      storeLocation.id
+    )
     await Api.postRequest(Routes.paypalCreateOrder(
         this.state.paypalInfo.paypal.client_id,
         this.state.paypalInfo.paypal.client_secret, 
@@ -170,10 +192,22 @@ class OrderSummaryScreen extends Component {
       Alert.alert(`Can't open: ${url}`);
     }
   }
+
+  setDate = (data) => {
+    this.setState({date: data})
+  }
+
+  setDeliveryTime() {
+    const {setSelectedDeliveryTime} = this.props
+    let deliveryTimeRequested = this.state.date
+
+    let deliveryTime = moment(deliveryTimeRequested).format('HH:mm')
+    setSelectedDeliveryTime(deliveryTime)
+  }
   
   render() {
     const { cart, orderDetails, deliveryTime } = this.props.state;
-    const { errorMessage, isLoading } = this.state;
+    const { errorMessage, isLoading, date } = this.state;
     return (
       <View style={{ flex: 1 }} key={this.state.key}>
         <Modal visible={this.state.isSubmit > 0 ? true : false}>
@@ -187,56 +221,80 @@ class OrderSummaryScreen extends Component {
               />
           </View>
         </Modal>
-        <Modal visible={this.state.isVisible} >
-          <View style={{ flex: 1, backgroundColor: Color.primary }}>
-          <TouchableOpacity
-              style={[{ marginTop: 40, marginLeft: 20 }]} onPress={this.toggleModal}>
-              <FontAwesomeIcon icon={faTimesCircle} style={{
-                color: Color.gray
-              }} size={BasicStyles.iconSize} />
-            </TouchableOpacity>
-            <View style={{
-              flex: 1,
-              justifyContent: "center",
-              backgroundColor: Color.primary,
-              alignItems: "center",
-            }}>
-
-              <View style={{
-                backgroundColor: Color.white,
-                borderRadius: 10,
-                padding: 35,
-                width: Style.getWidth() - 100,
-                alignItems: "center",
-              }}>
-                <Text style={[Style.fontSize(BasicStyles.standardFontSize), { textAlign: 'center', color: Color.darkGray }]}>Available delivery slots from :</Text>
-                <DatePicker
-                    mode='time'
-                    date={new Date()}
-                    is24hourSource="locale"
-                    minuteInterval={15}
-                    onDateChange={(e) => {
-                      this.setState({ hour: e.getHours() })
-                      this.setState({ mins: e.getMinutes() })
-                    }}
-                    />
-                <View style={{ marginTop: 40 }}>
-                  <TouchableOpacity style={{
-                    backgroundColor: Color.secondary,
-                    paddingHorizontal: 25,
-                    paddingVertical: 10,
-                    borderRadius: 10
-                  }}
-                  onPress={() => {
-                    const { hour, mins } = this.state
-                    this.setState({ selectedTime: `${hour}:${parseInt(mins) > 0? mins : '00'}` })
-                    this.setSelectedTime(`${hour}:${parseInt(mins) > 0? mins : '00'}`)
-                  }}
-                  >
-                    <Text style={[Style.fontSize(BasicStyles.standardFontSize), Style.fontWeight('bold')]}>GO</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.isVisible}
+          style={{
+            height: height
+          }}
+          >
+          <View style={ModalStyle.insideModalCenteredView}>
+            <TouchableHighlight
+              activeOpacity={0.6}
+              underlayColor={Color.lightGray}
+              style={{
+                borderWidth: 1,
+                paddingTop: 0,
+                borderColor: Color.white,
+                borderRadius: 20,
+                position: 'absolute',
+                top: 30,
+                left: 20,
+                backgroundColor: Color.white
+              }}
+              onPress={() => {
+                this.setState({isVisible: false})
+              }}
+              >
+              <Text
+                style={[
+                  {
+                    color: 'rgba(0,100,177,.9)',
+                    fontSize: BasicStyles.standardFontSize + 15,
+                    lineHeight: 21,
+                    marginBottom: -10,
+                    paddingTop: 7.5,
+                    paddingBottom: 7.5,
+                    paddingRight: 6,
+                    paddingLeft: 6
+                  }
+                ]}
+                >&times;</Text>
+            </TouchableHighlight>
+            <View style={ModalStyle.modalView}>
+              <DatePicker
+                date={new Date(date)}
+                mode={"time"}
+                androidVariant={"nativeAndroid"}
+                onDateChange={this.setDate.bind(this)}
+                minuteInterval={15}
+                locale={'fr-ca'}
+                is24hourSource={'locale'}
+              />
+              <TouchableHighlight
+                activeOpacity={0.6}
+                underlayColor={Color.lightGray}
+                onPress={() => {
+                  this.setDeliveryTime()
+                  this.setState({isVisible: false})
+                }}
+                style={{
+                  backgroundColor: Color.lightYellow,
+                  color: Color.darkGray,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  paddingTop: 8,
+                  paddingBottom: 8,
+                  borderRadius: 5
+                }}
+              >
+                <Text
+                  style={[
+                    BasicStyles.headerTitleStyle
+                  ]}
+                >GO</Text>
+              </TouchableHighlight>
             </View>
           </View>
         </Modal>
@@ -267,7 +325,11 @@ class OrderSummaryScreen extends Component {
           </View>
         </View>
         <Separator />
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={[styles.OrderHistoryListContainer]}>
+        <ScrollView 
+          contentContainerStyle={{ flexGrow: 1 }} 
+          showsVerticalScrollIndicator ={false}
+          style={[styles.OrderHistoryListContainer]}
+        >
           <View >
             {
               cart && cart.map((cartItem, idx) => {

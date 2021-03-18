@@ -7,6 +7,7 @@ import {
   Image,
   Alert,
   TouchableHighlight,
+  Dimensions
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faArrowLeft, faTimes} from '@fortawesome/free-solid-svg-icons';
@@ -18,6 +19,10 @@ import NumericInput from 'react-native-numeric-input';
 import Modal from 'react-native-modal';
 import {connect} from 'react-redux';
 import Counter from 'modules/products/components/Counter.js';
+import { color } from 'react-native-reanimated';
+
+const width = Math.round(Dimensions.get('window').width);
+
 class Menu extends Component {
   constructor(props) {
     super(props);
@@ -34,7 +39,8 @@ class Menu extends Component {
       products: null,
       productInCart: null,
       isAddingAddressName: false,
-      alertText: ""
+      alertText: "",
+      orderMaximumQuantity: 0
     };
   }
 
@@ -184,7 +190,7 @@ class Menu extends Component {
         itemImage: item.images[0].src,
         itemDescription: item.full_description,
         qty: selectedCartItem ? selectedCartItem.quantity : 1,
-        orderMaximumQuantity: item.order_maximum_quantity = 5
+        orderMaximumQuantity: item.order_maximum_quantity
       });
     }, 1000);
   }
@@ -358,35 +364,53 @@ class Menu extends Component {
               source={{uri: this.state.itemImage}}
               style={Style.productImageFull}
             />
-            <TouchableOpacity
-              style={[
-                {
-                  backgroundColor: Color.primary,
-                  borderRadius: 20,
-                  position: 'absolute',
-                  top: 15,
-                  right: 15,
-                },
-              ]}
+            <TouchableHighlight
+              activeOpacity={0.6}
+              underlayColor={Color.lightGray}
+              style={{
+                borderWidth: 1,
+                paddingTop: 0,
+                borderColor: Color.white,
+                borderRadius: 20,
+                position: 'absolute',
+                top: 20,
+                left: 20,
+                backgroundColor: 'rgba(0,100,177,.7)'
+              }}
               onPress={() => {
                 this.setState({visibleModal: false});
-              }}>
-              <FontAwesomeIcon
-                icon={faTimes}
-                style={{
-                  color: Color.white,
-                }}
-                size={BasicStyles.iconSize}
-              />
-            </TouchableOpacity>
+              }}
+            >
+              <Text
+                style={[
+                  {
+                    color: Color.white,
+                    fontSize: BasicStyles.standardFontSize + 15,
+                    lineHeight: 21,
+                    marginBottom: -10,
+                    paddingTop: 7.5,
+                    paddingBottom: 7.5,
+                    paddingRight: 6,
+                    paddingLeft: 6
+                  }
+                ]}
+                >&times;</Text>
+            </TouchableHighlight>
             <View
               style={{
                 padding: 30,
                 borderBottomWidth: 1,
                 borderBottomColor: Color.gray,
+                width: width
               }}>
-              <Text style={{fontWeight: 'bold'}}>{this.state.itemName}</Text>
-              <Text style={{fontWeight: 'bold'}}>
+              <Text style={{
+                fontWeight: 'bold',
+                marginBottom: 10
+              }}>{this.state.itemName}</Text>
+              <Text style={{
+                fontWeight: 'bold',
+                marginBottom: 10
+              }}>
                 HK$ {this.state.itemPrice}
               </Text>
               <Text style={{fontSize: BasicStyles.standardFontSize}}>
@@ -394,7 +418,9 @@ class Menu extends Component {
               </Text>
             </View>
           </View>
-          <View style={{alignItems: 'center'}}>
+          <View style={{
+            alignItems: 'center'
+          }}>
             <Counter
               count={this.state.qty}
               increment={() => {
@@ -436,9 +462,6 @@ class Menu extends Component {
             padding: 0,
             width: '100%',
             margin: 0
-          }}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
           }}
         >
           <View style={Style.insideModalCenteredView}>

@@ -1,5 +1,5 @@
 import { Color, BasicStyles } from 'common';
-import { Dimensions } from 'react-native';
+import { Dimensions, Plat } from 'react-native';
 const width = Math.round(Dimensions.get('window').width);
 export default {
   scrollContainer: {
@@ -15,7 +15,8 @@ export default {
     flexWrap: 'wrap'
   },
   productImageFull:{
-    width: width-50,
+    marginTop: 0,
+    width: width,
     height: width-50
   },
   productImage: {
@@ -114,7 +115,7 @@ export default {
     width: '100%'
   },
   insideModalCenteredView: {
-    flex: 1,
+    flexDirection: 'row',
     justifyContent: "center",
     alignItems: "center",
     width: '100%'
@@ -193,4 +194,14 @@ export default {
     fontSize: 15,
     fontWeight: 'bold',
   },
+  boxShadow: {
+    shadowColor: "#000",
+    shadowOffset:{
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: 6,
+  }
 }

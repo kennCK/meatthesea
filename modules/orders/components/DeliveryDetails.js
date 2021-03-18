@@ -299,7 +299,7 @@ class DeliveryDetails extends Component {
                       {fontSize: BasicStyles.standardFontSize},
                     ]}>
                     {'  '}
-                    {userLocation.route + ', ' + userLocation.city + ', ' + userLocation.country}
+                    {userLocation.address1}
                   </Text>
                 </View>
               )

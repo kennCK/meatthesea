@@ -22,7 +22,10 @@ export default {
     width: '100%'
   },
   TextContainer: {
-    flex: 1
+    // flex: 1,
+    flexDirection: 'row',
+    padding: 10,
+    paddingBotto: 30
   },
   messageContainer: {
     height: 50,
@@ -59,18 +62,32 @@ export default {
     color: Color.primary
   },
   textSecondary: {
-    marginTop: 15,
-    textAlign: 'center'
+    marginTop: 19,
+    textAlign: 'center',
+    flex: 1,
+    flexWrap: 'wrap'
   },
   btnWhite: {
     height: 50,
     backgroundColor: Color.white,
-    width: width - 150,
+    // width: width - 150,
+    paddingLeft: 30,
+    paddingRight: 30,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 25,
     borderColor: Color.primary,
-    borderWidth: 2
+    borderWidth: 2,
+    position: 'absolute',
+    bottom: -15,
+    shadowColor: "#000",
+    shadowOffset:{
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: 6,
   },
   circle: {
     marginBottom: 50,
@@ -78,7 +95,15 @@ export default {
     width: width-140,
     height: width-140,
     borderRadius: (width-140)*2/2,
-    backgroundColor: Color.white
+    backgroundColor: Color.white,
+    shadowColor: "#000",
+    shadowOffset:{
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: 6,
   },
   modal: {
     height: '100%',

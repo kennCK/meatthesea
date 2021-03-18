@@ -43,6 +43,7 @@ class SavedAddress extends Component {
   componentDidMount() {
     const {params} = this.props.navigation.state;
     const { user } = this.props.state;
+    console.log(user)
     if(user === null){
       return
     }
@@ -86,28 +87,41 @@ class SavedAddress extends Component {
     this.focusListener.remove()
   }
 
-  addAddress = () => {
-    const { user, location } = this.props.state;
-    const { countries } = this.state
+  addAddress = async () => {
+    const { user, location } = await this.props.state;
+    const { countries } = await this.state
     let temp = location.address.replace(/ /g, '');
 
-    let countryObject = countries.find(el => {
-      return el.country_name.toLowerCase() === location.country
-    })
-
-    console.log("| <<< TESTING >>> | user: ", user.id, ' | fullname: ' , user.first_name + ' ' + user.last_name,' | ' , null,' | address: ' , location.address,' | ' , this.state.value,' | ' , location.latitude,' | ' , location.longtitude,' | city: ' , location.locality,' | postal code: ' , this.state.postalCode,' | countryId: ' , countryObject !== null && countryObject !== undefined ? countryObject.id : 131)
     
-    Api.postRequest(Routes.customerAddAddress(user.id, user.first_name + ' ' + user.last_name, null, location.address, this.state.value, location.latitude, location.longtitude, location.locality, this.state.postalCode, countryObject !== null && countryObject !== undefined ? countryObject.id : 131), {}, response => {
-      console.log("Adding address response: ", response);
-      this.setState({ isAddingAddressName: false, address: response.address, value: '', postalCode: '', addingAddress: false });
-      const {setLocation} = this.props
-      setTimeout(() => {
-        setLocation(null)
-      }, 2000)
-      // this.fetchAddress()
-    }, error => {
-      console.log("Adding address error: ", error);
-    });
+    let countryObject = countries.find(el => {
+      return el.country_name.toLowerCase() === location.country.toLowerCase()
+    })
+    console.log('-------------------------:::TESING:::-------------------------')
+    console.log(user)
+    console.log('-------------------------:::TESING:::-------------------------')
+    Api.postRequest(
+      Routes.customerAddAddress(
+        user.id, user.first_name + ' ' + user.last_name, 
+        null, 
+        location.address, 
+        this.state.value, 
+        location.latitude, 
+        location.longtitude, 
+        location.locality, 
+        this.state.postalCode, 
+        countryObject !== null && countryObject !== undefined ? countryObject.id : 131
+      ),
+      {}, response => {
+        console.log("Adding address response: ", response);
+        this.setState({ isAddingAddressName: false, address: response.address, value: '', postalCode: '', addingAddress: false });
+        const {setLocation} = this.props
+        setTimeout(() => {
+          setLocation(null)
+        }, 2000)
+        // this.fetchAddress()
+      }, error => {
+        console.log("Adding address error: ", error);
+      });
   }
 
   getCurrentLocation = () => {

@@ -9,7 +9,7 @@ import { Routes, Color, Helper, BasicStyles } from 'common';
 import CustomError from 'components/Modal/Error.js';
 import Header from './Header';
 import config from 'src/config';
-class Register extends Component {
+class JoinWaitList extends Component {
   //Screen1 Component
   constructor(props) {
     super(props);
@@ -17,8 +17,6 @@ class Register extends Component {
       fullname: '',
       email: '',
       phoneNumber: '',
-      location: '',
-      password: '',
       isLoading: false,
       token: null,
       error: 0,
@@ -35,68 +33,40 @@ class Register extends Component {
   }
 
   submit() {
-    // const { username, email, password } = this.state;
-    // if (this.validate() == false) {
-    //   return
-    // }
-    // let parameter = {
-    //   username: username,
-    //   email: email,
-    //   password: password,
-    //   config: null,
-    //   account_type: 'USER',
-    //   referral_code: null,
-    //   status: 'ADMIN'
-    // }
-    // this.setState({ isLoading: true })
-    // Api.request(Routes.accountCreate, parameter, response => {
-    //   this.setState({ isLoading: false })
-    //   if (response.error !== null) {
-    //     if (response.error.status === 100) {
-    //       let message = response.error.message
-    //       if (typeof message.username !== undefined && typeof message.username !== 'undefined') {
-    //         this.setState({ errorMessage: message.username[0] })
-    //       } else if (typeof message.email !== undefined && typeof message.email !== 'undefined') {
-    //         this.setState({ errorMessage: message.email[0] })
-    //       }
-    //     } else if (response.data !== null) {
-    //       if (response.data > 0) {
-    //         this.redirect('loginStack')
-    //       }
-    //     }
-    //   }
-    // }, error => {
-    //   this.setState({ isResponseError: true })
-    // })
+    const { fullname, email, phoneNumber } = this.state;
+    if (this.validate() == false) {
+      return
+    }
+    this.setState({ isLoading: true })
+    Api.postRequest(Routes.waitListAdd(fullname, email, phoneNumber), {}, response => {
+      this.setState({ isLoading: false })
+      if (response.toLowerCase().replace(/ /g, '') === 'waitlistaddedsuccessfully') {
+        this.redirect('appOnBoardingStack')
+      }
+    }, error => {
+      this.setState({ isResponseError: true })
+    })
   }
 
   validate() {
-    // const { username, email, password, confirmPassword } = this.state;
-    // if (username.length >= 6 &&
-    //   email !== '' &&
-    //   password !== '' &&
-    //   password.length >= 6 &
-    //   password.localeCompare(confirmPassword) === 0 &&
-    //   Helper.validateEmail(email) === true) {
-    //   return true
-    // } else if (email !== '' && Helper.validateEmail(email) === false) {
-    //   this.setState({ errorMessage: 'You have entered an invalid email address.' })
-    //   return false
-    // } else if (username !== '' && username.length < 6) {
-    //   this.setState({ errorMessage: 'Username must be atleast 6 characters.' })
-    //   return false
-    // } else if (password !== '' && password.length < 6) {
-    //   this.setState({ errorMessage: 'Password must be atleast 6 characters.' })
-    //   return false
-    // } else if (password !== '' && password.localeCompare(confirmPassword) !== 0) {
-    //   this.setState({ errorMessage: 'Password did not match.' })
-    //   return false
-    // } else {
-    //   this.setState({ errorMessage: 'Please fill in all required fields.' })
-    //   return false
-    // }
+    const { fullname, email, phoneNumber } = this.state;
+    if (
+      email != '' &&
+      fullname != '' &&
+      phoneNumber.length == 8 &
+      Helper.validateEmail(email) == true) {
+      return true
+    } else if (email != '' && Helper.validateEmail(email) == false) {
+      this.setState({ errorMessage: 'You have entered an invalid email address.' })
+      return false
+    } else if (phoneNumber.substr(0, 2) != '853' && phoneNumber.length != 8) {
+      this.setState({ errorMessage: 'Phone Number must contain only 8 digits.' })
+      return false
+    } else {
+      this.setState({ errorMessage: 'Please fill in all required fields.' })
+      return false
+    }
   }
-
   render() {
     const { isLoading, errorMessage, isResponseError } = this.state;
     const { theme } = this.props.state;
@@ -141,13 +111,13 @@ class Register extends Component {
               value={this.state.phoneNumber}
               placeholder={'Phone number'}
             />
-            <TextInput
+            {/* <TextInput
               style={Style.textInput}
               {...Style.textPlaceHolder}
               onChangeText={(location) => this.setState({ location })}
               value={this.state.location}
               placeholder={'Find my location'}
-            />
+            /> */}
             <TouchableHighlight
               style={[BasicStyles.btn, Style.btnWhite, { marginTop: 20 }]}
               onPress={() => this.submit()}
@@ -165,7 +135,7 @@ class Register extends Component {
                 color: Color.gray
               }}>Already have an account?
               <Text
-                  onPress={() => this.redirect('loginStack')}
+                  onPress={() => this.redirect('appOnBoardingStack')}
                   style={[BasicStyles.textWhite, Style.fontWeight('700'), Style.fontSize(14)]}>
                   {' '} Log in
               </Text>
@@ -196,4 +166,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Register);
+)(JoinWaitList);

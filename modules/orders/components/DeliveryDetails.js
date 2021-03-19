@@ -298,8 +298,26 @@ class DeliveryDetails extends Component {
                       styles.DeliveryDetailText,
                       {fontSize: BasicStyles.standardFontSize},
                     ]}>
-                    {'  '}
-                    {userLocation.address1}
+                    {' '}
+                    {
+                      userLocation.address1 !== null && userLocation.address1 !== '' 
+                      ? 
+                        userLocation.address1 
+                      : 
+                        <TouchableOpacity onPress={() => {
+                          this.props.navigate('savedAddressStack')
+                        }}>
+                          <Text style={[
+                            BasicStyles.titleText,
+                            styles.DeliveryDetailText,
+                            {
+                              fontSize: BasicStyles.standardFontSize,
+                              left: -30,
+                              top: -2
+                            },
+                          ]}>Click to add address</Text>
+                        </TouchableOpacity>
+                    }
                   </Text>
                 </View>
               )

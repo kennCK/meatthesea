@@ -156,5 +156,8 @@ export default {
   getAccessToken: apiUrl + 'getaccesstoken',
 
   // countries
-  getCountries: apiUrl + 'countries'
+  getCountries: apiUrl + 'countries',
+
+  //WaitList
+  waitListAdd: (name, email, phone) => apiUrl + `add_waitlist?FullName=${name}&Email=${email}&PhoneNumber=${phone}`
 };

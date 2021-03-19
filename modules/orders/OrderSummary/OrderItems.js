@@ -28,7 +28,7 @@ class OrderItems extends Component {
       return
     }
     let quantity = increment == false ? parseInt(data.quantity) - 1 : parseInt(data.quantity) + 1
-    let parameters = '?CustomerId=' + user.id + '&StoreId=' + storeLocation.id + '&ProductId=' + data.product_id + '&Quantity=' + quantity + '&CartType=1';
+    let parameters = '?CustomerId=' + user.id + '&CartId=' + data.id + '&Quantity=' + quantity;
     Api.postRequest(Routes.shoppingCartItemsUpdateCart + parameters, {}, (response) => {
         this.props.onUpdate()
       }, (error) => {
@@ -47,13 +47,12 @@ class OrderItems extends Component {
   }
 
   removingItem = (data) => {
+    console.log(data)
     const { user, storeLocation } = this.props.state;
     if(user == null || storeLocation == null || data == null){
       return
     }
-    let quantity = 0
-    let parameters = '?CustomerId=' + user.id + '&StoreId=' + storeLocation.id + '&ProductId=' + data.product_id + '&Quantity=' + quantity + '&CartType=1';
-    Api.postRequest(Routes.shoppingCartItemsUpdateCart + parameters, {}, (response) => {
+    Api.deleteRequest(Routes.shoppingCartItemsDelete(data.id), {}, (response) => {
         this.setState({isRemoving: false})
         this.props.onUpdate()
       }, (error) => {

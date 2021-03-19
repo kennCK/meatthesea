@@ -2,7 +2,7 @@ import { Routes } from 'common';
 import Data from 'services/Data';
 import axios from 'axios'
 const Api = {
-  authenticate: (username, password, callback, errorCallback = null) => {
+  authenticate: (username, password, callback, errorCallback) => {
     const body = {
       username: username,
       password: password,
@@ -21,7 +21,7 @@ const Api = {
       }
     })
   },
-  getAuthUser: (token, callback, errorCallback = null) => {
+  getAuthUser: (token, callback, errorCallback) => {
     const body = {
     };
     const fetchOptions = {

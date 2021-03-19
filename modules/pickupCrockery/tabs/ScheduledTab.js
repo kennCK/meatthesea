@@ -12,12 +12,12 @@ class ScheduledTab extends Component {
     let orders = this.props.orders;
     if(orders.length > 0) {
       return orders.map((order, index) => {
-        var date = new Date(order.paid_date_utc).toLocaleDateString();
+        var date = new Date(order.created_date_utc).toLocaleDateString();
         return (
           <OrderTile
             key={index}
             withIcon={this.props.withIcon}
-            orderNumber={order.id}
+            orderNumber={order.order_id}
             orderDate={date}
             data={order}
             navigate={() => this.props.navigation.navigate('scheduledPickupStack')}

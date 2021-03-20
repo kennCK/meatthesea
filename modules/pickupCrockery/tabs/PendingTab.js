@@ -17,7 +17,7 @@ class PendingTab extends Component {
           <OrderTile
             key={index}
             withIcon={this.props.withIcon}
-            orderNumber={order.id}
+            orderNumber={order.order_id}
             orderDate={date}
             data={order}
             navigate={() => this.props.navigation.navigate('pendingPickUpStack')}

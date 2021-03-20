@@ -17,7 +17,6 @@ class Register extends Component {
     super(props);
     this.state = {
       fullName: '',
-      username: '',
       email: '',
       password: '',
       location: '',
@@ -28,28 +27,29 @@ class Register extends Component {
       errorMessage: null,
       isResponseError: false,
       stores: [],
+      c_password: ''
       // floor: null
     };
   }
 
   getData = async () => {
     let checkToken = (_expiry) => {
-        if (_expiry < new Date().getTime() / 1000) {
-            this.props.logout();
-        } else {
-            this.props.navigation.navigate('homepageStack');
-        }
+      if (_expiry < new Date().getTime() / 1000) {
+        this.props.logout();
+      } else {
+        this.props.navigation.navigate('homepageStack');
+      }
     }
 
     try {
-        const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
-        const token_expiration = await AsyncStorage.getItem(Helper.APP_NAME + 'token_expiration');
-        if (token != null) {
-            this.setState({ token });
-            setInterval(() => {
-                checkToken(token_expiration)
-            }, 1000)
-        }
+      const token = await AsyncStorage.getItem(Helper.APP_NAME + 'token');
+      const token_expiration = await AsyncStorage.getItem(Helper.APP_NAME + 'token_expiration');
+      if (token != null) {
+        this.setState({ token });
+        setInterval(() => {
+          checkToken(token_expiration)
+        }, 1000)
+      }
     } catch (e) {
         // error reading value
     }
@@ -60,14 +60,14 @@ class Register extends Component {
     this.getData();
     Api.getRequest(Routes.storeRetrieveAll,
       response => {
-            console.log('stores: ', response)
-            this.setState({ isLoading: false })
-            this.setState({ stores: response.stores })
-        },
-        error => {
-            this.setState({ isLoading: false })
-            alert("Something went wrong")
-        })
+        console.log('stores: ', response)
+        this.setState({ isLoading: false })
+        this.setState({ stores: response.stores })
+      },
+      error => {
+        this.setState({ isLoading: false })
+        alert("Something went wrong")
+      })
 
   }
 
@@ -78,19 +78,15 @@ class Register extends Component {
   submit() {
     const {
       fullName,
-      username,
       email,
       password,
-      location,
       phoneNumber
     } = this.state;
     const { login } = this.props;
     const { storeLocation } = this.props.state;
-    console.log('------------------------- location --- ', storeLocation)
     if(this.validate() == true){
-      console.log(true)
         Api.postRequest(
-          Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname"+fullName+"&PhoneNumber="+phoneNumber+"&StoreId=" + storeLocation.id,
+          Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname="+fullName+"&PhoneNumber="+phoneNumber+"&StoreId=" + storeLocation.id,
           {},
           response => {
             console.log('Register response: ', response)
@@ -147,44 +143,43 @@ class Register extends Component {
   validate() {
     const {
       fullName,
-      username,
       email,
       password,
+      c_password,
       location,
       phoneNumber,
     } = this.state;
-    if (username.length >= 6 &&
-      fullName != '' &&
-      username != '' &&
-      location != '' &&
-      phoneNumber != '' &&
-      email !== '' &&
-      password !== '' &&
-      password.length >= 6 &&
-      Helper.validateEmail(email) === true) {
-      return true
-    } else if (email !== '' && Helper.validateEmail(email) === false) {
+    if (
+      fullName === '' &&
+      location === '' &&
+      phoneNumber === '' &&
+      email === '' &&
+      password === '' &&
+      password.length < 6 &&
+      !Helper.validateEmail(email)) {
+        console.log('all')
+        this.setState({ errorMessage: 'Please fill in all required fields.' })
+        return false
+    } else if(!/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u.test(fullName)){
+      this.setState({errorMessage: 'Full name should be valid.'});
+      return false;
+    }else if (!Helper.validateEmail(email)) {
       this.setState({ errorMessage: 'You have entered an invalid email address.' })
       return false
-    } else if (password !== '' && password.length < 6) {
+    } else if (password.length < 6) {
       this.setState({ errorMessage: 'Password must be atleast 6 characters.' })
       return false
-    } else if (username !== '' && username.length < 6) {
-      this.setState({ errorMessage: 'Username must be atleast 6 characters.' })
+    } else if(password !== c_password) {
+      this.setState({ errorMessage: 'Password did not match.' })
       return false
-    } else if (phoneNumber !== '' && phoneNumber.length < 6) {
-      this.setState({ errorMessage: 'Phone number must be atleast 6 characters.' })
+    } else if (!/^[0-9]{7,11}$/.test(phoneNumber)) {
+      this.setState({ errorMessage: 'Invalid phone number.' })
       return false
-    } else {
-      console.log(fullName)
-      console.log(username)
-      console.log(email)
-      console.log(password)
-      console.log(location)
-      console.log(phoneNumber)
-      this.setState({ errorMessage: 'Please fill in all required fields.' })
+    } else if(location == '') {
+      this.setState({ errorMessage: 'Please choose your location.' })
       return false
     }
+    return true;
   }
 
   render() {
@@ -219,13 +214,6 @@ class Register extends Component {
             <TextInput
               style={Style.textInput}
               {...Style.textPlaceHolder}
-              onChangeText={(username) => this.setState({ username })}
-              value={this.state.username}
-              placeholder={'Username'}
-            />
-            <TextInput
-              style={Style.textInput}
-              {...Style.textPlaceHolder}
               onChangeText={(email) => this.setState({ email })}
               value={this.state.email}
               placeholder={'Email'}
@@ -236,6 +224,14 @@ class Register extends Component {
               onChangeText={(password) => this.setState({ password })}
               value={this.state.password}
               placeholder={'Password'}
+              secureTextEntry={true}
+            />
+            <TextInput
+              style={Style.textInput}
+              {...Style.textPlaceHolder}
+              onChangeText={(c_password) => this.setState({ c_password })}
+              value={this.state.c_password}
+              placeholder={'Confirm Password'}
               secureTextEntry={true}
             />
 
@@ -294,7 +290,7 @@ class Register extends Component {
                 color: Color.gray
               }}>Already have an account?
               <Text
-                  onPress={() => this.redirect('loginStack')}
+                  onPress={() => this.redirect('appOnBoardingStack')}
                   style={[BasicStyles.textWhite, Style.fontWeight('700'), Style.fontSize(14)]}>
                   {' '} Log in
               </Text>

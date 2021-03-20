@@ -207,21 +207,7 @@ class OrderedSummary extends Component {
           <View style={styles.HeaderContainer}>
             {/* */}
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              <Text style={[Style.fontSize(BasicStyles.standardFontSize)]}>Delivery time : </Text>
-              <View style={{ paddingHorizontal: 15 }}>
-                <Text style={[Style.fontSize(BasicStyles.standardFontSize), Style.fontWeight('bold'), { color: Color.primary, borderBottomColor: Color.darkGray }]}>{deliveryTime ? deliveryTime : 'As soon as possible'}
-                  <TouchableOpacity style={[{ flex: 0 }]} onPress={this.toggleModal} >
-                      <FontAwesomeIcon icon={faEdit} style={{ color: Color.darkGray, marginRight: 10, marginLeft: 10 }} size={BasicStyles.standardFontSize} />
-                  </TouchableOpacity>
-                </Text>
-                <View
-                  style={{
-                      height: 1,
-                      width: Style.getWidth() - 190,
-                      backgroundColor: Color.black,
-                  }}
-                />
-              </View>
+              <Text style={[Style.fontSize(BasicStyles.standardFontSize)]}>Delivery time : {deliveryTime}</Text>
             </View>
             <View style={[{ marginTop: 15 },]}>
               <Text style={[{ color: Color.darkGray }, Style.fontSize(BasicStyles.standardFontSize)]}>Current wait time: around 30 mins

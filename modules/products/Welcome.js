@@ -113,7 +113,6 @@ class Welcome extends Component {
   }
 
   componentDidMount() {
-    console.log('\n\nSTORE LOCATION : ', this.props.state.storeLocation, '\n\n')
     const { filter } = this.props.state;
     const { setHomepageSettings } = this.props;
     if(filter){
@@ -502,19 +501,24 @@ class Welcome extends Component {
                   ]}>
                   {
                     userLocation !== null ?
-                      userLocation.address1 !== "" ||
-                      userLocation.address1 !== null ||
-                      userLocation.address1 !== undefined 
+                      userLocation.address1 !== "" &&
+                      userLocation.address1 !== null &&
+                      userLocation.address1 !== undefined
                     ?
                       userLocation.address1.length > 40 ?
                         userLocation.address1.substring(0, 40) + '...'
                       :
                       userLocation.address1
                     :
-                      userLocation.address2.length > 40 ?
-                        userLocation.address2.substring(0, 40) + '...'
+                      userLocation.address2 !== "" &&
+                      userLocation.address2 !== null &&
+                      userLocation.address2 !== undefined ? 
+                        userLocation.address2.length > 40 ?
+                          userLocation.address2.substring(0, 40) + '...'
+                        :
+                        userLocation.address2
                       :
-                      userLocation.address2
+                        ''
                     :
                       ''
                   }

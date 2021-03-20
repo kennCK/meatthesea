@@ -56,8 +56,12 @@ class OrderSummaryScreen extends Component {
     });
   }
 
-  componentDidMount() {
-    // console.log('cart : ', this.props.state.cart)
+  onFocusFunction = () => {
+    /**
+     * Executed each time we enter in this component &&
+     * will be executed after going back to this component 
+    */
+    this.setState({errorMessage: null});
     this.setState({date: new Date().toLocaleString()})
 
     Api.getRequest(Routes.paypalAccountRetrieve, response => {
@@ -67,6 +71,22 @@ class OrderSummaryScreen extends Component {
     }, error => {
       console.log('Retrieving Paypal Account Error: ', error)
     })
+  }
+
+
+  componentDidMount() {
+    // console.log('cart : ', this.props.state.cart)
+
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount () {
+    /**
+     * removing the event listener added in the componentDidMount()
+     */
+    this.focusListener.remove()
   }
   
   redirect = (route) => {
@@ -108,6 +128,13 @@ class OrderSummaryScreen extends Component {
     /**
      * Should not proceed to confirm order if conditions below meet
      */
+
+    if(userLocation.address1 == '' || userLocation.address1 == null || userLocation.address1 == undefined){
+      this.setState({
+        errorMessage: 'Invalid Address!'
+      })
+      return
+    }
     if(userLocation == null){
       this.setState({
         errorMessage: 'Address is required.'
@@ -145,22 +172,6 @@ class OrderSummaryScreen extends Component {
   executeOrderPlacement = async () => {
     const {userLocation, storeLocation, cart, user} = await this.props.state;
     this.setState({isLoading: true});
-    console.log('\n===================================================================\n',
-      'clientId: ',
-      this.state.paypalInfo.paypal.client_id,
-      ', clientSecret: ',
-      this.state.paypalInfo.paypal.client_secret, 
-      ', paymentType: ',
-      0,
-      ', isSandbox: ',
-      true, 
-      ', userId: ',
-      user.id, 
-      ', userLocationId: ',
-      userLocation.id,
-      ', store_id: ',
-      storeLocation.id
-    )
     await Api.postRequest(Routes.paypalCreateOrder(
         this.state.paypalInfo.paypal.client_id,
         this.state.paypalInfo.paypal.client_secret, 

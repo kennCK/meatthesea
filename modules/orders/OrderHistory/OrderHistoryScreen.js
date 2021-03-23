@@ -37,7 +37,7 @@ class OrderHistoryScreen extends Component {
       Api.getRequest(
         Routes.storeRetrieveAll,
         (response) => {
-          console.log(response.stores);
+          // console.log(response.stores);
           this.props.setStores(response.stores);
           this.setState({allStores: response.stores});
         },

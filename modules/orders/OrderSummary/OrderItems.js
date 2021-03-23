@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import {connect} from 'react-redux';
 import Api from 'services/apiv2/index.js';
-import ModalStyle from './Style'
+import Confirm from 'modules/generic/confirm';
 
 class OrderItems extends Component {
   constructor(props) {
@@ -194,86 +194,13 @@ class OrderItems extends Component {
         }
 
       </View>
-      <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.state.isAddingAddressName}
-          style={{
-            padding: 0,
-            width: '100%',
-            margin: 0
-          }}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
-        >
-          <View style={ModalStyle.insideModalCenteredView}>
-            <View style={ModalStyle.modalView}>
-              <View
-                style={
-                  ModalStyle.iconContainer
-                }
-              >
-              </View>
-              <Text style={[
-                ModalStyle.modalText
-              ]}>{this.state.alertText}</Text>
-              <View
-                style={
-                  {
-                    width: '100%',
-                    position: 'absolute',
-                    flexDirection: 'row',
-                    bottom: 0,
-                    paddingBottom: 0
-                  }
-                }
-              >
-                <TouchableHighlight
-                  activeOpacity={0.6}
-                  underlayColor={Color.lightGray}
-                  // style={{ 
-                  //   ...Style.openButton, backgroundColor: Color.primaryDark }}
-                  style={
-                    [
-                      BasicStyles.btn,
-                      ModalStyle.btnWhite
-                    ]
-                  }
-                  onPress={() => {
-                    this.setState({ isAddingAddressName: false});
-                  }}
-                >
-                  <Text style={ModalStyle.textStyle}>CANCEL</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                  activeOpacity={0.6}
-                  underlayColor={Color.lightGray}
-                  // style={{ 
-                  //   ...Style.openButton, backgroundColor: Color.primaryDark }}
-                  style={
-                    [
-                      BasicStyles.btn,
-                      ModalStyle.btnWhite,
-                      {
-                        borderLeftWidth: 1,
-                        borderLeftColor: Color.lightGray,
-                        borderBottomLeftRadius: 0,
-                        borderBottomRightRadius: 20,
-                      }
-                    ]
-                  }
-                  onPress={() => {
-                    this.removingItem(data)
-                  }}
-                >
-                  <Text style={ModalStyle.textStyle}>OK</Text>
-                </TouchableHighlight>
-              </View>
-            </View>
-          </View>
-        </Modal>
-        <Separator />
+      <Confirm
+        show={this.state.isAddingAddressName}
+        text={this.state.alertText}
+        onCancel={()=> {this.setState({ isAddingAddressName: false})} }
+        onSuccess={()=> {this.removingItem(data)} }
+      />
+      <Separator />
       </View>
     )
   }

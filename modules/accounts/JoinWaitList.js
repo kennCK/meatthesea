@@ -59,8 +59,8 @@ class JoinWaitList extends Component {
     } else if (email != '' && Helper.validateEmail(email) == false) {
       this.setState({ errorMessage: 'You have entered an invalid email address.' })
       return false
-    } else if (phoneNumber.substr(0, 2) != '853' && phoneNumber.length != 8) {
-      this.setState({ errorMessage: 'Phone Number must contain only 8 digits.' })
+    } else if (!/^[0-9]{7,11}$/.test(phoneNumber)) {
+      this.setState({ errorMessage: 'Invalid phone number.' })
       return false
     } else {
       this.setState({ errorMessage: 'Please fill in all required fields.' })

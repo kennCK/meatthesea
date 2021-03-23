@@ -117,7 +117,7 @@ export default {
   addressItems: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    height: 30,
+    minHeight: 30,
     marginTop: 5,
     marginBottom: 5
   }

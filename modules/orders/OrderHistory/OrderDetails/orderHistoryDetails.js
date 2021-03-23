@@ -34,7 +34,7 @@ class OrderHistoryDetails extends Component {
   }
 
   filterOrder = () => {
-    // console.log('-----> ordered items <----- ', this.props.state.orderDetails)
+    console.log('\n\n-----> ordered items <----- ', this.props.state.orderDetails, '\n---------------------------------------------------------------------------------')
     /**
      * 
      * categorization of ordered products for restaurant and deli-shop
@@ -221,14 +221,14 @@ class OrderHistoryDetails extends Component {
           }
           {this.itemMenu('store')}
           <View style={Style.totalSection}>
-            <Text style={Style.deliveryCondition}> Contactless delivery: -^-</Text>
+            <Text style={Style.deliveryCondition}> Contactless delivery: ____</Text>
             <View style={Style.flexDirectionBetween}>
               <Text> Sub total </Text>
               <Text> {data.customer_currency_code} { data.order_subtotal_incl_tax } </Text>
             </View>
             <View style={Style.flexDirectionBetween}>
               <Text> Delivery fee </Text>
-              <Text> {data.customer_currency_code} -^- </Text>
+              <Text> {data.customer_currency_code} {data.delivery_fee} </Text>
             </View>
             <View style={Style.flexDirectionBetween}>
               <Text> Total </Text>
@@ -251,7 +251,17 @@ class OrderHistoryDetails extends Component {
                 size={BasicStyles.iconSize}
                 style={{color: Color.primary, marginRight: 5}}
               />
-              <Text> {data.shipping_address.address1 !== "" ? data.shipping_address.address1 : data.shipping_address.address2} </Text>
+              <Text> {
+                data.shipping_address.address1 !== "" 
+                ? 
+                  data.shipping_address.address1.length < 45 
+                  ? 
+                    data.shipping_address.address1
+                  : 
+                    data.shipping_address.address1.substring(0, 45) + '...'
+                : 
+                  data.shipping_address.address2
+              } </Text>
             </View>
             <View style={Style.addressItems}>
               <FontAwesomeIcon
@@ -259,7 +269,7 @@ class OrderHistoryDetails extends Component {
                 size={BasicStyles.iconSize}
                 style={{color: Color.primary, marginRight: 5}}
               />
-              <Text> Delivery time: -^- </Text>
+              <Text> Delivery time: {data.delivery_time_requested} </Text>
             </View>
             <View style={Style.addressItems}>
               <FontAwesomeIcon
@@ -267,7 +277,13 @@ class OrderHistoryDetails extends Component {
                 size={BasicStyles.iconSize}
                 style={{color: Color.primary, marginRight: 5}}
               />
-              <Text> Payment method: {data.payment_method_system_name} </Text>
+              <Text> Payment method: {
+                data.payment_method_system_name.length < 25 
+                ?
+                  data.payment_method_system_name
+                :
+                  data.payment_method_system_name.substring(0, 23) + '...'
+              } </Text>
             </View>
           </View>
         </ScrollView>

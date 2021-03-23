@@ -46,6 +46,7 @@ class OrderSummaryScreen extends Component {
       return
     }
     Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
+      console.log('testing::, ', response)
         const { setCart } = this.props;
         setCart(response.shopping_carts)
         this.setState({
@@ -71,6 +72,8 @@ class OrderSummaryScreen extends Component {
     }, error => {
       console.log('Retrieving Paypal Account Error: ', error)
     })
+
+    this.retrieveCart();
   }
 
 
@@ -344,7 +347,7 @@ class OrderSummaryScreen extends Component {
           <View >
             {
               cart && cart.map((cartItem, idx) => {
-                return <OrderItems key={idx} data={cartItem} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>
+                return <OrderItems key={idx} data={cartItem} editable={true} updateOrder={() => this.updateTotal()} onUpdate={this.retrieveCart}/>
               })
             }
           </View>
@@ -359,7 +362,7 @@ class OrderSummaryScreen extends Component {
         <View style={styles.MainContainer}>
           <TouchableHighlight
             onPress={() => { this.placeOrder() }}
-            disabled={this.props.state.orderDetails === null ? true : false}
+            disabled={this.props.state.orderDetails === null || this.props.state.cart === null || this.props.state.cart.length == 0 ? true : false}
             style={[BasicStyles.btn, Style.btnPrimary, { borderRadius: 0, width: Style.getWidth() - 30 }]}
             underlayColor={Color.gray}>
             <Text style={[{ color: Color.tertiary }, Style.fontWeight('bold'), Style.fontSize(BasicStyles.standardFontSize)]}>

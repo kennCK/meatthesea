@@ -5,7 +5,6 @@ import {
   Text,
   ScrollView,
   Image,
-  Alert,
   TouchableHighlight,
   Dimensions
 } from 'react-native';
@@ -20,6 +19,7 @@ import Modal from 'react-native-modal';
 import {connect} from 'react-redux';
 import Counter from 'modules/products/components/Counter.js';
 import { color } from 'react-native-reanimated';
+import Alert from 'modules/generic/alert';
 
 const width = Math.round(Dimensions.get('window').width);
 
@@ -72,6 +72,7 @@ class Menu extends Component {
       return;
     }
     if (search == null || search == '' || storeLocation == null) {
+      console.log('\n...............RETRIEVING...................\n\n')
       this.props.load(true)
       Api.getRequest(
         Routes.productsRetrieve + '?categoryid=' + filter.id,
@@ -85,6 +86,7 @@ class Menu extends Component {
         },
       );
     } else {
+      console.log('\n...............SEARCHING...................\n\n')
       let parameters =
         '?Keyword=' +
         search +
@@ -336,7 +338,8 @@ class Menu extends Component {
                   return (
                     <TouchableOpacity
                       onPress={() => this.selectItem(item)}
-                      key={idx}>
+                      key={idx} 
+                    >
                       <View style={Style.menuContainer}>
                         <Image
                           source={{uri: item.images[0] !== undefined && item.images[0] !== null ? item.images[0].src : '#'}}
@@ -370,7 +373,7 @@ class Menu extends Component {
               style={{
                 borderWidth: 1,
                 paddingTop: 0,
-                borderColor: Color.white,
+                borderWidth: 0,
                 borderRadius: 20,
                 position: 'absolute',
                 top: 20,
@@ -454,58 +457,12 @@ class Menu extends Component {
             </TouchableHighlight>
           </View>
         </Modal>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.state.isAddingAddressName}
-          style={{
-            padding: 0,
-            width: '100%',
-            margin: 0
-          }}
-        >
-          <View style={Style.insideModalCenteredView}>
-            <View style={Style.modalView}>
-              <View
-                style={
-                  Style.iconContainer
-                }
-              >
-              </View>
-              <Text style={[
-                Style.modalText
-              ]}>{this.state.alertText}</Text>
-              <View
-                style={
-                  {
-                    width: '100%',
-                    position: 'absolute',
-                    bottom: 0,
-                    paddingBottom: 0
-                  }
-                }
-              >
-                <TouchableHighlight
-                  activeOpacity={0.6}
-                  underlayColor={Color.lightGray}
-                  // style={{ 
-                  //   ...Style.openButton, backgroundColor: Color.primaryDark }}
-                  style={
-                    [
-                      BasicStyles.btn,
-                      Style.btnWhite
-                    ]
-                  }
-                  onPress={() => {
-                    this.setState({ isAddingAddressName: false, visibleModal: false, });
-                  }}
-                >
-                  <Text style={Style.textStyle}>Ok</Text>
-                </TouchableHighlight>
-              </View>
-            </View>
-          </View>
-        </Modal>
+        <Alert
+          show={this.state.isAddingAddressName}
+          text={this.state.alertText}
+          onClick={()=> this.setState({ isAddingAddressName: false}) }
+          alertType={'primary'}
+        />
       </View>
     );
   }

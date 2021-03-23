@@ -20,7 +20,7 @@ class PendingTab extends Component {
             orderNumber={order.order_id}
             orderDate={date}
             data={order}
-            navigate={() => this.props.navigation.navigate('pendingPickUpStack')}
+            navigate={() => this.props.navigation.navigate('pendingPickUpStack', {id: order.order_id})}
           />
         );
       });

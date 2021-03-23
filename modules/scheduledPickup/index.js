@@ -13,17 +13,19 @@ class ScheduledPickup extends Component {
   constructor() {
     super();
     this.state = {
-      address: ''
+      address: '',
+      order_number: null
     };
   }
 
-  async componentDidMount() {
-    await this.getOrders();
+  componentDidMount() {
+    this.getOrders();
   }
 
   getOrders = async () => {
-    await Api.getRequest(
-      Routes.ordersRetrieve + '?limit=' + 1,
+    const {id} = this.props.navigation.state.params;
+    Api.getRequest(
+      Routes.ordersRetrieveById(id),
       response => {
         const address =
           response.orders[0].shipping_address.address1 +
@@ -33,7 +35,8 @@ class ScheduledPickup extends Component {
           response.orders[0].shipping_address.province;
         this.setState(
           {
-            address,
+            address: address,
+            order_number: response.orders[0].id
           },
           () => {
             console.log('RESPONSE', this.state.address);
@@ -53,7 +56,7 @@ class ScheduledPickup extends Component {
           minHeight: height
         }]}>
           <View style={styles.OrderNumberContainer}>
-            <Text style={styles.OrderNumberStyle}>Order Number 1234</Text>
+            <Text style={styles.OrderNumberStyle}>Order Number {this.state.order_number}</Text>
           </View>
 
           <View style={styles.ScheduleDetailsContainer}>

@@ -20,7 +20,7 @@ class ScheduledTab extends Component {
             orderNumber={order.order_id}
             orderDate={date}
             data={order}
-            navigate={() => this.props.navigation.navigate('scheduledPickupStack')}
+            navigate={() => this.props.navigation.navigate('scheduledPickupStack', {id: order.order_id})}
           />
         );
       });

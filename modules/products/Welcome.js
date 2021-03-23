@@ -280,7 +280,7 @@ class Welcome extends Component {
       stars.push(
         <TouchableOpacity onPress={() => this.submitRating(i)} key={'start' + i}>
           <FontAwesomeIcon
-          icon={ i <= this.state.ratingIndex ? faStar : faStarRegular}
+          icon={ i <= this.state.ratingIndex === i ? faStar : faStarRegular}
           size={40}
           style={{
             color: Color.secondary
@@ -342,6 +342,7 @@ class Welcome extends Component {
               }}
             >
               <TouchableOpacity
+                disabled={this.state.value !== '' ? false : true}
                 style={{
                   backgroundColor: Color.lightYellow,
                   width: '90%',
@@ -373,9 +374,46 @@ class Welcome extends Component {
     let deliveryTime = moment(data).format('HH:mm')
     setSelectedDeliveryTime(deliveryTime)
   }
+
+  searchProduct = () => {
+    const { storeLocation, filter , search} = this.props.state
+    const { setSearch, setHomepageSettings } = this.props;
+    if(search.length > 3){
+      setHomepageSettings({
+        type: 1,
+        selectedMenu: 1
+      })
+      setSearch(search)
+      let parameters =
+        '?Keyword=' +
+        search +
+        '&StoreId=' +
+        storeLocation.id +
+        (filter === null ? '' : `&CategoryIds=${filter.id}`)
+      Api.getRequest(
+        Routes.productSearch + parameters,
+        response => {
+          let categories  = [];
+          // response.products.forEach(el => {
+          //   categories.push(el.)
+          // })
+          console.log(`\n\n-------------------------${JSON.stringify(response)}-----------------------------\n\n`)
+          const { setMenuProducts } = this.props
+          setMenuProducts(response.products);
+        },
+        error => {
+          console.log(error);
+        },
+      );
+    }else{
+      setSearch(null)
+      setHomepageSettings(null)
+    }
+  }
   render() {
     const { homepage, search, cart, crockeries, user, userLocation, showRating } = this.props.state;
     const { isLoading } = this.state;
+    const { setSearch } = this.props;
     return (
       <SafeAreaView style={Style.MainContainer}>
         <Modal
@@ -542,7 +580,10 @@ class Welcome extends Component {
             }
           ]}>
             <View style={Style.searchBar}>
-              <TouchableOpacity style={[{flex: 1}]}>
+              <TouchableOpacity 
+                style={[{flex: 1}]}
+                onPress={() => {this.searchProduct()}}
+              >
                 <FontAwesomeIcon
                   icon={faSearch}
                   style={{color: Color.darkGray, marginLeft: 10}}
@@ -552,20 +593,12 @@ class Welcome extends Component {
               <TextInput
                 style={[{height: 37, flex: 7, width: '100%'}]}
                 placeholder={'Search'}
-                onChangeText={(search) => {
-                    this.setState({search})
-                    const { setSearch, setHomepageSettings } = this.props;
-                    if(search.length > 3){
-                      setSearch(search)
-                      setHomepageSettings({
-                        type: 1,
-                        selectedMenu: 1
-                      })
-                    }else{
-                      setSearch(null)
-                      setHomepageSettings(null)
+                onChangeText={(searches) => {
+                    setSearch(searches)
+                    if(search === null || search === '') {
+                      console.log('testing')
+                      this.retrieveProducts();
                     }
-                    
                   }
                 }
                 value={search}

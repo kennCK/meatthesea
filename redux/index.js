@@ -124,7 +124,7 @@ const initialState = {
   cart: null,
   orderDetails: null,
   userLocation: null,
-  paymentMethod: null,
+  paymentMethod: {type: 'PayPal', last4: ''},
   crockeries: null,
   deliveryTime: 'ASAP',
   order: null,

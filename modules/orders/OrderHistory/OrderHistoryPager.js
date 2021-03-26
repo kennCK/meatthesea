@@ -32,50 +32,68 @@ class Pager extends Component {
       pageNumber: 1,
       isLoading: false,
       completed: [],
-      pending: []
+      pending: [],
+      pendingLength: 0
     };
   }
 
-  async componentDidMount() {
-    this.getOrders();
+  componentDidMount() {
+    this.completedOrdersRetrieve();
+    this.pendingOrdersLength();
   }
 
-  getOrders = () => {
-    this.setState({
-      isLoading: true,
-    });
-    Api.getRequest(
-      // Routes.ordersRetrieve + '?limit=' + 1 + '&page=' + this.state.pageNumber, // use the route below
-      Routes.ordersRetrieveByCustomer(this.props.state.user.id),
-      response => {
-        // console.log('orders ', response)
-        this.setState({completed: [], pending: []})
-        response.orders.forEach(el => {
-          if(el.order_status.toLowerCase() == 'pending') {
-            this.state.pending.push(el)
-          }else if(el.order_status.toLowerCase() == 'complete') {
-            this.state.completed.push(el)
-          }
-        })
-        this.setState(prevState => ({
-          orders: response.orders,
-          isLoading: false,
-        }));
-      },
-      error => {
-        console.log('error', error);
-      },
-    );
-  };
+  pendingOrdersLength = () => {
+    const {user} = this.props.state
+    let params = `?Status=10&CustomerId=${user.id}`;
+    Api.getRequest(Routes.ordersCount + params , response => {
+      this.setState({pendingLength : response.count})
+    }, error => {
+      console.log('Retrieve pending count error: ', error)
+    })
+  }
+
+  pendingOrdersRetrieve = () => {
+    const {user} = this.props.state
+    let params = `?Status=10&CustomerId=${user.id}`;
+    this.setState({isLoading: true});
+    Api.getRequest(Routes.ordersRetrieve + params , response => {
+      this.setState({pending : response.orders})
+      this.setState({isLoading: false});
+    }, error => {
+      console.log('Retrieve orders error: ', error)
+    })
+  }
+
+  completedOrdersRetrieve = () => {
+    const {user} = this.props.state
+    let params = `?Status=30&CustomerId=${user.id}`;
+    this.setState({isLoading: true});
+    Api.getRequest(Routes.ordersRetrieve + params , response => {
+      this.setState({completed : response.orders})
+      this.setState({isLoading: false});
+    }, error => {
+      console.log('Retrieve orders error: ', error)
+    })
+  }
 
   handlePagination = () => {
     this.setState({pageNumber: this.state.pageNumber + 1}, () => {
-      this.getOrders();
+      if(this.state.activeIndex === 0) {
+        this.completedOrdersRetrieve()
+      }else if(this.state.activeIndex === 1){
+        this.pendingOrdersRetrieve()
+      }
     });
   };
 
   setActiveIndex = (index) => {
-    this.setState({activeIndex: index})
+    this.setState({activeIndex: index}, () => {
+      if(this.state.activeIndex === 0) {
+        this.completedOrdersRetrieve()
+      }else if(this.state.activeIndex === 1){
+        this.pendingOrdersRetrieve()
+      }
+    })
   }
 
   onTabChange = i => {
@@ -161,7 +179,7 @@ class Pager extends Component {
                       marginLeft: 10
                     }]}>
                       <Text style={styles.NotificationTextStyle}>
-                        {this.state.pending.length}
+                        {this.state.pendingLength}
                       </Text>
                     </View>
                   )}
@@ -170,7 +188,31 @@ class Pager extends Component {
             ))}
           </ScrollView>
         </View>
-        <View>{this.getCurrentTab()}</View>
+        <View>
+          { this.state.activeIndex === 0 && 
+            <CompletedTab
+              height={height}
+              isLoading={this.state.isLoading}
+              orders={this.state.completed}
+              handlePagination={this.handlePagination}
+              resetPage={this.resetPage}
+              isLoading={this.state.isLoading}
+              navigation={this.props.navigation}
+            />
+          }
+          { this.state.activeIndex === 1 && 
+            <PendingTab
+              height={height}
+              isLoading={this.state.isLoading}
+              orders={this.state.pending}
+              handlePagination={this.handlePagination}
+              resetPage={this.resetPage}
+              isLoading={this.state.isLoading}
+              withIcon={true}
+              navigation={this.props.navigation}
+            />
+          }
+        </View>
         {isLoading ? <Spinner mode="overlay"/> : null }
       </View>
     );

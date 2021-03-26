@@ -3,10 +3,17 @@ import {Text, FlatList, View, ScrollView} from 'react-native';
 import OrderTile from '../OrderTile';
 import {ActivityIndicatorComponent} from 'react-native';
 import { connect } from 'react-redux';
+import Api from 'services/apiv2/index.js';
+import {Routes} from 'common';
+import { Spinner } from 'components';
 
 class PendingTab extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      orders: [],
+      isLoading: false,
+    }
   }
 
   seeDetails = (data) => {
@@ -16,9 +23,8 @@ class PendingTab extends Component {
   }
 
   displayOrders = () => {
-    let orders = this.props.orders;
-    if(orders.length > 0){
-      return orders.map((order, index) => {
+    if(this.props.orders.length > 0){
+      return this.props.orders.map((order, index) => {
         var date = new Date(order.paid_date_utc).toLocaleDateString();
         return (
           <OrderTile
@@ -35,9 +41,11 @@ class PendingTab extends Component {
   };
 
   render() {
+    const{isLoading} = this.state
     return (
       <ScrollView
         style={{height: '100%'}}
+        showsVerticalScrollIndicator={false}
         onScroll={event => {
           let scrollingHeight =
             event.nativeEvent.layoutMeasurement.height +
@@ -57,6 +65,7 @@ class PendingTab extends Component {
         <View style={{height: '100%', minHeight: this.props.height}}>
           {this.displayOrders()}
         </View>
+        {isLoading ? <Spinner mode="overlay"/> : null }
       </ScrollView>
     );
   }

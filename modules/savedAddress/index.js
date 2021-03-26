@@ -69,11 +69,11 @@ class SavedAddress extends Component {
       if (address) {
         // console.log('address response: ', address)
         this.setState({address: address})
-        address.map((el, ndx) => {
-          if(el.default_address) {
-            this.setState({selectedTile: ndx})
-          }
-        });
+        // address.map((el, ndx) => {
+        //   if(el.default_address) {
+        //     this.setState({selectedTile: ndx})
+        //   }
+        // });
       }
     }, error => {
       console.log('Retrieve addresses error: ', error);
@@ -91,14 +91,11 @@ class SavedAddress extends Component {
     const { user, location } = await this.props.state;
     const { countries } = await this.state
     let temp = location.address.replace(/ /g, '');
-
     
     let countryObject = countries.find(el => {
       return el.country_name.toLowerCase() === location.country.toLowerCase()
     })
-    console.log('-------------------------:::TESING:::-------------------------')
-    console.log(user)
-    console.log('-------------------------:::TESING:::-------------------------')
+
     Api.postRequest(
       Routes.customerAddAddress(
         user.id, user.first_name + ' ' + user.last_name, 

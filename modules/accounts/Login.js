@@ -21,7 +21,7 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "elia.virtucio@gukodigital.com",
+      email: '',
       password: null,
       isLoading: false,
       token: null,
@@ -47,11 +47,11 @@ class Login extends Component {
       const { address } = response
       if (address) {
         this.setState({address: address})
-        address.map((el, ndx) => {
-          if(el.default_address) {
-            this.props.setUserLocation(el)
-          }
-        });
+        // address.map((el, ndx) => {
+        //   if(el.default_address) {
+        //     this.props.setUserLocation(el)
+        //   }
+        // });
       }
     }, error => {
       console.log('Retrieve addresses error: ', error);

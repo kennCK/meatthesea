@@ -72,7 +72,7 @@ class DeliveryDetails extends Component {
                     Style.fontSize(BasicStyles.standardFontSize),
                     Style.fontWeight('bold'),
                   ]}>
-                  Add cultery
+                  Add cutlery
                 </Text>
                 <Text
                   style={{
@@ -402,7 +402,7 @@ class DeliveryDetails extends Component {
                     },
                   ]}>
                   {'  '}
-                  {'Payment Method: ' + (paymentMethod ? paymentMethod.type + ' ending ' + paymentMethod.last4 : 'Click to add payment method')}
+                  {'Payment Method: ' + (paymentMethod ? paymentMethod.type : 'Click to add payment method')}
                 </Text>
               </View>
             </TouchableOpacity>

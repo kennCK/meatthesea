@@ -129,14 +129,12 @@ class AppOnBoarding extends Component {
     this.navigate(event.url);
   }
   navigate = (url) => { // E
-    console.log(' ------------- DEEP LINK R O U T E ------------- ', url)
     const { navigate } = this.props.navigation;
     if(url !== null){
       const route = url.replace(/.*?:\/\//g, '');
       const routeName = route.split('/')[0];
       console.log(routeName)
       if (routeName === 'mts.meatthesea.com' && route.split('/')[2] === 'paypalSuccess') {
-        console.log('\n\ntesting ============================================================================== \n\n')
         navigate('orderPlacedStack')
       };
     }
@@ -212,9 +210,8 @@ class AppOnBoarding extends Component {
     return (
       <ScrollView style={Style.ScrollView}>
         {isLoading ? <Spinner mode="overlay" /> : null}
-
-        <View style={Style.MainContainer}>
           <Header params={'AppOnBoarding'} lg></Header>
+          <View style={Style.MainContainer}>
           {errorMessage != null && (
             <View
               style={{

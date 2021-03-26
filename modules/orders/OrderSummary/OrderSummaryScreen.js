@@ -19,6 +19,8 @@ import Api from 'services/apiv2/index.js';
 import ModalStyle from '../components/style';
 import {Spinner} from 'components';
 import moment from 'moment';
+import AddressModal from 'modules/generic/addAddressModal';
+import Confirm from 'modules/generic/confirm';
 
 const width = Math.round(Dimensions.get('window').width);
 const height = Math.round(Dimensions.get('window').height);
@@ -36,7 +38,12 @@ class OrderSummaryScreen extends Component {
       isSubmit: 0,
       paypalInfo: {},
       isLoading: false,
-      date: ''
+      date: '',
+      countries: [],
+      isAddingAddressName: false,
+      value: '',
+      postalCode: '',
+      showAddAddressConfirmation: false
     };
   }
   
@@ -60,9 +67,10 @@ class OrderSummaryScreen extends Component {
   onFocusFunction = () => {
     /**
      * Executed each time we enter in this component &&
-     * will be executed after going back to this component 
+     * will be executed after going back to this component
     */
-    this.setState({errorMessage: null});
+    this.retrieveCountries();
+    this.setState({errorMessage: null, postalCode: this.props.state.location.postal});
     this.setState({date: new Date().toLocaleString()})
 
     Api.getRequest(Routes.paypalAccountRetrieve, response => {
@@ -131,19 +139,20 @@ class OrderSummaryScreen extends Component {
     /**
      * Should not proceed to confirm order if conditions below meet
      */
+    
+    // if(userLocation == null){
+    //   this.setState({
+    //     errorMessage: 'Address is required.'
+    //   })
+    //   return
+    // }
 
-    if(userLocation.address1 == '' || userLocation.address1 == null || userLocation.address1 == undefined){
-      this.setState({
-        errorMessage: 'Invalid Address!'
-      })
-      return
-    }
-    if(userLocation == null){
-      this.setState({
-        errorMessage: 'Address is required.'
-      })
-      return
-    }
+    // if(userLocation.address1 == '' || userLocation.address1 == null || userLocation.address1 == undefined){
+    //   this.setState({
+    //     errorMessage: 'Invalid Address!'
+    //   })
+    //   return
+    // }
     // if(paymentMethod == null){
     //   this.setState({
     //     errorMessage: 'Payment Method is required.'
@@ -169,7 +178,63 @@ class OrderSummaryScreen extends Component {
       StoreId: storeLocation.id,
       AddressId: 1
     }
-    this.executeOrderPlacement()
+    // this.executeOrderPlacement()
+    if(userLocation === null || userLocation === '' || userLocation === undefined) {
+      this.setState({showAddAddressConfirmation: true})
+    }else{
+      this.executeOrderPlacement()
+    }
+  }
+
+  retrieveCountries = () => {
+    Api.getRequest(Routes.getCountries, response => {
+      this.setState({countries: response.countries})
+    }, error => {
+      console.log('RETRIEVE COUNTRIES ERROR: ', error)
+    })
+  }
+
+  saveAddress = () => {
+    const {userLocation} = this.props.state
+    if(userLocation === null || userLocation === '' || userLocation === undefined){
+      console.log('Saving Address First....')
+      const { user, location } = this.props.state;
+      const { countries } = this.state
+      let temp = location.address.replace(/ /g, '');
+      
+      let countryObject = countries.find(el => {
+        return el.country_name.toLowerCase() === location.country.toLowerCase()
+      })
+
+      // CustomerId, FullName, PhoneNumber, Address, AddressName, Latitude, Longitude, City, PostalCode, CountryId
+  
+      Api.postRequest(
+        Routes.customerAddAddress(
+          user.id, 
+          user.first_name + ' ' + user.last_name, 
+          null, 
+          location.address, 
+          this.state.value, 
+          location.latitude, 
+          location.longtitude, 
+          location.locality, 
+          this.state.postalCode, 
+          countryObject !== null && countryObject !== undefined ? countryObject.id : 131
+        ),
+        {}, response => {
+          console.log("Adding address response: ", response);
+          let data = response.address
+          const{setUserLocation} = this.props
+          this.setState({isAddingAddressName: false, value: '', postalCode: ''})
+          setUserLocation(response.address[data.length - 1]);
+          this.executeOrderPlacement()
+        }, error => {
+          console.log("Adding address error: ", error);
+        });
+    }else{
+      console.log("Executing checkout...");
+      this.executeOrderPlacement()
+    }
   }
   
   executeOrderPlacement = async () => {
@@ -191,7 +256,8 @@ class OrderSummaryScreen extends Component {
         let approve = response.paypal.links.filter(el => {
           return el.rel.toLowerCase() === 'approve';
         })
-        this.openURL(approve[0].href);
+        this.props.navigation.navigate('webViewStack', {link: approve[0].href});
+        // this.openURL(approve[0].href);
     }, error => {
       this.setState({isLoading: false});
       console.log('Creating Paypal Order Error: ', error)
@@ -218,10 +284,27 @@ class OrderSummaryScreen extends Component {
     let deliveryTime = moment(deliveryTimeRequested).format('HH:mm')
     setSelectedDeliveryTime(deliveryTime)
   }
+
+  handleName = (value) => {
+    this.setState({value: value})
+  }
+
+  handleCode = (value) => {
+    this.setState({postalCode: value});
+  }
+
+  onAdd = () => {
+    console.log('Adding Address::')
+    this.saveAddress()
+  }
+
+  onClose = () => {
+    this.setState({isAddingAddressName: false})
+  }
   
   render() {
-    const { cart, orderDetails, deliveryTime } = this.props.state;
-    const { errorMessage, isLoading, date } = this.state;
+    const { cart, orderDetails, deliveryTime, location } = this.props.state;
+    const { isAddingAddressName, errorMessage, isLoading, date, value, postalCode, showAddAddressConfirmation } = this.state;
     return (
       <View style={{ flex: 1 }} key={this.state.key}>
         <Modal visible={this.state.isSubmit > 0 ? true : false}>
@@ -370,6 +453,25 @@ class OrderSummaryScreen extends Component {
             </Text>
           </TouchableHighlight>
         </View>
+        <Confirm
+          show={showAddAddressConfirmation}
+          text={'Do you want to use your current Location?'}
+          onCancel={()=> {this.setState({ showAddAddressConfirmation: false})}}
+          onSuccess={()=> {
+            this.setState({ showAddAddressConfirmation: false, isAddingAddressName: true})
+          }}
+        />
+        <AddressModal
+          {...this.props}
+          onAdd={this.onAdd}
+          onClose={this.onClose}
+          addressName={value}
+          address={location.address}
+          isVisible={isAddingAddressName}
+          postalCode={postalCode}
+          handleName={this.handleName}
+          handleCode={this.handleCode}
+        />
         {isLoading ? <Spinner mode="overlay"/> : null }
       </View>
     );
@@ -386,7 +488,8 @@ const mapDispatchToProps = (dispatch) => {
     setCart: (cart) => dispatch(actions.setCart(cart)),
     setOrderDetails: (details) => dispatch(actions.setOrderDetails(details)),
     setSelectedDeliveryTime: (time) => dispatch(actions.setSelectedDeliveryTime(time)),
-    setPaypalSuccessData: (paypalSuccessData) => dispatch(actions.setPaypalSuccessData(paypalSuccessData))
+    setPaypalSuccessData: (paypalSuccessData) => dispatch(actions.setPaypalSuccessData(paypalSuccessData)),
+    setUserLocation: (userLocation) => dispatch(actions.setUserLocation(userLocation))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(OrderSummaryScreen);

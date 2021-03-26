@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TouchableHighlight, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableHighlight, Dimensions, ScrollView } from 'react-native';
 import { BasicStyles, Color, Routes } from 'common';
 import Modal from "react-native-modal";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -64,7 +64,8 @@ class DeliveryDetails extends Component{
           transparent={true}
           visible={this.props.state}
           style={{
-            height: height
+            height: height,
+            width: '100%'
           }}
           >
           <View style={ModalStyle.insideModalCenteredView}>
@@ -207,21 +208,26 @@ class DeliveryDetails extends Component{
                     ))
                   }  
                   </RadioForm> */}
-                  {
-                    this.props.addresses.map((obj, index) => {
-                      return <AddressCard
-                        key={index}
-                        id={index}
-                        selectedTile={index === this.props.defaultIndex ? true : false}
-                        addressType={obj.address_name}
-                        address={(obj.address1 === '' || obj.address1 === null) ? obj.address2 : obj.address1}
-                        onSelect={() => {
-                            this.props.selectHandler(index)
+                  <ScrollView
+                    style={{height: 150}}
+                    showsVerticalScrollIndicator={false}
+                  >
+                    {
+                      this.props.addresses.map((obj, index) => {
+                        return <AddressCard
+                          key={index}
+                          id={index}
+                          selectedTile={index === this.props.defaultIndex ? true : false}
+                          addressType={obj.address_name}
+                          address={(obj.address1 === '' || obj.address1 === null) ? obj.address2 : obj.address1}
+                          onSelect={() => {
+                              this.props.selectHandler(index)
+                            }
                           }
-                        }
-                      />
-                    })
-                  }
+                        />
+                      })
+                    }
+                  </ScrollView>
                   <TouchableOpacity
                     onPress={() => this.props.click('redirecting')}
                   >

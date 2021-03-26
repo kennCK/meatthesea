@@ -34,6 +34,7 @@ import {Routes} from 'common';
 import {connect} from 'react-redux';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment';
+import CurrentLocation from 'components/Location/location';
 
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component {
@@ -61,11 +62,12 @@ class Welcome extends Component {
     };
   }
 
-  onFocusFunction = () => {
+   onFocusFunction = async () => {
     /**
      * Executed each time we enter in this component &&
      * will be executed after going back to this component 
     */
+
     this.retrieveCart()
     this.fetchAddress()
   }
@@ -150,17 +152,17 @@ class Welcome extends Component {
         console.log('address response: ', address)
         address.forEach((el, ndx) => {
           address['label'] = el.address_name
-          if(el.default_address) {
-            this.setState({defaultIndex: ndx})
-          }
+          // if(el.default_address) {
+          //   this.setState({defaultIndex: ndx})
+          // }
         });
         this.setState({addresses: address})
-        const {setUserLocation} = this.props
-        if(this.state.addresses[this.state.defaultIndex] !== undefined && this.state.addresses[this.state.defaultIndex] !== null) {
-          setUserLocation(this.state.addresses[this.state.defaultIndex])
-        }else {
-          setUserLocation(null);
-        }
+        // const {setUserLocation} = this.props
+        // if(this.state.addresses[this.state.defaultIndex] !== undefined && this.state.addresses[this.state.defaultIndex] !== null) {
+        //   setUserLocation(this.state.addresses[this.state.defaultIndex])
+        // }else {
+        //   setUserLocation(null);
+        // }
       }
     }, error => {
       console.log('Retrieve addresses error: ', error);
@@ -411,18 +413,21 @@ class Welcome extends Component {
     }
   }
   render() {
-    const { homepage, search, cart, crockeries, user, userLocation, showRating } = this.props.state;
+    const { homepage, search, cart, crockeries, user, userLocation, showRating, location } = this.props.state;
     const { isLoading } = this.state;
     const { setSearch } = this.props;
     return (
       <SafeAreaView style={Style.MainContainer}>
+        <CurrentLocation />
         <Modal
           isVisible={this.state.visibleModal}
           style={Style.modal}
           onRequestClose={() => {
             this.setState({visibleModal: false});
           }}>
+          {location === null && userLocation === null ? <Spinner mode="overlay" style={{zIndex: 999}}/> : null }
           <TouchableHighlight
+            disabled={location === null && userLocation === null}
             activeOpacity={0.6}
             underlayColor={Color.lightGray}
             style={{
@@ -465,9 +470,13 @@ class Welcome extends Component {
             <View style={Style.TextContainer}>
               <Text style={[Style.textSecondary]}>
                 Products from our deli store right at your finger tips
+                {/* {this.props.state.location !== null && this.props.state.location !==  '' && this.props.state.location !==  undefined ? this.props.state.location.address : ''} */}
               </Text>
             </View>
             <TouchableOpacity
+              disabled={location === null && userLocation === null}
+              activeOpacity={0.6}
+              underlayColor={Color.lightGray}
               style={[
                 Style.btnWhite
               ]}
@@ -489,6 +498,9 @@ class Welcome extends Component {
               </Text>
             </View>
             <TouchableHighlight
+              disabled={location === null && userLocation === null}
+              activeOpacity={0.6}
+              underlayColor={Color.lightGray}
               style={[
                 Style.btnWhite
               ]}
@@ -538,27 +550,41 @@ class Welcome extends Component {
                     {fontSize: BasicStyles.standardFontSize},
                   ]}>
                   {
-                    userLocation !== null ?
+                    userLocation !== null 
+                    ?
                       userLocation.address1 !== "" &&
                       userLocation.address1 !== null &&
                       userLocation.address1 !== undefined
-                    ?
-                      userLocation.address1.length > 40 ?
-                        userLocation.address1.substring(0, 40) + '...'
-                      :
-                      userLocation.address1
-                    :
-                      userLocation.address2 !== "" &&
-                      userLocation.address2 !== null &&
-                      userLocation.address2 !== undefined ? 
-                        userLocation.address2.length > 40 ?
-                          userLocation.address2.substring(0, 40) + '...'
+                      ?
+                        userLocation.address1.length > 40 
+                        ?
+                          userLocation.address1.substring(0, 40) + '...'
                         :
-                        userLocation.address2
+                        userLocation.address1
+                      :
+                        userLocation.address2 !== "" &&
+                        userLocation.address2 !== null &&
+                        userLocation.address2 !== undefined 
+                        ? 
+                          userLocation.address2.length > 40 
+                          ?
+                            userLocation.address2.substring(0, 40) + '...'
+                          :
+                          userLocation.address2
+                        :
+                          ''
+                    :
+                      location !== null && (location.address !== "" &&
+                      location.address !== null &&
+                      location.address !== undefined )
+                      ?
+                      location.address.length > 40 
+                        ?
+                        location.address.substring(0, 40) + '...'
+                        :
+                        location.address
                       :
                         ''
-                    :
-                      ''
                   }
                 </Text>
               </TouchableOpacity>

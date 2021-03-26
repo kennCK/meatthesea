@@ -23,7 +23,7 @@ class AccountScreen extends Component {
   };
 
   componentDidMount() {
-    let route = Routes.customerRetrieveById('1');
+    let route = Routes.customerRetrieveById(this.props.state.user.id);
     Api.getRequest(route, response => {
       let customer = response.customers[0]
       this.setState({ user: customer })

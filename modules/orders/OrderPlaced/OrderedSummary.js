@@ -232,6 +232,48 @@ class OrderedSummary extends Component {
 
           </ScrollView>
         }
+        <View 
+          style={
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }
+          }
+        >
+          {/* {!isLoading && 
+            <TouchableHighlight
+              activeOpacity={0.6}
+              underlayColor={Color.lightGray}
+              // style={{ 
+              //   ...Style.openButton, backgroundColor: Color.primaryDark }}
+              style={
+                [
+                  BasicStyles.btn,
+                  {
+                    height: 50,
+                    backgroundColor: Color.primary,
+                    width: Style.getWidth() - 100,
+                    marginBottom: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 5,
+                    marginTop: 20
+                  }
+                ]
+              }
+              onPress={() => {
+                this.props.navigation.navigate('orderHistoryStack');
+              }}
+            >
+              <Text style={{
+                color: Color.tertiary,
+                fontWeight: "bold",
+                textAlign: "center"
+              }}>FINISH</Text>
+            </TouchableHighlight>
+          } */}
+        </View>
         {isLoading ? <Spinner mode="overlay"/> : null }
       </View>
     );

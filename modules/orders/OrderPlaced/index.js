@@ -17,6 +17,7 @@ class HeaderOptions extends Component {
     goBack = () => {
         let { navigationProps } = this.props
         navigationProps.goBack(null);
+        this.props.navigationProps.pop();
     };
     render() {
         return (

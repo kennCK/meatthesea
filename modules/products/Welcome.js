@@ -58,7 +58,8 @@ class Welcome extends Component {
       isAddingComment: false,
       value: '',
       addresses: [],
-      defaultIndex: null
+      defaultIndex: null,
+      isGettingCurrentLocation: false
     };
   }
 
@@ -67,9 +68,9 @@ class Welcome extends Component {
      * Executed each time we enter in this component &&
      * will be executed after going back to this component 
     */
-
-    this.retrieveCart()
-    this.fetchAddress()
+    this.setState({isGettingCurrentLocation: true});
+    this.retrieveCart();
+    this.fetchAddress();
   }
 
   retrieveProducts = () => {
@@ -138,6 +139,7 @@ class Welcome extends Component {
     /**
      * removing the event listener added in the componentDidMount()
      */
+     this.setState({isGettingCurrentLocation: false});
     this.focusListener.remove()
   }
 
@@ -414,11 +416,13 @@ class Welcome extends Component {
   }
   render() {
     const { homepage, search, cart, crockeries, user, userLocation, showRating, location } = this.props.state;
-    const { isLoading } = this.state;
+    const { isLoading, isGettingCurrentLocation } = this.state;
     const { setSearch } = this.props;
     return (
       <SafeAreaView style={Style.MainContainer}>
-        <CurrentLocation />
+        {isGettingCurrentLocation &&
+          <CurrentLocation />
+        }
         <Modal
           isVisible={this.state.visibleModal}
           style={Style.modal}
@@ -550,7 +554,7 @@ class Welcome extends Component {
                     {fontSize: BasicStyles.standardFontSize},
                   ]}>
                   {
-                    userLocation !== null 
+                    userLocation !== null && userLocation !== '' 
                     ?
                       userLocation.address1 !== "" &&
                       userLocation.address1 !== null &&

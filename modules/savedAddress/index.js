@@ -178,7 +178,12 @@ class SavedAddress extends Component {
   }
 
   redirect = route => {
-    this.props.navigation.push(route);
+    this.props.navigation.push(route, {
+      data: {
+        latitude: "10.3520921",
+        longitude: "123.9133624",
+      }
+    });
   };
 
   render() {

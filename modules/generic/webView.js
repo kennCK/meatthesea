@@ -9,12 +9,10 @@ class Browser extends Component {
     }
 
     componentDidMount() {
-        if(new Object(this.props.navigation.state.params).lenght === 0) {
+        if(new Object(this.props.navigation.state.params).length === 0) {
             this.props.navigation.pop();
         }
     }
-    
-
 
     LoadingIndicatorView = () => {
         return <ActivityIndicator color='#009b88' size='large' style={{
@@ -27,6 +25,7 @@ class Browser extends Component {
         console.log('[WEB VIEW] ', event)
         if(event.url.includes('paypalSuccess')) {
             this.props.navigation.navigate('orderPlacedStack');
+            return;
         }
     }
 

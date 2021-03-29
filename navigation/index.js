@@ -32,7 +32,8 @@ import CheckoutStack from 'modules/checkout/CheckoutDrawer.js';
 import AddSubscriptionStack from 'modules/addSubscription/AddSubscriptionDrawer.js';
 import PapalPaymentStack from 'modules/Paypal';
 import OrderHistoryDetailsStack from 'modules/orders/OrderHistory/OrderDetails/orderHistoryDrawer';
-import WebViewStack from 'modules/generic/webView';
+import WebViewStack from 'modules/Paypal/webViewDrawer';
+import LocationViewerStack from 'components/Location/LocationViewerDrawer';
 
 // login stack
 const LoginStack = createStackNavigator(
@@ -140,7 +141,8 @@ const PrimaryNav = createStackNavigator(
     orderPlacedStack: {screen: OrderPlacedStack},
     papalPaymentStack: {screen: PapalPaymentStack},
     orderDetailsStack: {screen: OrderHistoryDetailsStack},
-    webViewStack: {screen: WebViewStack}
+    webViewStack: {screen: WebViewStack},
+    locationViewerStack: {screen: LocationViewerStack}
   },
   {
     // Default config for all screens

@@ -43,7 +43,8 @@ class OrderSummaryScreen extends Component {
       isAddingAddressName: false,
       value: '',
       postalCode: '',
-      showAddAddressConfirmation: false
+      showAddAddressConfirmation: false,
+      addresses: []
     };
   }
   
@@ -70,6 +71,7 @@ class OrderSummaryScreen extends Component {
      * will be executed after going back to this component
     */
     this.retrieveCountries();
+    this.fetchAddress();
     this.setState({errorMessage: null, postalCode: this.props.state.location.postal});
     this.setState({date: new Date().toLocaleString()})
 
@@ -117,6 +119,19 @@ class OrderSummaryScreen extends Component {
   toggleModal = () => {
     let { isVisible } = this.state;
     this.setState({ isVisible: !isVisible })
+  }
+
+  fetchAddress = () => {
+    const { user } = this.props.state
+    Api.getRequest(Routes.customerRetrieveAddresses(user.id), response => {
+      const { address } = response
+      if (address) {
+        console.log('/**/address response: /**/', address)
+        this.setState({addresses: address})
+      }
+    }, error => {
+      console.log('Retrieve addresses error: ', error);
+    });
   }
 
   placeOrder = () => {
@@ -301,6 +316,26 @@ class OrderSummaryScreen extends Component {
   onClose = () => {
     this.setState({isAddingAddressName: false})
   }
+
+  onSuccess = () => {
+    console.log('ADDRESSES: ', this.state.addresses)
+    let checker = null;
+    let addresses = this.state.addresses
+    const{location} = this.props.state
+    addresses.forEach((el, ndx) => {
+      if(el.address1 === location.address){
+        checker = ndx
+      }
+    })
+    if(checker !== null){
+      this.setState({ showAddAddressConfirmation: false})
+      const {setUserLocation} = this.props
+      setUserLocation(this.state.addresses[checker])
+      this.saveAddress()
+    }else{
+      this.setState({ showAddAddressConfirmation: false, isAddingAddressName: true})
+    }
+  }
   
   render() {
     const { cart, orderDetails, deliveryTime, location } = this.props.state;
@@ -458,7 +493,7 @@ class OrderSummaryScreen extends Component {
           text={'Do you want to use your current Location?'}
           onCancel={()=> {this.setState({ showAddAddressConfirmation: false})}}
           onSuccess={()=> {
-            this.setState({ showAddAddressConfirmation: false, isAddingAddressName: true})
+            this.onSuccess()
           }}
         />
         <AddressModal

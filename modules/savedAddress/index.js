@@ -103,7 +103,7 @@ class SavedAddress extends Component {
         location.address, 
         this.state.value, 
         location.latitude, 
-        location.longtitude, 
+        location.longitude, 
         location.locality, 
         this.state.postalCode, 
         countryObject !== null && countryObject !== undefined ? countryObject.id : 131
@@ -178,12 +178,7 @@ class SavedAddress extends Component {
   }
 
   redirect = route => {
-    this.props.navigation.push(route, {
-      data: {
-        latitude: "10.3520921",
-        longitude: "123.9133624",
-      }
-    });
+    this.props.navigation.push(route);
   };
 
   render() {

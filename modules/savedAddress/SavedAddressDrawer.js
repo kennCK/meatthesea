@@ -13,7 +13,7 @@ class HeaderOptions extends Component {
   }
   back = () => {
     const {setLocation} = this.props;
-    setLocation(null);
+    // setLocation(null);
     this.props.navigationProps.pop();
   };
   render() {

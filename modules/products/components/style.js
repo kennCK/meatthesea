@@ -105,7 +105,9 @@ export default {
   },
   menuImage: {
     width: (width/2)-30,
-    height: (width/2)-30
+    height: (width/2)-30,
+    // alignSelf: 'stretch',
+    // flex: 1
   },
   centeredView: {
     flex: 1,

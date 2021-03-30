@@ -68,7 +68,9 @@ class Welcome extends Component {
      * Executed each time we enter in this component &&
      * will be executed after going back to this component 
     */
-    this.setState({isGettingCurrentLocation: true});
+    this.setState({isGettingCurrentLocation: false}, () => {
+      this.setState({isGettingCurrentLocation: true});
+    })
     this.retrieveCart();
     this.fetchAddress();
   }
@@ -139,8 +141,8 @@ class Welcome extends Component {
     /**
      * removing the event listener added in the componentDidMount()
      */
-     this.setState({isGettingCurrentLocation: false});
-    this.focusListener.remove()
+    this.setState({isGettingCurrentLocation: false});
+    this.focusListener.remove();
   }
 
   fetchAddress = () => {
@@ -244,6 +246,8 @@ class Welcome extends Component {
         ratingIndex: index,
         isAddingComment: true
       })
+      const {setShowRating} = this.props;
+      setShowRating(false);
     }, error => {
       console.log('Add Ratings Error: ', error)
     })

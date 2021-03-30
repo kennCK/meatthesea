@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faArrowLeft, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {faImage} from '@fortawesome/free-regular-svg-icons';
 import {BasicStyles, Color} from 'common';
 import Style from './style.js';
 import Api from 'services/apiv2/index.js';
@@ -189,7 +190,7 @@ class Menu extends Component {
         itemID: item.id,
         itemName: item.name,
         itemPrice: item.price,
-        itemImage: item.images[0].src,
+        itemImage: item.images[0] !== null && item.images[0] !== undefined ? item.images[0].src : '#',
         itemDescription: item.full_description,
         qty: selectedCartItem ? selectedCartItem.quantity : 1,
         orderMaximumQuantity: item.order_maximum_quantity
@@ -336,21 +337,51 @@ class Menu extends Component {
               {menuProducts !== null &&
                 menuProducts.map((item, idx) => {
                   return (
-                    <TouchableOpacity
+                    <TouchableHighlight
+                      activeOpacity={0.9}
+                      underlayColor={Color.lightGray}
                       onPress={() => this.selectItem(item)}
                       key={idx} 
                     >
                       <View style={Style.menuContainer}>
-                        <Image
-                          source={{uri: item.images[0] !== undefined && item.images[0] !== null ? item.images[0].src : '#'}}
-                          style={Style.menuImage}
-                        />
+                        {item.images.length > 0 && 
+                          <View style={{
+                            width: Style.menuImage.width,
+                            height: Style.menuImage.height,
+                            backgroundColor: Color.white,
+                            shadowColor: "#000",
+                            shadowOffset:{
+                              width: 0,
+                              height: 3,
+                            },
+                            shadowOpacity: 0.27,
+                            shadowRadius: 4.65,
+                            elevation: 6,
+                          }}>
+                            <Image
+                              resizeMode={'contain'}
+                              source={{uri: item.images.length > 0 ? item.images[0].src : '#'}}
+                              style={Style.menuImage}
+                            />
+                          </View>
+                        }
+                        {item.images.length === 0 && 
+                          <FontAwesomeIcon
+                            icon={faImage}
+                            size={Style.menuImage.width}
+                            style={
+                              {
+                                color: Color.gray
+                              }
+                            }
+                          />
+                        }
                         <Text style={{fontWeight: 'bold'}}>
                           HK$ {item.price}
                         </Text>
                         <Text>{item.name}</Text>
                       </View>
-                    </TouchableOpacity>
+                    </TouchableHighlight>
                   );
                 })}
             </View>
@@ -363,10 +394,24 @@ class Menu extends Component {
             this.setState({visibleModal: false});
           }}>
           <View style={{alignItems: 'center', height: '100%', flex: 1}}>
-            <Image
-              source={{uri: this.state.itemImage}}
-              style={Style.productImageFull}
-            />
+            { this.state.itemImage !== '#' && this.state.itemImage !== null && this.state.itemImage !== undefined &&
+              <Image
+                resizeMode={'contain'}
+                source={{uri: this.state.itemImage !== null && this.state.itemImage !== undefined ? this.state.itemImage : '#'}}
+                style={Style.productImageFull}
+              />
+            }
+            {this.state.itemImage === '#' && 
+              <FontAwesomeIcon
+                icon={faImage}
+                size={Style.menuImage.width + 50}
+                style={
+                  {
+                    color: Color.gray
+                  }
+                }
+              />
+            }
             <TouchableHighlight
               activeOpacity={0.6}
               underlayColor={Color.lightGray}

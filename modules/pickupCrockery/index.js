@@ -60,7 +60,7 @@ class PickupCrockery extends Component {
 
   retrieveCrockery = () => {
     const { user, storeLocation } = this.props.state
-    Api.getRequest(Routes.crockeryRetrieve(), response => {
+    Api.getRequest(Routes.crockeryRetrieve(user.id, storeLocation.id), response => {
       let tempScheduled = []
       let tempPending = []
       response.crockery.forEach(el => {

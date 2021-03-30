@@ -72,7 +72,11 @@ class OrderSummaryScreen extends Component {
     */
     this.retrieveCountries();
     this.fetchAddress();
-    this.setState({errorMessage: null, postalCode: this.props.state.location.postal});
+    const{userLocation, location} = this.props.state
+    this.setState({
+      errorMessage: null, 
+      postalCode: userLocation === null || userLocation === '' || userLocation === undefined ? this.props.state.location.postal : userLocation.postal_code
+    });
     this.setState({date: new Date().toLocaleString()})
 
     Api.getRequest(Routes.paypalAccountRetrieve, response => {
@@ -126,7 +130,6 @@ class OrderSummaryScreen extends Component {
     Api.getRequest(Routes.customerRetrieveAddresses(user.id), response => {
       const { address } = response
       if (address) {
-        console.log('/**/address response: /**/', address)
         this.setState({addresses: address})
       }
     }, error => {
@@ -212,7 +215,6 @@ class OrderSummaryScreen extends Component {
   saveAddress = () => {
     const {userLocation} = this.props.state
     if(userLocation === null || userLocation === '' || userLocation === undefined){
-      console.log('Saving Address First....')
       const { user, location } = this.props.state;
       const { countries } = this.state
       let temp = location.address.replace(/ /g, '');
@@ -231,13 +233,12 @@ class OrderSummaryScreen extends Component {
           location.address, 
           this.state.value, 
           location.latitude, 
-          location.longtitude, 
+          location.longitude, 
           location.locality, 
           this.state.postalCode, 
           countryObject !== null && countryObject !== undefined ? countryObject.id : 131
         ),
         {}, response => {
-          console.log("Adding address response: ", response);
           let data = response.address
           const{setUserLocation} = this.props
           this.setState({isAddingAddressName: false, value: '', postalCode: ''})
@@ -247,7 +248,6 @@ class OrderSummaryScreen extends Component {
           console.log("Adding address error: ", error);
         });
     }else{
-      console.log("Executing checkout...");
       this.executeOrderPlacement()
     }
   }
@@ -264,7 +264,6 @@ class OrderSummaryScreen extends Component {
         userLocation.id, 
         storeLocation.id
       ), {}, response => {
-        console.log("CREATE PAYPAL ORDER RESPONSE: ", response)
         const { setPaypalSuccessData } = this.props;
         setPaypalSuccessData(response);
         this.setState({isLoading: false});
@@ -275,7 +274,6 @@ class OrderSummaryScreen extends Component {
         // this.openURL(approve[0].href);
     }, error => {
       this.setState({isLoading: false});
-      console.log('Creating Paypal Order Error: ', error)
     })
   }
 
@@ -309,7 +307,6 @@ class OrderSummaryScreen extends Component {
   }
 
   onAdd = () => {
-    console.log('Adding Address::')
     this.saveAddress()
   }
 
@@ -317,8 +314,15 @@ class OrderSummaryScreen extends Component {
     this.setState({isAddingAddressName: false})
   }
 
+  updatingUserLocation = async (checker) => {
+    const {setUserLocation} = await this.props
+    await setUserLocation(this.state.addresses[checker])
+    await this.setState({ showAddAddressConfirmation: false}, () => {
+      this.saveAddress()
+    })
+  }
+
   onSuccess = () => {
-    console.log('ADDRESSES: ', this.state.addresses)
     let checker = null;
     let addresses = this.state.addresses
     const{location} = this.props.state
@@ -328,17 +332,14 @@ class OrderSummaryScreen extends Component {
       }
     })
     if(checker !== null){
-      this.setState({ showAddAddressConfirmation: false})
-      const {setUserLocation} = this.props
-      setUserLocation(this.state.addresses[checker])
-      this.saveAddress()
+      this.updatingUserLocation(checker)
     }else{
       this.setState({ showAddAddressConfirmation: false, isAddingAddressName: true})
     }
   }
   
   render() {
-    const { cart, orderDetails, deliveryTime, location } = this.props.state;
+    const { cart, orderDetails, deliveryTime, location, userLocation } = this.props.state;
     const { isAddingAddressName, errorMessage, isLoading, date, value, postalCode, showAddAddressConfirmation } = this.state;
     return (
       <View style={{ flex: 1 }} key={this.state.key}>
@@ -501,7 +502,7 @@ class OrderSummaryScreen extends Component {
           onAdd={this.onAdd}
           onClose={this.onClose}
           addressName={value}
-          address={location.address}
+          address={userLocation === null || userLocation === '' || userLocation === undefined ? location.address : userLocation.address1}
           isVisible={isAddingAddressName}
           postalCode={postalCode}
           handleName={this.handleName}

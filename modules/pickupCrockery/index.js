@@ -26,7 +26,34 @@ class PickupCrockery extends Component {
 
   async componentDidMount() {
     // this.getOrders();
-    this.retrieveCrockery();
+    this.scheduledCrockeryRetrieve();
+    this.pendingCrockeryRetrieve();
+    // this.retrieveCrockery();
+  }
+
+  pendingCrockeryRetrieve = () => {
+    const {user, storeLocation} = this.props.state
+    let params = `StatusId=10&CustomerId=${user.id}&StoreId=${storeLocation.id}`;
+    this.setState({isLoading: true});
+    Api.getRequest(Routes.crockeryRetrieve + params , response => {
+      console.log('RESPONSE: ', response)
+      this.setState({pending : response.crockery})
+      this.setState({isLoading: false});
+    }, error => {
+      console.log('Retrieve crockery error: ', error)
+    })
+  }
+
+  scheduledCrockeryRetrieve = () => {
+    const {user, storeLocation} = this.props.state
+    let params = `StatusId=40&CustomerId=${user.id}&StoreId=${storeLocation.id}`;
+    this.setState({isLoading: true});
+    Api.getRequest(Routes.crockeryRetrieve + params , response => {
+      this.setState({scheduled : response.crockery})
+      this.setState({isLoading: false});
+    }, error => {
+      console.log('Retrieve crockery error: ', error)
+    })
   }
 
   getOrders = () => {
@@ -85,7 +112,12 @@ class PickupCrockery extends Component {
   handlePagination = () => {
     this.setState({pageNumber: this.state.pageNumber + 1}, () => {
       // this.getOrders();
-      this.retrieveCrockery();
+      // this.retrieveCrockery();
+      if(this.state.index === 0) {
+        this.scheduledCrockeryRetrieve()
+      }else if(this.state.index === 1){
+        this.pendingCrockeryRetrieve()
+      }
     });
   };
 
@@ -96,7 +128,13 @@ class PickupCrockery extends Component {
   };
 
   onTabChange = i => {
-    this.setState({index: i});
+    this.setState({index: i}, () => {
+      if(this.state.index === 0) {
+        this.scheduledCrockeryRetrieve()
+      }else if(this.state.index === 1){
+        this.pendingCrockeryRetrieve()
+      }
+    });
   };
 
   getCurrentTab = () => {
@@ -144,7 +182,32 @@ class PickupCrockery extends Component {
           notificationTitle={'PENDING'}
           notificationCount={this.state.pending.length}
         />
-        <View>{this.getCurrentTab()}</View>
+        {/* <View>{this.getCurrentTab()}</View> */}
+        <View>
+          { this.state.activeIndex === 0 && 
+            <ScheduledTab
+              height={height}
+              isLoading={this.state.isLoading}
+              orders={this.state.scheduled}
+              handlePagination={this.handlePagination}
+              resetPage={this.resetPage}
+              isLoading={this.state.isLoading}
+              navigation={this.props.navigation}
+            />
+          }
+          { this.state.activeIndex === 1 && 
+            <PendingTab
+              height={height}
+              isLoading={this.state.isLoading}
+              orders={this.state.pending}
+              handlePagination={this.handlePagination}
+              resetPage={this.resetPage}
+              isLoading={this.state.isLoading}
+              withIcon={true}
+              navigation={this.props.navigation}
+            />
+          }
+        </View>
       </View>
     );
   }

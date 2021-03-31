@@ -188,13 +188,13 @@ class Welcome extends Component {
         this.isLoading(false);
         console.log(error);
     });
-    Api.getRequest(Routes.crockeryRetrieve(user.id, storeLocation.id), response => {
-      const { setPickupCrockeries } = this.props;
-      setPickupCrockeries(response.crockery)
-      console.log('\n\nRETRIEVING CROCKERY RESPONSE: ', response, '\n\n')
-    }, error => {
-      console.log('\n\nRETRIEVING CROCKERY ERROR: ', error, '\n\n')
-    })
+    // Api.getRequest(Routes.crockeryRetrieve(user.id, storeLocation.id), response => {
+    //   const { setPickupCrockeries } = this.props;
+    //   setPickupCrockeries(response.crockery)
+    //   console.log('\n\nRETRIEVING CROCKERY RESPONSE: ', response, '\n\n')
+    // }, error => {
+    //   console.log('\n\nRETRIEVING CROCKERY ERROR: ', error, '\n\n')
+    // })
   }
 
   changeSelectedMenu(data, type) {
@@ -246,8 +246,7 @@ class Welcome extends Component {
         ratingIndex: index,
         isAddingComment: true
       })
-      const {setShowRating} = this.props;
-      setShowRating(false);
+      
     }, error => {
       console.log('Add Ratings Error: ', error)
     })
@@ -259,6 +258,7 @@ class Welcome extends Component {
     this.setState({isLoading: true})
     Api.postRequest(Routes.addFeedback(user.id, storeLocation.id, this.state.value), {}, response => {
       console.log('Add Feedback Response: ', response)
+      this.setState({isAddingComment: false, isLoading: false})
       const {setShowRating} = this.props
       setShowRating(false)
     }, error => {
@@ -826,6 +826,7 @@ class Welcome extends Component {
                   onPress={() => {
                     const {setShowRating} = this.props
                     setShowRating(false)
+                    this.setState({isAddingComment: false})
                   }}
                 >
                   <Text

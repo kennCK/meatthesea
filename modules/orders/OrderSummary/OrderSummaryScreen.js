@@ -75,7 +75,7 @@ class OrderSummaryScreen extends Component {
     const{userLocation, location} = this.props.state
     this.setState({
       errorMessage: null, 
-      postalCode: userLocation === null || userLocation === '' || userLocation === undefined ? this.props.state.location.postal : userLocation.postal_code
+      postalCode: userLocation === null || userLocation === '' || userLocation === undefined ? location !== null && location !== undefined && location !== '' ? this.props.state.location.postal : '': userLocation.postal_code
     });
     this.setState({date: new Date().toLocaleString()})
 
@@ -502,7 +502,16 @@ class OrderSummaryScreen extends Component {
           onAdd={this.onAdd}
           onClose={this.onClose}
           addressName={value}
-          address={userLocation === null || userLocation === '' || userLocation === undefined ? location.address : userLocation.address1}
+          address={
+            userLocation === null || userLocation === '' || userLocation === undefined 
+            ? 
+              location !== null && location !== undefined && location !== '' 
+              ?
+                location.address
+              : 
+                ''
+            : 
+              userLocation.address1}
           isVisible={isAddingAddressName}
           postalCode={postalCode}
           handleName={this.handleName}

@@ -74,7 +74,7 @@ export default {
 
   paypalConfirmOrder: (CustomerId, StoreId, AddressId, OrderGuid, PayPalOrderId, DeliveryTimeRequested, LocalTimeCreated) => apiUrl + `confirm_order_paypal?CustomerId=${CustomerId}&StoreId=${StoreId}&AddressId=${AddressId}&OrderGuid=${OrderGuid}&PayPalOrderId=${PayPalOrderId}&DeliveryTimeRequested=${DeliveryTimeRequested}&LocalTimeCreated=${LocalTimeCreated}`,
 
-  crockeryRetrieve: (CustomerID, StoreID, optional = '') => apiUrl + `get_crockery?CustomerId=${CustomerID}&StoreId=${StoreID}` + optional,
+  crockeryRetrieve: apiUrl + `get_crockery?`,
 
   crockeryUpdate: (CrockeryID, AddressID, CrockeryStatusID) => apiUrl + `update_crockery?CrockeryId=${CrockeryID}&AddressId=${AddressID}&CrockeryStatusId=${CrockeryStatusID}`,
 

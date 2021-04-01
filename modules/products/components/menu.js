@@ -234,9 +234,7 @@ class Menu extends Component {
       this.state.qty +
       '&CartType=1';
     Api.postRequest(
-      (productInCart
-        ? Routes.shoppingCartItemsUpdateCart
-        : Routes.shoppingCartItemsAddToCart) + parameters,
+      (productInCart ? Routes.shoppingCartItemsUpdateCart : Routes.shoppingCartItemsAddToCart) + parameters,
       {},
       response => {
         console.log('add to basket response ', response)

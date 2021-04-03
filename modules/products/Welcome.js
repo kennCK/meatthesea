@@ -248,6 +248,7 @@ class Welcome extends Component {
       })
       
     }, error => {
+      this.isLoading(false)
       console.log('Add Ratings Error: ', error)
     })
   }
@@ -262,6 +263,7 @@ class Welcome extends Component {
       const {setShowRating} = this.props
       setShowRating(false)
     }, error => {
+      this.isLoading(false)
       console.log('Add Feedback error')
     })
   }

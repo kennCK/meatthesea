@@ -128,6 +128,7 @@ class PickupCrockery extends Component {
   };
 
   onTabChange = i => {
+    console.log("page: ", i)
     this.setState({index: i}, () => {
       if(this.state.index === 0) {
         this.scheduledCrockeryRetrieve()
@@ -182,9 +183,8 @@ class PickupCrockery extends Component {
           notificationTitle={'PENDING'}
           notificationCount={this.state.pending.length}
         />
-        {/* <View>{this.getCurrentTab()}</View> */}
         <View>
-          { this.state.activeIndex === 0 && 
+          { this.state.index === 0 && 
             <ScheduledTab
               height={height}
               isLoading={this.state.isLoading}
@@ -195,7 +195,7 @@ class PickupCrockery extends Component {
               navigation={this.props.navigation}
             />
           }
-          { this.state.activeIndex === 1 && 
+          { this.state.index === 1 && 
             <PendingTab
               height={height}
               isLoading={this.state.isLoading}

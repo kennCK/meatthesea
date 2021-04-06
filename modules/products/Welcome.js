@@ -435,9 +435,9 @@ class Welcome extends Component {
           onRequestClose={() => {
             this.setState({visibleModal: false});
           }}>
-          {location === null && userLocation === null ? <Spinner mode="overlay" style={{zIndex: 999}}/> : null }
+          {/* {location === null && userLocation === null ? <Spinner mode="overlay" style={{zIndex: 999}}/> : null } */}
           <TouchableHighlight
-            disabled={location === null && userLocation === null}
+            // disabled={location === null && userLocation === null}
             activeOpacity={0.6}
             underlayColor={Color.lightGray}
             style={{

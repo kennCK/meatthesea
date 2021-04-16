@@ -24,6 +24,11 @@ class ReturnInPerson extends Component {
     return ts;
   };
 
+  componentDidMount() {
+    const { returnInPerson } = this.props.state;
+    console.log('testing, ', returnInPerson)
+  }
+
   displaySchedule = () => {
     const schedule = this.props.state.storeLocation.store_schedules;
     return schedule.map(day => {

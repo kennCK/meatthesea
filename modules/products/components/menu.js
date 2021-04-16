@@ -41,7 +41,8 @@ class Menu extends Component {
       productInCart: null,
       isAddingAddressName: false,
       alertText: "",
-      orderMaximumQuantity: 0
+      orderMaximumQuantity: 0,
+      isError: true
     };
   }
 
@@ -237,16 +238,33 @@ class Menu extends Component {
       (productInCart ? Routes.shoppingCartItemsUpdateCart : Routes.shoppingCartItemsAddToCart) + parameters,
       {},
       response => {
-        console.log('add to basket response ', response)
         this.retrieveCart();
-        this.setState({
-          alertText: 'Added to basket successfully!',
-          isAddingAddressName: true
-        })
+        console.log('TESTING: ', response)
+        if(response != undefined) {
+          console.log('Add to basket response: ', response)
+          let temp = {
+            addToBasketResponse : {
+              
+              isError: false
+            }
+          }
+          this.setState({
+            alertText: 'Added to basket successfully!',
+            isError: false,
+            isAddingAddressName: true
+          })
+        }
         // this.alertMethod('Success Added!', 'Test');
       },
       error => {
-        console.log(error);
+
+        this.setState({
+          alertText: 'Product requested to be added in the cart is not allowred. Product is in different Store.',
+          isError: true
+        }, () => {
+          this.setState({isAddingAddressName: true})
+          console.log('\nAdd to basket error: ', this.state.addToBasketResponse);
+        })
       },
     );
   }
@@ -460,7 +478,8 @@ class Menu extends Component {
                 HK$ {this.state.itemPrice}
               </Text>
               <Text style={{fontSize: BasicStyles.standardFontSize}}>
-                {this.state.itemDescription}
+                {/* {this.state.itemDescription} */}
+                {this.state.isError}
               </Text>
             </View>
           </View>
@@ -504,7 +523,7 @@ class Menu extends Component {
           show={this.state.isAddingAddressName}
           text={this.state.alertText}
           onClick={()=> this.setState({ isAddingAddressName: false}) }
-          alertType={'primary'}
+          alertType={this.state.isError == true ? 'error' : 'primary'}
         />
       </View>
     );

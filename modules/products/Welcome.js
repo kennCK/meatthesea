@@ -120,6 +120,7 @@ class Welcome extends Component {
   componentDidMount() {
     const { filter } = this.props.state;
     const { setHomepageSettings } = this.props;
+    console.log('[PROPS]', this.props.state.deliveryTime);
     if(filter){
       setHomepageSettings({
         type: filter.category == 'restaurant' ? 0 : 1,
@@ -529,6 +530,7 @@ class Welcome extends Component {
           addresses={this.state.addresses}
           selectHandler={this.selectHandler}
           deliveryTimeHandler={this.deliveryTimeHandler}
+          redux={this.props.state}
         />
         <View>
           <View style={[

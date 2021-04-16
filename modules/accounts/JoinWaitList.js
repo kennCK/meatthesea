@@ -37,25 +37,26 @@ class JoinWaitList extends Component {
     if (this.validate() == false) {
       return
     }
-    this.setState({ isLoading: true })
-    Api.postRequest(Routes.waitListAdd(fullname, email, phoneNumber), {}, response => {
-      this.setState({ isLoading: false })
-      if (response.toLowerCase().replace(/ /g, '') === 'waitlistaddedsuccessfully') {
-        this.redirect('appOnBoardingStack')
-      }
-    }, error => {
-      this.setState({ isResponseError: true })
-    })
+    // this.setState({ isLoading: true })
+    // Api.postRequest(Routes.waitListAdd(fullname, email, phoneNumber), {}, response => {
+    //   this.setState({ isLoading: false })
+    //   if (response.toLowerCase().replace(/ /g, '') === 'waitlistaddedsuccessfully') {
+    //     this.redirect('appOnBoardingStack')
+    //   }
+    // }, error => {
+    //   this.setState({ isResponseError: true })
+    // })
   }
 
   validate() {
     const { fullname, email, phoneNumber } = this.state;
     if (
-      email != '' &&
-      fullname != '' &&
-      phoneNumber.length == 8 &
-      Helper.validateEmail(email) == true) {
-      return true
+      (email == '' || email == null)&&
+      (fullname == '' || fullname == null)&&
+      phoneNumber  == '' || phoneNumber == null &&
+      !Helper.validateEmail(email)) {
+      this.setState({ errorMessage: 'Please fill in all required fields.' })
+      return false
     } else if (email != '' && Helper.validateEmail(email) == false) {
       this.setState({ errorMessage: 'You have entered an invalid email address.' })
       return false
@@ -63,8 +64,7 @@ class JoinWaitList extends Component {
       this.setState({ errorMessage: 'Invalid phone number.' })
       return false
     } else {
-      this.setState({ errorMessage: 'Please fill in all required fields.' })
-      return false
+      return true
     }
   }
   render() {

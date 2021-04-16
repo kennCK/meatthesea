@@ -43,6 +43,7 @@ class DeliveryDetails extends Component{
     this.show();
   }
   show(){
+    console.log('[TIMEs]', this.props.deliveryTime);
     this.setState({radio_open: this.state.radio_open?false:true})
   }
 
@@ -116,7 +117,7 @@ class DeliveryDetails extends Component{
                 alignItems: 'center'
               }}
             >
-              <Text>{moment().format('HH : mm')}</Text>
+              <Text>{this.props.redux.deliveryTime === 'ASAP' ? moment().format('HH : mm') : this.props.redux.deliveryTime}</Text>
               <TouchableOpacity
                 onPress={() => { 
                   this.props.click(true); 

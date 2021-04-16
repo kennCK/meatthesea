@@ -29,8 +29,8 @@ class OrderHistoryDetails extends Component {
     }
   }
 
-  componentDidMount() {
-    this.filterOrder()
+  async componentDidMount() {
+    await this.filterOrder()
   }
 
   filterOrder = () => {
@@ -40,15 +40,19 @@ class OrderHistoryDetails extends Component {
      * categorization of ordered products for restaurant and deli-shop
      * 
      *  */ 
-    this.props.state.orderDetails.order_items.forEach(el=> {
+    let rest = []
+    let store = []
+    this.props.state.orderDetails.order_items.forEach(async el=> {
       /**
        * categorizes(Restaurant, Deli-Shop) the products response from api
        */
       if(el.product.category_type === 1){
-        this.state.store.push(el)
+        store.push(el)
       }else if(el.product.category_type === 0){
-        this.state.restaurant.push(el)
+        rest.push(el)
       }
+      await this.setState({store: store})
+      await this.setState({restaurant: rest})
     })
   }
 

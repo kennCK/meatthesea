@@ -51,11 +51,12 @@ class JoinWaitList extends Component {
   validate() {
     const { fullname, email, phoneNumber } = this.state;
     if (
-      email != '' &&
-      fullname != '' &&
-      phoneNumber.length == 8 &
-      Helper.validateEmail(email) == true) {
-      return true
+      (email == '' || email == null)&&
+      (fullname == '' || fullname == null)&&
+      phoneNumber  == '' || phoneNumber == null &&
+      !Helper.validateEmail(email)) {
+      this.setState({ errorMessage: 'Please fill in all required fields.' })
+      return false
     } else if (email != '' && Helper.validateEmail(email) == false) {
       this.setState({ errorMessage: 'You have entered an invalid email address.' })
       return false
@@ -63,8 +64,7 @@ class JoinWaitList extends Component {
       this.setState({ errorMessage: 'Invalid phone number.' })
       return false
     } else {
-      this.setState({ errorMessage: 'Please fill in all required fields.' })
-      return false
+      return true
     }
   }
   render() {

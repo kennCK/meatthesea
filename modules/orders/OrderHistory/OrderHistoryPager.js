@@ -69,6 +69,7 @@ class Pager extends Component {
     let params = `?Status=30&CustomerId=${user.id}`;
     this.setState({isLoading: true});
     Api.getRequest(Routes.ordersRetrieve + params , response => {
+      console.log('[COMPLETED]', Routes.ordersRetrieve + params);
       this.setState({completed : response.orders})
       this.setState({isLoading: false});
     }, error => {

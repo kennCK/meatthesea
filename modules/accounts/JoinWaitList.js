@@ -37,15 +37,15 @@ class JoinWaitList extends Component {
     if (this.validate() == false) {
       return
     }
-    // this.setState({ isLoading: true })
-    // Api.postRequest(Routes.waitListAdd(fullname, email, phoneNumber), {}, response => {
-    //   this.setState({ isLoading: false })
-    //   if (response.toLowerCase().replace(/ /g, '') === 'waitlistaddedsuccessfully') {
-    //     this.redirect('appOnBoardingStack')
-    //   }
-    // }, error => {
-    //   this.setState({ isResponseError: true })
-    // })
+    this.setState({ isLoading: true })
+    Api.postRequest(Routes.waitListAdd(fullname, email, phoneNumber), {}, response => {
+      this.setState({ isLoading: false })
+      if (response.toLowerCase().replace(/ /g, '') === 'waitlistaddedsuccessfully') {
+        this.redirect('appOnBoardingStack')
+      }
+    }, error => {
+      this.setState({ isResponseError: true })
+    })
   }
 
   validate() {

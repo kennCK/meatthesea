@@ -78,7 +78,7 @@ const Api = {
           return response.json();
         }
         if (response.status >= 400 && response.status < 500) {
-          console.log('error status :', response.error);
+          // console.log('error status :', response);
           errorCallback({
             response,
             message: 'Request failed',

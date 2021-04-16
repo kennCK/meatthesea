@@ -33,10 +33,9 @@ class PickupCrockery extends Component {
 
   pendingCrockeryRetrieve = () => {
     const {user, storeLocation} = this.props.state
-    let params = `StatusId=10&CustomerId=${user.id}&StoreId=${storeLocation.id}`;
+    let params = `get_crockery?StoreId=${storeLocation.id}&Status=10&CustomerId=${user.id}`;
     this.setState({isLoading: true});
     Api.getRequest(Routes.crockeryRetrieve + params , response => {
-      console.log('RESPONSE: ', response)
       this.setState({pending : response.crockery})
       this.setState({isLoading: false});
     }, error => {
@@ -46,7 +45,7 @@ class PickupCrockery extends Component {
 
   scheduledCrockeryRetrieve = () => {
     const {user, storeLocation} = this.props.state
-    let params = `StatusId=40&CustomerId=${user.id}&StoreId=${storeLocation.id}`;
+    let params = `StoreId=${storeLocation.id}&Status=40&CustomerId=${user.id}`;
     this.setState({isLoading: true});
     Api.getRequest(Routes.crockeryRetrieve + params , response => {
       this.setState({scheduled : response.crockery})
@@ -114,8 +113,10 @@ class PickupCrockery extends Component {
       // this.getOrders();
       // this.retrieveCrockery();
       if(this.state.index === 0) {
+        console.log('...pagination scheduled...')
         this.scheduledCrockeryRetrieve()
       }else if(this.state.index === 1){
+        console.log('...pagination pending...')
         this.pendingCrockeryRetrieve()
       }
     });
@@ -131,8 +132,10 @@ class PickupCrockery extends Component {
     console.log("page: ", i)
     this.setState({index: i}, () => {
       if(this.state.index === 0) {
+        console.log('...tab change scheduled...')
         this.scheduledCrockeryRetrieve()
       }else if(this.state.index === 1){
+        console.log('...tab change pending...')
         this.pendingCrockeryRetrieve()
       }
     });

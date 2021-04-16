@@ -83,7 +83,7 @@ class Welcome extends Component {
     }
     if (search == null || search == '' || storeLocation == null) {
       Api.getRequest(
-        Routes.productsRetrieve + '?categoryid=' + filter.id,
+        Routes.productsRetrieve + '?categoryid=' + filter.id + '&PublishedStatus=true',
         response => {
           setMenuProducts(response.products);
         },

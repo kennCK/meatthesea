@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {SafeAreaView, View, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
-
+import Api from 'services/apiv2/index.js';
 import styles from './Style';
-
+import {Routes} from 'common';
 let dayOfWeek = [
   'Monday',
   'Tuesday',
@@ -27,6 +27,7 @@ class ReturnInPerson extends Component {
   componentDidMount() {
     const { returnInPerson } = this.props.state;
     console.log('testing, ', returnInPerson)
+    this.collectCrockery();
   }
 
   displaySchedule = () => {
@@ -44,6 +45,15 @@ class ReturnInPerson extends Component {
       );
     });
   };
+
+  collectCrockery = () => {
+    const { requestPickUpCrockery } = this.props.state;
+    Api.putRequest(Routes.crockeryUpdate(requestPickUpCrockery.id, requestPickUpCrockery.address_id, 30), {}, response => {
+      console.log('RETURN CROCKERY RESPONSE: ', response)
+    }, error => {
+      console.log('RETURN CROCKERY ERROR: ', error)
+    })
+  }
 
   render() {
     return (

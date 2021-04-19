@@ -13,6 +13,8 @@ class HeaderOptions extends Component {
   }
   back = () => {
     this.props.navigationProps.pop();
+    this.props.navigationProps.pop();
+    this.props.navigationProps.pop();
   };
   render() {
     return (

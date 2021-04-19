@@ -24,12 +24,31 @@ class PickupCrockery extends Component {
     };
   }
 
+  onFocusFunction = () => {
+    /**
+     * Executed each time we enter in this component &&
+     * will be executed after going back to this component 
+    */
+     this.scheduledCrockeryRetrieve();
+     this.pendingCrockeryRetrieve();
+  }
+
+
   async componentDidMount() {
     // this.getOrders();
-    this.scheduledCrockeryRetrieve();
-    this.pendingCrockeryRetrieve();
     // this.retrieveCrockery();
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
   }
+
+  componentWillUnmount () {
+    /**
+     * removing the event listener added in the componentDidMount()
+     */
+    this.focusListener.remove();
+  }
+
 
   pendingCrockeryRetrieve = () => {
     const {user, storeLocation} = this.props.state

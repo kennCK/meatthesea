@@ -259,7 +259,7 @@ class Menu extends Component {
       error => {
 
         this.setState({
-          alertText: 'Product requested to be added in the cart is not allowred. Product is in different Store.',
+          alertText: 'Product requested to be added in the cart is not allowed. Product is in different Store.',
           isError: true
         }, () => {
           this.setState({isAddingAddressName: true})

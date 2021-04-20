@@ -62,7 +62,15 @@ class ProfileScreen extends Component {
         value: 'Change Password',
         icon: faLock,
         onPress: () => {
-          this.redirect("changePasswordStack")
+          Api.postRequest(Routes.customerForgotPassword+"?email="+ email, null, 
+            response =>{
+              if(response !== undefined || resposne !== null){
+                this.props.navigation.navigate('forgotPasswordWebViewStack', {link: response.recovery_url})
+              }else{
+              }
+            }, error => {
+              console.log('| FORGOT PASSWORD ERROR |', error)
+            });
         }
       },
     ]

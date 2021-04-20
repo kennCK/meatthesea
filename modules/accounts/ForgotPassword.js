@@ -53,6 +53,11 @@ class ForgotPassword extends Component {
           successMessage: response.message,
           errorMessage: null
         })
+        if(response !== undefined || resposne !== null){
+          this.props.navigation.navigate('forgotPasswordWebViewStack', {link: response.recovery_url})
+        }else{
+          this.setState({ errorMessage: 'Email not found' })
+        }
       }, error => {
         this.setState({ errorMessage: 'Email not found' })
         return false

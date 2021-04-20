@@ -34,6 +34,7 @@ import PapalPaymentStack from 'modules/Paypal';
 import OrderHistoryDetailsStack from 'modules/orders/OrderHistory/OrderDetails/orderHistoryDrawer';
 import WebViewStack from 'modules/Paypal/webViewDrawer';
 import LocationViewerStack from 'components/Location/LocationViewerDrawer';
+import ForgotPasswordWebViewStack from 'modules/accounts/components/forgotPasswordDrawer';
 
 // login stack
 const LoginStack = createStackNavigator(
@@ -142,7 +143,8 @@ const PrimaryNav = createStackNavigator(
     papalPaymentStack: {screen: PapalPaymentStack},
     orderDetailsStack: {screen: OrderHistoryDetailsStack},
     webViewStack: {screen: WebViewStack},
-    locationViewerStack: {screen: LocationViewerStack}
+    locationViewerStack: {screen: LocationViewerStack},
+    forgotPasswordWebViewStack: {screen: ForgotPasswordWebViewStack}
   },
   {
     // Default config for all screens

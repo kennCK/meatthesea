@@ -6,7 +6,7 @@ import Style from 'modules/accounts/Style';
 import { Color, Routes } from 'common';
 import Separator from '../components/Separator'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
+import { faTrashAlt, faTrash } from '@fortawesome/free-regular-svg-icons';
 import {connect} from 'react-redux';
 import Api from 'services/apiv2/index.js';
 import Confirm from 'modules/generic/confirm';
@@ -20,6 +20,11 @@ class OrderItems extends Component {
       visibleModal: false,
       alertText: ''
     };
+  }
+
+  componentDidMount() {
+    const {data} = this.props
+    console.log(data.product.attributes[0].attribute_values)
   }
 
   updateCart(data, increment = true) {
@@ -77,14 +82,17 @@ class OrderItems extends Component {
                     }}
                   >
                     <View>
-                      <Text style={[
+                      <View style={[
                           BasicStyles.titleText,
                           Style.fontSize(BasicStyles.standardFontSize),
                           {
                             marginTop: -7
                           }
                       ]}>
-                        <Text  >
+                        <View style={{
+                          flexDirection: 'row',
+                          alignItems: 'center'
+                        }}>
                           <>
                           <TouchableOpacity onPress={() => {
                               this.updateCart(data, false)
@@ -113,8 +121,8 @@ class OrderItems extends Component {
                             }}>+</Text>
                           </TouchableOpacity>
                           </>
-                        </Text>
-                      </Text>
+                        </View>
+                      </View>
                     </View>
                     <View
                       style={{
@@ -134,13 +142,51 @@ class OrderItems extends Component {
                     </View>
                   </View>
                   <View>
-                    <Text style={[
-                        { marginVertical: 2 },
-                        Style.fontWeight("700"),
-                        Style.fontSize(BasicStyles.standardFontSize),
-                    ]}>
+                    <View>
+                      <Text style={[
+                          { marginVertical: 2 },
+                          Style.fontWeight("700"),
+                          Style.fontSize(BasicStyles.standardFontSize),
+                      ]}>
                         {data.product.name}
-                    </Text>
+                      </Text>
+                      {
+                        data.product.attributes[0].attribute_values.map((addOn, ndx) => {
+                          return (
+                            <Text key={ndx + 'add-ons1'}
+                              style={[
+                                {
+                                  color: Color.black,
+                                  marginTop: 2,
+                                  marginBottom: 2
+                                },
+                                Style.fontSize(BasicStyles.standardFontSize)
+                              ]}
+                            >
+                              + {addOn.name}
+                            </Text>
+                          )
+                        })
+                      }
+                      {
+                        data.product.attributes[1].attribute_values.map((addOn, ndx) => {
+                          return (
+                            <Text key={ndx + 'add-ons2'}
+                              style={[
+                                {
+                                  color: Color.black,
+                                  marginTop: 2,
+                                  marginBottom: 2
+                                },
+                                Style.fontSize(BasicStyles.standardFontSize)
+                              ]}
+                            >
+                              + {addOn.name}
+                            </Text>
+                          )
+                        })
+                      }
+                    </View>
                     <Text style={[
                         { 
                           marginVertical: 2,
@@ -159,37 +205,6 @@ class OrderItems extends Component {
                   }}>{'HK$ ' + data.product.price}</Text>
                 </View>
                 </View>
-                        {/*
-                            itemText.addOns.map((addOn, id) => {
-                                return (
-                                    <View key={id} >
-                                        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                                            <Text style={[
-                                                { marginVertical: 2, marginLeft: 10 },
-                                                BasicStyles.titleText,
-                                                Style.fontSize(BasicStyles.standardFontSize),
-                                            ]}>
-                                                <FontAwesomeIcon icon={faTrash} color={Color.primary} />
-                                            </Text>
-                                            <Text
-                                                style={[
-                                                    { color: Color.darkGray },
-                                                    BasicStyles.titleText,
-                                                    Style.fontWeight("100"),
-                                                    Style.fontSize(BasicStyles.standardFontSize)
-                                                ]}>{"\t"}
-                                                +{addOn.item}</Text>
-                                            <Text style={{
-                                                fontSize:BasicStyles.standardFontSize,
-                                                position: 'absolute',
-                                                right: 25,
-                                                top: 5
-                                            }}>{addOn.price}</Text>
-                                        </View>
-                                    </View>
-                                )
-                            })
-                        */}
           </View>)
         }
 

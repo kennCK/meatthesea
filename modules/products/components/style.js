@@ -20,10 +20,14 @@ export default {
     height: width-50
   },
   productImage: {
+    borderRadius: ((width/3)-20) / 2,
     width: (width/3)-20,
-    height: (width/3)-20
+    height: (width/3)-20,
+    overflow: "hidden"
   },
   productContainer: {
+    marginTop: 10,
+    marginBottom: 5,
     width: (width/3),
     alignItems: 'center',
   },

@@ -12,7 +12,7 @@ class ProductItems extends Component {
     return (
       <View style={Style.productContainer}>
         <Image source={Image_Http_URL} style={Style.productImage}/>
-        <Text style={Style.productName}>{name}</Text>
+        <Text style={Style.productName}>{name.toUpperCase()}</Text>
       </View>
     );
   }

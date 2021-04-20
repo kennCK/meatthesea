@@ -77,7 +77,7 @@ class Menu extends Component {
       console.log('\n...............RETRIEVING...................\n\n')
       this.props.load(true)
       Api.getRequest(
-        Routes.productsRetrieve + '?categoryid=' + filter.id,
+        Routes.productsRetrieve + '?categoryid=' + filter.id + '&PublishedStatus=true',
         response => {
           this.props.load(false)
           setMenuProducts(response.products);

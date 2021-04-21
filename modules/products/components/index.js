@@ -75,7 +75,7 @@ class Products extends Component {
     ];
     const { restaurant, deliStore } = this.props.state;
     return (
-      <View style={[{flex: 1, backgroundColor:Color.white, padding: 0}]}>
+      <View style={[{flex: 1, backgroundColor:Color.black, padding: 0}]}>
         <Pagination
           menu={menu}
           activeIndex={this.props.active}
@@ -83,10 +83,14 @@ class Products extends Component {
         />
         {this.props.active == 0 && (
           <ScrollView
-          style={this.props.active == 0 ? Style.showScroll : Style.hideScroll}
-          showsVerticalScrollIndicator={false}>
+            style={this.props.active == 0 ? Style.showScroll : Style.hideScroll}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+          >
             <View style={Style.scrollContainer}>
-              <Image source={require('assets/products/res.png')} />
+              <View style={{width: '100%'}}>
+                <Image source={require('assets/products/res.png')}/>
+              </View>
               <View style={Style.imageRow}>
                 {restaurant != null &&
                   restaurant.map((data, idx) => {

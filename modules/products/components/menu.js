@@ -68,18 +68,17 @@ class Menu extends Component {
   }
 
   retrieveProducts = () => {
-    const {filter, search, storeLocation, menuProducts} = this.props.state;
+    console.log('MENU>>>......')
+    const {filter, search, storeLocation} = this.props.state;
     const { setMenuProducts } = this.props
     if (filter == null) {
       return;
     }
+    console.log('menu retrieve condition......')
     if (search == null || search == '' || storeLocation == null) {
-      console.log('\n...............RETRIEVING...................\n\n')
-      this.props.load(true)
       Api.getRequest(
         Routes.productsRetrieve + '?categoryid=' + filter.id + '&PublishedStatus=true',
         response => {
-          this.props.load(false)
           setMenuProducts(response.products);
         },
         error => {
@@ -88,19 +87,21 @@ class Menu extends Component {
         },
       );
     } else {
-      console.log('\n...............SEARCHING...................\n\n')
+      console.log('searching......')
       let parameters =
         '?Keyword=' +
         search +
         '&StoreId=' +
         storeLocation.id +
-        '&CategoryIds=' +
-        filter.id;
+        (filter === null ? '' : `&CategoryIds=${filter.id}`) +
+        '&CategoryType=' + this.state.menu
       Api.getRequest(
         Routes.productSearch + parameters,
         response => {
-          this.props.load(false)
-          setMenuProducts(response.products);
+          if(response !== undefined && response !== null){
+            const { setMenuProducts } = this.props
+            setMenuProducts(response.products);
+          }
         },
         error => {
           this.props.load(false)

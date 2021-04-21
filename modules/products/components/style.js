@@ -34,7 +34,9 @@ export default {
   productName: {
     textAlign: 'center',
     fontWeight: "bold",
-    fontSize: BasicStyles.standardFontSize
+    fontSize: BasicStyles.standardFontSize,
+    color: Color.white,
+    marginTop: 5
   },
   menuContainer: {
     flexDirection: 'row',

@@ -98,12 +98,15 @@ class Welcome extends Component {
         search +
         '&StoreId=' +
         storeLocation.id +
-        '&CategoryIds=' +
-        filter.id;
+        (filter === null ? '' : `&CategoryIds=${filter.id}`) +
+        '&CategoryType=' + this.state.menu
       Api.getRequest(
         Routes.productSearch + parameters,
         response => {
-          setMenuProducts(response.products);
+          if(response !== undefined && response !== null){
+            const { setMenuProducts } = this.props
+            setMenuProducts(response.products);
+          }
         },
         error => {
           this.props.load(false)
@@ -391,8 +394,8 @@ class Welcome extends Component {
     const { setSearch, setHomepageSettings } = this.props;
     if(search.length > 3){
       setHomepageSettings({
-        type: 1,
-        selectedMenu: 1
+        type: this.state.menu,
+        selectedMenu: this.state.menu
       })
       setSearch(search)
       let parameters =
@@ -400,17 +403,21 @@ class Welcome extends Component {
         search +
         '&StoreId=' +
         storeLocation.id +
-        (filter === null ? '' : `&CategoryIds=${filter.id}`)
+        (filter === null ? '' : `&CategoryIds=${filter.id}`) +
+        '&CategoryType=' + this.state.menu
+      console.log('search parameters: ', parameters)
       Api.getRequest(
         Routes.productSearch + parameters,
         response => {
+          console.log('SEARCH RESPONSE: ', response)
           let categories  = [];
+          if(response !== undefined && response !== null){
+            const { setMenuProducts } = this.props
+            setMenuProducts(response.products);
+          }
           // response.products.forEach(el => {
           //   categories.push(el.)
           // })
-          console.log(`\n\n-------------------------${JSON.stringify(response)}-----------------------------\n\n`)
-          const { setMenuProducts } = this.props
-          setMenuProducts(response.products);
         },
         error => {
           console.log(error);

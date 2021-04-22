@@ -24,7 +24,6 @@ class OrderItems extends Component {
 
   componentDidMount() {
     const {data} = this.props
-    console.log(data.product.attributes[0].attribute_values)
   }
 
   updateCart(data, increment = true) {
@@ -64,6 +63,30 @@ class OrderItems extends Component {
         console.log(error);
       }
     );
+  }
+
+  returnAttributes = (type) => {
+    let { data } = this.props;
+      if(data.product.attributes.lenght > 0){
+        return (data.product.attributes[type].attribute_values.map((addOn, ndx) => {
+          return (
+            <Text key={ndx + 'add-ons2'}
+              style={[
+                {
+                  color: Color.black,
+                  marginTop: 2,
+                  marginBottom: 2
+                },
+                Style.fontSize(BasicStyles.standardFontSize)
+              ]}
+            >
+              + {addOn.name}
+            </Text>
+          )
+        }))
+      }else {
+        return <Text></Text>
+      }
   }
 
   render() {
@@ -150,52 +173,9 @@ class OrderItems extends Component {
                       ]}>
                         {data.product.name}
                       </Text>
-                      {
-                        data.product.attributes[0].attribute_values.map((addOn, ndx) => {
-                          return (
-                            <Text key={ndx + 'add-ons1'}
-                              style={[
-                                {
-                                  color: Color.black,
-                                  marginTop: 2,
-                                  marginBottom: 2
-                                },
-                                Style.fontSize(BasicStyles.standardFontSize)
-                              ]}
-                            >
-                              + {addOn.name}
-                            </Text>
-                          )
-                        })
-                      }
-                      {
-                        data.product.attributes[1].attribute_values.map((addOn, ndx) => {
-                          return (
-                            <Text key={ndx + 'add-ons2'}
-                              style={[
-                                {
-                                  color: Color.black,
-                                  marginTop: 2,
-                                  marginBottom: 2
-                                },
-                                Style.fontSize(BasicStyles.standardFontSize)
-                              ]}
-                            >
-                              + {addOn.name}
-                            </Text>
-                          )
-                        })
-                      }
+                      {this.returnAttributes(0)}
+                      {this.returnAttributes(1)}
                     </View>
-                    <Text style={[
-                        { 
-                          marginVertical: 2,
-                          paddingTop: 10
-                        },
-                        Style.fontSize(BasicStyles.standardFontSize),
-                    ]}>
-                        {data.product.short_description}
-                    </Text>
                   </View>
                   <Text style={{
                       position: 'absolute',

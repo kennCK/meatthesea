@@ -35,6 +35,7 @@ import {connect} from 'react-redux';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment';
 import CurrentLocation from 'components/Location/location';
+import Alert from 'modules/generic/alert';
 
 const width = Math.round(Dimensions.get('window').width);
 class Welcome extends Component {
@@ -59,7 +60,8 @@ class Welcome extends Component {
       value: '',
       addresses: [],
       defaultIndex: null,
-      isGettingCurrentLocation: false
+      isGettingCurrentLocation: false,
+      noProductFound: false
     };
   }
 
@@ -82,8 +84,15 @@ class Welcome extends Component {
       return;
     }
     if (search == null || search == '' || storeLocation == null) {
+      let params = ''
+      if(filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.length > 0) {
+        params = (filter === null ? '' : `?CategoryId=${filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true'
+      }else{
+        params = (filter === null ? '' : `?CategoryId=${filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true'
+      }
+      console.log(params)
       Api.getRequest(
-        Routes.productsRetrieve + '?categoryid=' + filter.id + '&PublishedStatus=true',
+        Routes.productsRetrieve + params,
         response => {
           setMenuProducts(response.products);
         },
@@ -98,7 +107,7 @@ class Welcome extends Component {
         search +
         '&StoreId=' +
         storeLocation.id +
-        (filter === null ? '' : `&CategoryIds=${filter.id}`) +
+        (filter === null ? '' : `&CategoryId=${filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item[0].id}`) +
         '&CategoryType=' + this.state.menu
       Api.getRequest(
         Routes.productSearch + parameters,
@@ -393,10 +402,6 @@ class Welcome extends Component {
     const { storeLocation, filter , search} = this.props.state
     const { setSearch, setHomepageSettings } = this.props;
     if(search.length > 3){
-      setHomepageSettings({
-        type: this.state.menu,
-        selectedMenu: this.state.menu
-      })
       setSearch(search)
       let parameters =
         '?Keyword=' +
@@ -405,15 +410,37 @@ class Welcome extends Component {
         storeLocation.id +
         (filter === null ? '' : `&CategoryIds=${filter.id}`) +
         '&CategoryType=' + this.state.menu
-      console.log('search parameters: ', parameters)
       Api.getRequest(
         Routes.productSearch + parameters,
         response => {
-          console.log('SEARCH RESPONSE: ', response)
-          let categories  = [];
+          // console.log('SEARCH RESPONSE: ', response)
           if(response !== undefined && response !== null){
-            const { setMenuProducts } = this.props
-            setMenuProducts(response.products);
+            if(response.products.length > 0) {
+              const {restaurant, deliStore} = this.props.state
+              let temp = this.state.menu === 0 ? restaurant : deliStore
+              let item = []
+              temp.forEach(el => {
+                response.products.forEach(le => {
+                  if(el.id === le.category_id) {
+                    item.push(el)
+                  }
+                })
+              })
+              const{ setFilter } = this.props;
+              let objectFilter = {}
+              objectFilter[this.state.menu === 0 ? 'restaurant' : 'deli'] = {item: item,
+                category: this.state.menu === 0 ? 'restaurant' : 'deli'
+              }
+              setFilter(objectFilter)
+              setHomepageSettings({
+                type: this.state.menu,
+                selectedMenu: this.state.menu
+              })
+              const { setMenuProducts } = this.props
+              setMenuProducts(response.products);
+            }else{
+              this.setState({alertText: `Product is not Found.`, noProductFound: true})
+            }
           }
           // response.products.forEach(el => {
           //   categories.push(el.)
@@ -640,8 +667,7 @@ class Welcome extends Component {
                 placeholder={'Search'}
                 onChangeText={(searches) => {
                     setSearch(searches)
-                    if(search === null || search === '') {
-                      console.log('testing')
+                    if(search !== null && search === '') {
                       this.retrieveProducts();
                     }
                   }
@@ -892,6 +918,12 @@ class Welcome extends Component {
             </View>
           )
         }
+        <Alert 
+          show={this.state.noProductFound}
+          text={this.state.alertText}
+          onClick={()=> this.setState({ noProductFound: false}) }
+          alertType={'primary'}
+        />
         {isLoading ? <Spinner mode="overlay"/> : null }
       </SafeAreaView>
     );
@@ -912,7 +944,8 @@ const mapDispatchToProps = (dispatch) => {
     setMenuProducts: (menuProducts) => dispatch(actions.setMenuProducts(menuProducts)),
     setUserLocation: (userLocation) => dispatch(actions.setUserLocation(userLocation)),
     setSelectedDeliveryTime: (deliveryTime) => dispatch(actions.setSelectedDeliveryTime(deliveryTime)),
-    setShowRating: (showRating) => dispatch(actions.setShowRating(showRating))
+    setShowRating: (showRating) => dispatch(actions.setShowRating(showRating)),
+    setFilter: filter => dispatch(actions.setFilter(filter)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);

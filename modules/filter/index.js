@@ -50,15 +50,64 @@ class Filter extends Component {
 
   setSelectedFilter = async (item, category) => {
     const{ setFilter } = await this.props;
-    await setFilter({...item,
-      category: category
-    })
+    const { filter } = this.props.state;
+    // let isSet = null
+    // if(filter !== null && filter !== undefined) {
+    //   isSet = Object.keys(filter)
+    // }else {
+    //   isSet = []
+    // }
+    let tempRestaurant = []
+    let tempDeli = []
+    // if(isSet.length > 0) {
+    //   if(filter[category] !== undefined) {
+    //     tempRestaurant = filter['restaurant'].item
+    //     tempDeli = filter['deli'].item
+    //   }
+    // }
+
+    if(category === 'restaurant') {
+      tempRestaurant.push(item)
+    }else if(category === 'deli') {
+      tempDeli.push(item)
+    }
+
+    let objectFilter = {}
+    objectFilter['restaurant'] = {item: tempRestaurant, category: 'restaurant'}
+    objectFilter['deli'] = {item: tempDeli, category: 'deli'}
+
+    await setFilter(objectFilter)
+
     const { setHomepageSettings } = await this.props;
     await setHomepageSettings({
       type: category == 'restaurant' ? 0 : 1,
       selectedMenu: category == 'restaurant' ? 0 : 1
     })
+
     await this.props.navigation.navigate('homepageStack')
+  }
+
+  filterCheck = (toCheck, category) => {
+    const {filter, homepage} = this.props.state;
+    let _return = false;
+    if(filter !== null && filter !== undefined) {
+      if(filter[category] !== undefined){
+        // filter[category].item.forEach(el => {
+        //   if(el.id === toCheck) {
+        //     _return = true;
+        //     return;
+        //   }
+        // })
+        if(filter[category].item.length > 0) {
+          _return = filter[category].item[0].id === toCheck
+        }else{
+          _return = false
+        }
+      }
+    }else {
+      _return = false;
+    }
+    return _return;
   }
 
   render() {
@@ -78,8 +127,8 @@ class Filter extends Component {
                 onPress={() => this.setSelectedFilter(item, 'restaurant')}
                 >
                 <Text style={{
-                  color: filter !== null && filter.id === item.id ? Color.primary : Color.black,
-                  fontWeight: filter !== null && filter.id === item.id ? 'bold' : 'normal'
+                  color: filter !== null && this.filterCheck(item.id, 'restaurant') ? Color.primary : Color.black,
+                  fontWeight: filter !== null && this.filterCheck(item.id, 'restaurant') ? 'bold' : 'normal'
                 }}>{item.name}</Text>
               </TouchableOpacity>)
             })
@@ -90,19 +139,19 @@ class Filter extends Component {
           </View>
           <View style={[{borderBottomWidth: 1, borderBottomColor: Color.lightGray, padding: 20, paddingTop: 0}]}>
           { deliStore != null &&
-                deliStore.map((item, idx) => {
-                  return <TouchableOpacity
-                    style={[{ marginTop: 15 }]}
-                    key={idx}
-                    onPress={() => this.setSelectedFilter(item, 'deli')}
-                    >
-                    <Text style={{
-                      color: filter !== null && filter.id === item.id ? Color.primary : Color.black,
-                      fontWeight: filter !== null && filter.id === item.id ? 'bold' : 'normal'
-                    }}>{item.name}</Text>
-                  </TouchableOpacity>
-                })
-              }
+            deliStore.map((item, idx) => {
+              return <TouchableOpacity
+                style={[{ marginTop: 15 }]}
+                key={idx}
+                onPress={() => this.setSelectedFilter(item, 'deli')}
+                >
+                <Text style={{
+                  color: filter !== null && this.filterCheck(item.id, 'deli') ? Color.primary : Color.black,
+                  fontWeight: filter !== null && this.filterCheck(item.id, 'deli') ? 'bold' : 'normal'
+                }}>{item.name}</Text>
+              </TouchableOpacity>
+            })
+          }
           </View>
         </ScrollView>
         {this.state.isLoading ? <Spinner mode="overlay"/> : null }

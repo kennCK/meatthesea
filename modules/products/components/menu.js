@@ -68,16 +68,14 @@ class Menu extends Component {
   }
 
   retrieveProducts = () => {
-    console.log('MENU>>>......')
-    const {filter, search, storeLocation} = this.props.state;
+    const {filter, search, storeLocation, homepage} = this.props.state;
     const { setMenuProducts } = this.props
     if (filter == null) {
       return;
     }
-    console.log('menu retrieve condition......')
     if (search == null || search == '' || storeLocation == null) {
       Api.getRequest(
-        Routes.productsRetrieve + '?categoryid=' + filter.id + '&PublishedStatus=true',
+        Routes.productsRetrieve + (filter === null ? '' : `?CategoryId=${filter[homepage.type === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true',
         response => {
           setMenuProducts(response.products);
         },
@@ -87,13 +85,12 @@ class Menu extends Component {
         },
       );
     } else {
-      console.log('searching......')
       let parameters =
         '?Keyword=' +
         search +
         '&StoreId=' +
         storeLocation.id +
-        (filter === null ? '' : `&CategoryIds=${filter.id}`) +
+        (filter === null ? '' : `&CategoryId=${filter[homepage.type === 0 ? 'restaurant' : 'deli'].item[0].id}`) +
         '&CategoryType=' + this.state.menu
       Api.getRequest(
         Routes.productSearch + parameters,
@@ -166,7 +163,34 @@ class Menu extends Component {
 
   setSelectedFilter = async (item, category) => {
     const {setFilter} = await this.props;
-    await setFilter({...item, category: category});
+    const { filter } = this.props.state;
+    // let isSet = null
+    // if(filter !== null && filter !== undefined) {
+    //   isSet = Object.keys(filter)
+    // }else {
+    //   isSet = []
+    // }
+    let tempRestaurant = []
+    let tempDeli = []
+    // if(isSet.length > 0) {
+    //   if(filter[category] !== undefined) {
+    //     tempRestaurant = filter['restaurant'].item
+    //     tempDeli = filter['deli'].item
+    //   }
+    // }
+
+    if(category === 'restaurant') {
+      tempRestaurant.push(item)
+    }else if(category === 'deli') {
+      tempDeli.push(item)
+    }
+
+    let objectFilter = {}
+    objectFilter['restaurant'] = {item: tempRestaurant, category: 'restaurant'}
+    objectFilter['deli'] = {item: tempDeli, category: 'deli'}
+
+    await setFilter(objectFilter)
+    // await setFilter({...item, category: category});
     await this.retrieveProducts();
   }
 
@@ -240,9 +264,7 @@ class Menu extends Component {
       {},
       response => {
         this.retrieveCart();
-        console.log('TESTING: ', response)
         if(response != undefined) {
-          console.log('Add to basket response: ', response)
           let temp = {
             addToBasketResponse : {
               
@@ -269,6 +291,30 @@ class Menu extends Component {
       },
     );
   }
+
+  filterCheck = (toCheck, category) => {
+    const {filter, homepage} = this.props.state;
+    let _return = false;
+    if(filter !== null && filter !== undefined) {
+      if(filter[category] !== undefined){
+        // filter[category].item.forEach(el => {
+        //   if(el.id === toCheck) {
+        //     _return = true;
+        //     return;
+        //   }
+        // })
+        if(filter[category].item.length > 0) {
+          _return = filter[category].item[0].id === toCheck
+        }else{
+          _return = false
+        }
+      }
+    }else {
+      _return = false;
+    }
+    return _return;
+  }
+
 
   render() {
     const {restaurant, deliStore, filter, homepage, menuProducts} = this.props.state;
@@ -307,7 +353,7 @@ class Menu extends Component {
                 return (
                   <TouchableOpacity
                     style={[Style.menuButton, {
-                      backgroundColor: filter && filter.id == data.id ? Color.secondary : Color.white
+                      backgroundColor: filter && this.filterCheck(data.id, 'restaurant') ? Color.secondary : Color.white
                     }]}
                     onPress={() => this.setSelectedFilter(data, 'restaurant')}
                     key={idx}>
@@ -330,7 +376,7 @@ class Menu extends Component {
                 return (
                   <TouchableOpacity
                     style={[Style.menuButton, {
-                      backgroundColor: filter && filter.id == data.id ? Color.secondary : Color.white
+                      backgroundColor: filter && this.filterCheck(data.id, 'deli') ? Color.secondary : Color.white
                     }]}
                     onPress={() => this.setSelectedFilter(data, 'deli')}
                     key={idx}>

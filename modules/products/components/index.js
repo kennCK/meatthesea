@@ -59,9 +59,33 @@ class Products extends Component {
 
   setSelectedFilter(item, category){
     const{ setFilter } = this.props;
-    setFilter({...item,
-      category: category
-    })
+    const { filter } = this.props.state;
+    // let isSet = null
+    // if(filter !== null && filter !== undefined) {
+    //   isSet = Object.keys(filter)
+    // }else {
+    //   isSet = []
+    // }
+    let tempRestaurant = []
+    let tempDeli = []
+    // if(isSet.length > 0) {
+    //   if(filter[category] !== undefined) {
+    //     tempRestaurant = filter['restaurant'].item
+    //     tempDeli = filter['deli'].item
+    //   }
+    // }
+
+    if(category === 'restaurant') {
+      tempRestaurant.push(item)
+    }else if(category === 'deli') {
+      tempDeli.push(item)
+    }
+
+    let objectFilter = {}
+    objectFilter['restaurant'] = {item: tempRestaurant, category: 'restaurant'}
+    objectFilter['deli'] = {item: tempDeli, category: 'deli'}
+
+    setFilter(objectFilter)
   }
 
   render() {
@@ -88,9 +112,7 @@ class Products extends Component {
             showsHorizontalScrollIndicator={false}
           >
             <View style={Style.scrollContainer}>
-              <View style={{width: '100%'}}>
-                <Image source={require('assets/products/res.png')}/>
-              </View>
+              <Image source={require('assets/products/res.png')}/>
               <View style={Style.imageRow}>
                 {restaurant != null &&
                   restaurant.map((data, idx) => {

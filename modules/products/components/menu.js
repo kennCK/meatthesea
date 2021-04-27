@@ -21,6 +21,7 @@ import {connect} from 'react-redux';
 import Counter from 'modules/products/components/Counter.js';
 import { color } from 'react-native-reanimated';
 import Alert from 'modules/generic/alert';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 const width = Math.round(Dimensions.get('window').width);
 
@@ -42,7 +43,10 @@ class Menu extends Component {
       isAddingAddressName: false,
       alertText: "",
       orderMaximumQuantity: 0,
-      isError: true
+      isError: true,
+      addOn1: {},
+      addOn2: {},
+      selectedIds: []
     };
   }
 
@@ -220,8 +224,20 @@ class Menu extends Component {
         itemDescription: item.full_description,
         qty: selectedCartItem ? selectedCartItem.quantity : 1,
         orderMaximumQuantity: item.order_maximum_quantity
+      }, () => {
+        if(item.attributes[1] !== undefined) {
+          if(item.attributes[1].product_attribute_id == 12) { //id 12 means bundle items
+            this.setState({addOn1: item.attributes[1], addOn2: item.attributes[0]})
+          }else{
+            this.setState({addOn1: item.attributes[0], addOn2: item.attributes[1]})
+          }
+        }else{
+          this.setState({addOn1: item.attributes[0],
+            addOn2: item.attributes[1]});
+        }
       });
     }, 1000);
+
   }
 
   alertMethod(title, message) {
@@ -259,6 +275,18 @@ class Menu extends Component {
       '&Quantity=' +
       this.state.qty +
       '&CartType=1';
+      this.state.selectedIds.forEach((el, ndx) => {
+        parameters += `&AttributesId=${this.state.addOn2.id}-${el}`
+      })
+      if(this.state.addOn1 !== undefined) {
+        if(Object.keys(this.state.addOn1).length > 0){
+          this.state.addOn1.attribute_values.forEach(el => {
+            parameters += `&AttributesId=${this.state.addOn1.id}-${el.id}`
+          })
+        }
+      }
+      console.log('ADD TO CART PARAMETERS: ', parameters)
+      console.log('TEST: ', this.state.addOn1, this.state.addOn2)
     Api.postRequest(
       (productInCart ? Routes.shoppingCartItemsUpdateCart : Routes.shoppingCartItemsAddToCart) + parameters,
       {},
@@ -282,7 +310,7 @@ class Menu extends Component {
       error => {
 
         this.setState({
-          alertText: 'Product requested to be added in the cart is not allowed. Product is in different Store.',
+          alertText: 'Product requested to be added in the cart is not allowed.',
           isError: true
         }, () => {
           this.setState({isAddingAddressName: true})
@@ -313,6 +341,88 @@ class Menu extends Component {
       _return = false;
     }
     return _return;
+  }
+
+  returnAddOn1 = () => {
+    let addOn1 = this.state.addOn1
+    if(addOn1 !== undefined) {
+      if(Object.keys(addOn1).length > 0){
+        return addOn1.attribute_values.map((el, ndx) => {
+          return <Text key={'a_on1' + ndx} style={{
+            marginTop: 10
+          }}>{el.name}</Text>
+        })
+      }else {
+        return null
+      }
+    }else {
+      return null
+    }
+  }
+
+  returnAddOn2 = () => {
+    let addOn2 = this.state.addOn2
+    if(addOn2 !== undefined) {
+      if(Object.keys(addOn2).length > 0){
+        return addOn2.attribute_values.map((el, ndx) => {
+          return <View style={{
+              marginTop: 10,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}
+            key={'a_on2' + ndx}
+          >
+            <Text>{el.name}</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}
+            >
+              <Text>(+$ {el.price_adjustment}){el.initial}</Text>
+              <RadioForm
+                formHorizontal={true}
+                animation={true}
+              >
+                {
+                  <RadioButton labelHorizontal={true} key={'a_on1_button' + ndx} >
+                    <RadioButtonInput
+                      obj={{label: '', value: el.id}}
+                      index={ndx}
+                      isSelected={this.state.selectedIds.includes(el.id)}
+                      onPress={(value) => {
+                        if(this.state.selectedIds.includes(el.id)) {
+                          let index = this.state.selectedIds.indexOf(el.id)
+                          let temp1 = this.state.selectedIds
+                          temp1.splice(index, 1)
+                          this.setState({selectedIds: temp1})
+                        }else {
+                          let temp2 = this.state.selectedIds
+                          temp2.push(el.id)
+                          this.setState({selectedIds: temp2})
+                        }
+                      }}
+                      borderWidth={1}
+                      buttonInnerColor={Color.primary}
+                      buttonOuterColor={Color.primary}
+                      buttonSize={8}
+                      buttonOuterSize={16}
+                      buttonStyle={{marginTop: 8, marginLeft: 15}}
+                      buttonWrapStyle={{}}
+                    />
+                  </RadioButton>
+                }  
+              </RadioForm>
+            </View>
+          </View>
+        })
+      }else {
+        return null
+      }
+    }else {
+      return null
+    }
   }
 
 
@@ -509,7 +619,10 @@ class Menu extends Component {
             </TouchableHighlight>
             <View
               style={{
-                padding: 30,
+                paddingLeft: 30,
+                paddingRight: 30,
+                paddingTop: 30,
+                paddingBottom: 0,
                 borderBottomWidth: 1,
                 borderBottomColor: Color.gray,
                 width: width
@@ -529,6 +642,24 @@ class Menu extends Component {
                 {this.state.isError}
               </Text>
             </View>
+            <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+              <View
+                style={{
+                  padding: 30,
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                  width: width
+                }}
+              >
+                {this.state.addOn1 !== undefined && this.state.addOn2 !== undefined &&
+                  <Text style={{
+                    fontWeight: 'bold'
+                  }}>Add more</Text>
+                }
+                {this.returnAddOn1()}
+                {this.returnAddOn2()}
+              </View>
+            </ScrollView>
           </View>
           <View style={{
             alignItems: 'center'

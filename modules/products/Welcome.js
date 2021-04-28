@@ -194,6 +194,7 @@ class Welcome extends Component {
     }
     this.isLoading(true);
     Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
+        console.log('RETRIEVE CART: ', response)
         this.isLoading(false);
         const { setCart } = this.props;
         setCart(response.shopping_carts)
@@ -201,13 +202,15 @@ class Welcome extends Component {
         this.isLoading(false);
         console.log(error);
     });
-    // Api.getRequest(Routes.crockeryRetrieve(user.id, storeLocation.id), response => {
-    //   const { setPickupCrockeries } = this.props;
-    //   setPickupCrockeries(response.crockery)
-    //   console.log('\n\nRETRIEVING CROCKERY RESPONSE: ', response, '\n\n')
-    // }, error => {
-    //   console.log('\n\nRETRIEVING CROCKERY ERROR: ', error, '\n\n')
-    // })
+
+    let params = `get_crockery?StoreId=${storeLocation.id}&Status=10&Status=40&CustomerId=${user.id}`;
+    Api.getRequest(Routes.crockeryRetrieve + params , response => {
+      const { setPickupCrockeries } = this.props;
+      setPickupCrockeries(response.crockery)
+      console.log('\n\nRETRIEVING CROCKERY RESPONSE: ', response, '\n\n')
+    }, error => {
+      console.log('Retrieve crockery error: ', error)
+    })
   }
 
   changeSelectedMenu(data, type) {

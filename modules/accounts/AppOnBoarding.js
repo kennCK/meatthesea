@@ -20,6 +20,7 @@ import config from 'src/config';
 import LocationWithIcon from './components/LocationInput.js';
 import { fcmService } from 'services/FCMService';
 import { localNotificationService } from 'services/LocalNotificationService';
+import CurrentLocation from 'components/Location/location';
 class AppOnBoarding extends Component {
   //Screen1 Component
   constructor(props) {
@@ -204,11 +205,32 @@ class AppOnBoarding extends Component {
     }
   }
 
+  retrieveNearestStore() {
+    const {location} = this.props.state;
+    const {setIsLocationRetrieve} = this.props;
+    setIsLocationRetrieve(false);
+    Api.getRequest(Routes.nearestStore(location.latitude, location.longitude), response => {
+      console.log('NEAREST STORE: ', response)
+    }, error => {
+      console.log('RETRIEVING NEAREST STORE ERROR: ', error);
+    })
+    
+    return null
+  }
+
+  componentDidUpdate() {
+    const { isLocationRetrieve, location } = this.props.state
+    if(isLocationRetrieve && location !== null) {
+      this.retrieveNearestStore()
+    }
+  }
+
   render() {
     const { isLoading, errorMessage, isResponseError } = this.state;
-
+    const { isLocationRetrieve } = this.props.state
     return (
       <ScrollView style={Style.ScrollView}>
+        <CurrentLocation />
         {isLoading ? <Spinner mode="overlay" /> : null}
           <Header params={'AppOnBoarding'} lg></Header>
           <View style={Style.MainContainer}>
@@ -335,6 +357,7 @@ const mapDispatchToProps = (dispatch) => {
     setStores: (stores) => dispatch(actions.setStores(stores)),
     logout: () => dispatch(actions.logout()),
     login: (email, password, user, token) => dispatch(actions.login(email, password, user, token)),
+    setIsLocationRetrieve: (isLocationRetrieve) => dispatch(actions.setIsLocationRetrieve(isLocationRetrieve))
   };
 };
 

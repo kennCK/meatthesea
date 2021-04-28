@@ -137,7 +137,7 @@ const initialState = {
   paypalSuccessData: null,
   menuProducts: null,
   showRating: false,
-  isLocationRetrieve: false
+  isLocationRetrieve: true
 };
 
 storeData = async (key, value) => {

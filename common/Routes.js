@@ -159,5 +159,8 @@ export default {
   getCountries: apiUrl + 'countries',
 
   //WaitList
-  waitListAdd: (name, email, phone) => apiUrl + `add_waitlist?FullName=${name}&Email=${email}&PhoneNumber=${phone}`
+  waitListAdd: (name, email, phone) => apiUrl + `add_waitlist?FullName=${name}&Email=${email}&PhoneNumber=${phone}`,
+
+  // nearest store
+  nearestStore: (lat, long) => apiUrl + `nearest_store?latitude=${lat}&longitude=${long}`
 };

@@ -10,6 +10,7 @@ import { faTrashAlt, faTrash } from '@fortawesome/free-regular-svg-icons';
 import {connect} from 'react-redux';
 import Api from 'services/apiv2/index.js';
 import Confirm from 'modules/generic/confirm';
+import { faAlignJustify } from '@fortawesome/free-solid-svg-icons';
 
 class OrderItems extends Component {
   constructor(props) {
@@ -51,7 +52,6 @@ class OrderItems extends Component {
   }
 
   removingItem = (data) => {
-    console.log(data)
     const { user, storeLocation } = this.props.state;
     if(user == null || storeLocation == null || data == null){
       return
@@ -67,10 +67,26 @@ class OrderItems extends Component {
 
   returnAttributes = (type) => {
     let { data } = this.props;
-      if(data.product.attributes.lenght > 0){
-        return (data.product.attributes[type].attribute_values.map((addOn, ndx) => {
-          return (
-            <Text key={ndx + 'add-ons2'}
+    console.log(data.attributes)
+    if(data.product_attributes.length > 0){
+      let ids = []
+      let details = []
+      data.product_attributes.forEach((id, ndx) => {
+        ids.push(parseInt(id.value))
+      })
+      data.product.attributes[type].attribute_values.forEach( el => {
+        if(ids.includes(el.id)){
+          details.push(el)
+        }
+      })
+
+      return (details.map((addOn, ndx) => {
+        return (
+          <View key={ndx + 'add-ons2'} style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}>
+            <Text
               style={[
                 {
                   color: Color.black,
@@ -80,123 +96,108 @@ class OrderItems extends Component {
                 Style.fontSize(BasicStyles.standardFontSize)
               ]}
             >
-              + {addOn.name}
+              + {addOn.name }
             </Text>
-          )
-        }))
-      }else {
-        return <Text></Text>
-      }
+            {data.product.attributes[type].product_attribute_id == 11 && <Text>
+              {'HK$ ' + addOn.price_adjustment}
+            </Text>}
+          </View>
+        )
+      }))
+    }else {
+      return <Text></Text>
+    }
   }
 
   render() {
     let { data } = this.props;
     const { cart } = this.props.state;
     return (
-      <View><View style={{ paddingTop: 20, marginBottom: 15 }}>
+      <View style={{ paddingTop: 20, marginBottom: 15 }}>
         {
           data && (
             <View>
-              <View >
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                  <View
-                    style={{
-                      flexDirection: 'column'
-                    }}
-                  >
-                    <View>
-                      <View style={[
-                          BasicStyles.titleText,
-                          Style.fontSize(BasicStyles.standardFontSize),
-                          {
-                            marginTop: -7
-                          }
-                      ]}>
-                        <View style={{
-                          flexDirection: 'row',
-                          alignItems: 'center'
-                        }}>
-                          <>
-                          <TouchableOpacity onPress={() => {
-                              this.updateCart(data, false)
-                            }}>
-                            <Text style={{
-                              marginHorizontal: 2,
-                              fontSize: 20,
-                              paddingLeft: 5,
-                              paddingRight: 5
-                            }}>-</Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity disabled>
-                            <Text style={{
-                                fontSize: BasicStyles.standardFontSize,
-                                marginHorizontal: 4,
-                                lineHeight: 25
-                            }}>{data.quantity > 0 ? data.quantity : 0}</Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity onPress={() => {
-                            this.updateCart(data)
-                          }}>
-                            <Text style={{
-                              marginHorizontal: 2,
-                              fontSize: 20,
-                              paddingLeft: 5
-                            }}>+</Text>
-                          </TouchableOpacity>
-                          </>
-                        </View>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        alignItems: 'center',
-                        paddingLeft: 7,
-                        paddingTop: 10
-                      }}
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'column', width: '27%', padding: 15}}>
+                  <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <TouchableOpacity onPress={() => {
+                      this.updateCart(data, false)
+                    }}>
+                      <Text style={{
+                        marginHorizontal: 2,
+                        fontSize: 20,
+                        paddingLeft: 5,
+                        paddingRight: 5
+                      }}>-</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity disabled>
+                      <Text style={{
+                          fontSize: BasicStyles.standardFontSize,
+                          marginHorizontal: 4,
+                          lineHeight: 25
+                      }}>{data.quantity > 0 ? data.quantity : 0}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => {
+                      this.updateCart(data)
+                    }}>
+                      <Text style={{
+                        marginHorizontal: 2,
+                        fontSize: 20,
+                        paddingLeft: 5
+                      }}>+</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: 50,
+                  }}>
+                    <TouchableOpacity
+                      onPress={() => {this.removeCart()}}
                     >
-                      <TouchableOpacity
-                        onPress={() => {this.removeCart()}}
-                      >
-                        <FontAwesomeIcon 
-                          icon={faTrashAlt}
-                          size={BasicStyles.iconSize}
-                        />
-                      </TouchableOpacity>
-                    </View>
+                      <FontAwesomeIcon 
+                        icon={faTrashAlt}
+                        size={BasicStyles.iconSize}
+                      />
+                    </TouchableOpacity>
                   </View>
-                  <View>
-                    <View>
-                      <Text style={[
-                          { marginVertical: 2 },
-                          Style.fontWeight("700"),
-                          Style.fontSize(BasicStyles.standardFontSize),
-                      ]}>
-                        {data.product.name}
-                      </Text>
-                      {this.returnAttributes(0)}
-                      {this.returnAttributes(1)}
-                    </View>
+                </View>
+                <View style={{width: '73%', padding: 15}}>
+                  <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                  }}>
+                    <Text>
+                      {data.product.name}
+                    </Text>
+                    <Text>
+                      {'HK$ ' + data.product.price}
+                    </Text>
                   </View>
-                  <Text style={{
-                      position: 'absolute',
-                      fontSize:BasicStyles.standardFontSize,
-                      right: 25,
-                      top: 5
-                  }}>{'HK$ ' + data.product.price}</Text>
+                  <View style={{
+                    marginTop: 10
+                  }}>
+                    {this.returnAttributes(0)}
+                    {this.returnAttributes(1)}
+                  </View>
                 </View>
-                </View>
-          </View>)
-        }
-
+            </View>
+          </View>
+        )}
+        <Confirm
+          show={this.state.isAddingAddressName}
+          text={this.state.alertText}
+          onCancel={()=> {this.setState({ isAddingAddressName: false})} }
+          onSuccess={()=> {this.removingItem(data)} }
+        />
+        <Separator />
       </View>
-      <Confirm
-        show={this.state.isAddingAddressName}
-        text={this.state.alertText}
-        onCancel={()=> {this.setState({ isAddingAddressName: false})} }
-        onSuccess={()=> {this.removingItem(data)} }
-      />
-      <Separator />
-      </View>
+      
     )
   }
 }

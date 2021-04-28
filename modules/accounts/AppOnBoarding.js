@@ -20,6 +20,7 @@ import config from 'src/config';
 import LocationWithIcon from './components/LocationInput.js';
 import { fcmService } from 'services/FCMService';
 import { localNotificationService } from 'services/LocalNotificationService';
+import CurrentLocation from 'components/Location/location';
 class AppOnBoarding extends Component {
   //Screen1 Component
   constructor(props) {
@@ -206,9 +207,10 @@ class AppOnBoarding extends Component {
 
   render() {
     const { isLoading, errorMessage, isResponseError } = this.state;
-
+    const { isLocationRetrieve } = this.props.state
     return (
       <ScrollView style={Style.ScrollView}>
+        <CurrentLocation />
         {isLoading ? <Spinner mode="overlay" /> : null}
           <Header params={'AppOnBoarding'} lg></Header>
           <View style={Style.MainContainer}>

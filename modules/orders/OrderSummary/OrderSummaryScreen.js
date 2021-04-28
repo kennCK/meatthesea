@@ -54,7 +54,6 @@ class OrderSummaryScreen extends Component {
       return
     }
     Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
-      console.log('testing::, ', response.shopping_carts[0])
         const { setCart } = this.props;
         setCart(response.shopping_carts)
         this.setState({

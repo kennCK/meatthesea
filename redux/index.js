@@ -28,7 +28,8 @@ const types = {
   SET_REQUEST_PICKUP_CROCKERY: 'SET_REQUEST_PICKUP_CROCKERY',
   SET_PAYPAL_SUCCESS_DATA: 'SET_PAYPAL_SUCCESS_DATA',
   SET_MENU_PRODUCTS: 'SET_MENU_PRODUCTS',
-  SET_SHOW_RATING: 'SET_SHOW_RATING'
+  SET_SHOW_RATING: 'SET_SHOW_RATING',
+  SET_ISLOCATION_RETRIEVE: 'SET_ISLOCATION_RETRIEVE'
 };
 
 export const actions = {
@@ -106,6 +107,9 @@ export const actions = {
   },
   setShowRating(showRating) {
     return { type: types.SET_SHOW_RATING, showRating}
+  },
+  setIsLocationRetrieve(isLocationRetrieve) {
+    return { type: types.SET_ISLOCATION_RETRIEVE, isLocationRetrieve}
   }
 };
 
@@ -132,7 +136,8 @@ const initialState = {
   requestPickUpCrockery: null,
   paypalSuccessData: null,
   menuProducts: null,
-  showRating: false
+  showRating: false,
+  isLocationRetrieve: false
 };
 
 storeData = async (key, value) => {
@@ -149,7 +154,7 @@ const reducer = (state = initialState, action) => {
   const {notification} = action;
   const {theme} = action;
   const {location} = action;
-  const {stores, showRating} = action;
+  const {stores, showRating, isLocationRetrieve} = action;
   const { filter, categories, settings, search } = action;
   const { cart, details, payment } = action;
   const { crockeries, deliveryTime, order, storeLocation } = action;
@@ -337,6 +342,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         showRating
+      }
+    case types.SET_ISLOCATION_RETRIEVE:
+      return {
+        ...state,
+        isLocationRetrieve
       }
     default:
       return {...state, nav: state.nav};

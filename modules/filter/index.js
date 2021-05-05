@@ -45,12 +45,33 @@ class Filter extends Component {
     }
     this.retrieveRestaurant(storeLocation.id)
     this.retrieveDeli(storeLocation.id)
-    console.log('store', this.props.state.storeLocation.id)
   }
 
   setSelectedFilter = async (item, category) => {
     const{ setFilter } = await this.props;
     const { filter } = this.props.state;
+    if(this.filterCheck(item.id, category)) { // check the new item if already in the FILTER
+      console.log(filter[category].item)
+      let r_tempRestaurant = filter[category].item
+      let r_tempDeli = filter[category].item
+
+      if(category === 'restaurant'){
+        r_tempRestaurant = filter[category].item.filter(x => {
+          x.id !== item.id
+        })
+      }else if(category === 'deli'){
+        r_tempDeli = filter[category].item.filter(x => {
+          x.id !== item.id
+        })
+      }
+
+      let objectFilter = {}
+      objectFilter['restaurant'] = {item: r_tempRestaurant, category: 'restaurant'}
+      objectFilter['deli'] = {item: r_tempDeli, category: 'deli'}
+
+      setFilter(objectFilter)
+      return
+    }
     // let isSet = null
     // if(filter !== null && filter !== undefined) {
     //   isSet = Object.keys(filter)

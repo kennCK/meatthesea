@@ -101,6 +101,12 @@ class Products extends Component {
     return (
       <View style={[{flex: 1, backgroundColor:Color.black, padding: 0}]}>
         <Pagination
+          activeBackground={Color.secondary}
+          inactiveBackground={Color.black}
+          activeTextColor={Color.black}
+          inActiveTextColor={Color.white}
+          activeBorder={Color.primary}
+          inActiveBorder={Color.black}
           menu={menu}
           activeIndex={this.props.active}
           onChange={index => this.props.click(index)}

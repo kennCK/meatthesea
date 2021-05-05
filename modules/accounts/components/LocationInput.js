@@ -44,13 +44,15 @@ export default class LocationInput extends React.Component {
           position: 'absolute',
           right: 10,
           top: 12
-      } } = this.props
+      }, disabled } = this.props
       return (
         <View>
           <TouchableHighlight
             style={[BasicStyles.btn, Style.textInput, style]}
             onPress={() => this.setModalVisible(!modalVisible)}
-            underlayColor={Color.gray}>
+            underlayColor={Color.gray}  
+            disabled={disabled}
+          >
             <>
               <Text style={[{ alignSelf: 'flex-start', color: Color.gray, }]}>
                 {!selected ? placeholder : selected}

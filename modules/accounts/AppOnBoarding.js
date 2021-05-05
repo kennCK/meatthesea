@@ -35,7 +35,8 @@ class AppOnBoarding extends Component {
       stores: [],
       email: null,
       password: null,
-      locationId: null
+      locationId: null,
+      willRetrieveCurrentLocation: false
     };
   }
 
@@ -47,6 +48,7 @@ class AppOnBoarding extends Component {
      * will be executed after going back to this component 
     */
    this.setState({location: ''})
+   this.setState({willRetrieveCurrentLocation: true})
     Linking.getInitialURL().then(url => {
       console.log(`from initial url ${url}, call navigate`)
       this.navigate(url);
@@ -211,6 +213,14 @@ class AppOnBoarding extends Component {
     setIsLocationRetrieve(false);
     Api.getRequest(Routes.nearestStore(location.latitude, location.longitude), response => {
       console.log('NEAREST STORE: ', response)
+      console.log('LOCATION: ', this.props.state.location)
+      if(response.stores.length > 0) {
+        this.props.setStoreLocation(response.stores[0]);
+        this.setState({ location: response.stores[0].name });
+      }else{
+        this.setState({ errorMessage: 'There is no nearest store available.' });
+      }
+      this.setState({willRetrieveCurrentLocation: false})
     }, error => {
       console.log('RETRIEVING NEAREST STORE ERROR: ', error);
     })
@@ -226,11 +236,13 @@ class AppOnBoarding extends Component {
   }
 
   render() {
-    const { isLoading, errorMessage, isResponseError } = this.state;
+    const { isLoading, errorMessage, isResponseError, willRetrieveCurrentLocation } = this.state;
     const { isLocationRetrieve } = this.props.state
     return (
-      <ScrollView style={Style.ScrollView}>
-        <CurrentLocation />
+      <ScrollView style={Style.ScrollView} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+        { willRetrieveCurrentLocation &&
+          <CurrentLocation />
+        }
         {isLoading ? <Spinner mode="overlay" /> : null}
           <Header params={'AppOnBoarding'} lg></Header>
           <View style={Style.MainContainer}>
@@ -268,7 +280,7 @@ class AppOnBoarding extends Component {
                 style={{
                   color: Color.gray,
                 }}>
-                Deliver to:
+                Nearest Store
               </Text>
             </View>
             <LocationWithIcon
@@ -278,21 +290,60 @@ class AppOnBoarding extends Component {
                 placeholder: 'Current location',
                 iconHeight: 20,
                 stores: this.state.stores,
+                disabled: true,
                 onSelect: (selectedItem) => {
                   this.props.setStoreLocation(selectedItem);
                   this.setState({ location: selectedItem.name });
                 },
               }}
             />
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  color: Color.gray,
+                }}>
+                Current Location
+              </Text>
+            </View>
+            <View style={[
+              BasicStyles.btn,
+              Style.textInput,
+              {
+                borderWidth: 1,
+                borderColor: Color.gray,
+                borderRadius: 5,
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                height: 50,
+                marginTop: 15
+              },
+            ]}>
+              { this.props.state.location === null &&
+                <Text style={{color: Color.gray}}>Current Location...</Text>
+              }
+              { this.props.state.location !== null && this.props.state.location !== undefined &&
+                <Text style={{color: Color.gray}}>{this.props.state.location.address.substring(0, 40)}...</Text>
+              }
+            </View>
             <TouchableHighlight
-              style={[BasicStyles.btn, Style.btnWhite]}
+              style={[
+                BasicStyles.btn, 
+                Style.btnWhite, 
+                {
+                  marginTop: 20
+                }
+              ]}
               onPress={() => this.submit()}
               underlayColor={Color.gray}>
               <Text
                 style={[
                   Style.textPrimary,
                   Style.fontWeight('bold'),
-                  Style.fontSize(18),
+                  Style.fontSize(18)
                 ]}>
                 BROWSE AS GUEST
               </Text>

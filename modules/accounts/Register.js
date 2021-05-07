@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
-import { View, TextInput, Image, TouchableHighlight, Text, ScrollView } from 'react-native';
+import { View, TextInput, Image, TouchableHighlight, Text, ScrollView, Dimensions } from 'react-native';
 import Style from './Style.js';
 import { Spinner } from 'components';
 import Api from 'services/apiv2/index.js';
@@ -10,6 +10,10 @@ import CustomError from 'components/Modal/Error.js';
 import Header from './Header';
 import config from 'src/config';
 import LocationWithIcon from './components/LocationInput.js';
+import {Picker} from '@react-native-community/picker';
+import CheckBox from '@react-native-community/checkbox';
+
+let width = Math.round(Dimensions.get('window').width);
 
 class Register extends Component {
   //Screen1 Component
@@ -27,7 +31,16 @@ class Register extends Component {
       errorMessage: null,
       isResponseError: false,
       stores: [],
-      c_password: ''
+      c_password: '',
+      isShowingCity: false,
+      selectedCity: '',
+      countries: [],
+      countryId: null,
+      buildingId: null,
+      streetAddress: '',
+      townDistrict: '',
+      postalOrZip: '',
+      isAgree: false
       // floor: null
     };
   }
@@ -58,21 +71,31 @@ class Register extends Component {
   componentDidMount() {
     this.setState({ isLoading: true })
     this.getData();
-    Api.getRequest(Routes.storeRetrieveAll,
-      response => {
-        console.log('stores: ', response)
-        this.setState({ isLoading: false })
-        this.setState({ stores: response.stores })
-      },
-      error => {
-        this.setState({ isLoading: false })
-        alert("Something went wrong")
-      })
-
+    this.retrieveAllBuildings();
+    this.retrieveCountries();
   }
 
   redirect = (route) => {
     this.props.navigation.navigate(route);
+  }
+
+  retrieveCountries = () => {
+    this.setState({ isLoading: true})
+    Api.getRequest(Routes.getCountries, response => {
+      this.setState({ isLoading: false, countries: response.countries}, () => {
+        this.state.countries.forEach(el => {
+          if(el == Helper.Country) {
+            this.setState({countryId: el.id})
+          }
+        })
+      })
+    }, error => {
+      this.setState({ isLoading: false})
+    })
+  }
+
+  selectCity = (itemValue, itemIndex) => {
+    this.setState({selectedCity: itemValue})
   }
 
   submit() {
@@ -80,64 +103,47 @@ class Register extends Component {
       fullName,
       email,
       password,
-      phoneNumber
+      phoneNumber,
+      countryId,
+      selectedCity,
+      buildingId,
+      postalOrZip,
+      townDistrict,
+      streetAddress
     } = this.state;
     const { login } = this.props;
     const { storeLocation } = this.props.state;
-    if(this.validate() == true){
-        Api.postRequest(
-          Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname="+fullName+"&PhoneNumber="+phoneNumber+"&StoreId=" + storeLocation.id,
-          {},
-          response => {
-            console.log('Register response: ', response)
-            let { customer, authorization } = response;
-            this.setState({ isLoading: false })
-            login(email, password, customer, authorization);
-            this.props.navigation.navigate('homepageStack')
-          },
-          error => {
-            console.log(error)
-            login(null, null, null, null);
-            this.setState({ isLoading: false })
-            this.setState({ isResponseError: true })
-          },
-        );
+    // "Email": "string",
+    // "Password": "string",
+    // "Fullname": "string",
+    // "PhoneNumber": "string",
+    // "CountryId": 0,
+    // "City": "string",
+    // "PostalCode": "string",
+    // "Address1": "string",
+    // "Address2": "string",
+    // "BuildingId": 0,
+    // "latitude": "string",
+    // "Longitude": "string",
+    // "TermsAndCondition": true
+    if(this.validate()){
+      Api.postRequest(
+        Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname="+fullName+"&PhoneNumber="+phoneNumber + '&CountryId='+countryId+'&City='+selectedCity+"&PostalCode="+ postalOrZip + "&Address1="+ townDistrict + "&Address2="+streetAddress+"&BuildingId=" + buildingId + "&TermsAndCondition="+true,
+        {},
+        response => {
+          let { customer, authorization } = response;
+          this.setState({ isLoading: false })
+          login(email, password, customer, authorization);
+          this.props.navigation.navigate('appOnBoardingStack')
+        },
+        error => {
+          console.log(error)
+          login(null, null, null, null);
+          this.setState({ isLoading: false })
+          this.setState({ isResponseError: true })
+        },
+      );
     }
-
-
-    // const { username, email, password } = this.state;
-    // if (this.validate() == false) {
-    //   return
-    // }
-    // let parameter = {
-    //   username: username,
-    //   email: email,
-    //   password: password,
-    //   config: null,
-    //   account_type: 'USER',
-    //   referral_code: null,
-    //   status: 'ADMIN'
-    // }
-    // this.setState({ isLoading: true })
-    // Api.request(Routes.accountCreate, parameter, response => {
-    //   this.setState({ isLoading: false })
-    //   if (response.error !== null) {
-    //     if (response.error.status === 100) {
-    //       let message = response.error.message
-    //       if (typeof message.username !== undefined && typeof message.username !== 'undefined') {
-    //         this.setState({ errorMessage: message.username[0] })
-    //       } else if (typeof message.email !== undefined && typeof message.email !== 'undefined') {
-    //         this.setState({ errorMessage: message.email[0] })
-    //       }
-    //     } else if (response.data !== null) {
-    //       if (response.data > 0) {
-    //         this.redirect('loginStack')
-    //       }
-    //     }
-    //   }
-    // }, error => {
-    //   this.setState({ isResponseError: true })
-    // })
   }
 
   validate() {
@@ -148,6 +154,11 @@ class Register extends Component {
       c_password,
       location,
       phoneNumber,
+      selectedCity,
+      streetAddress,
+      townDistrict,
+      postalOrZip,
+      isAgree
     } = this.state;
     if (
       fullName === '' &&
@@ -178,15 +189,41 @@ class Register extends Component {
     } else if(location == '') {
       this.setState({ errorMessage: 'Please choose your location.' })
       return false
+    } else if(location == 'Other'){
+      if(streetAddress == '') {
+        this.setState({ errorMessage: 'Please add your street address.' })
+        return false
+      }else if(townDistrict == ''){
+        this.setState({ errorMessage: 'Please add your town or district.' })
+        return false
+      }else if(selectedCity == '') {
+        this.setState({ errorMessage: 'Please choose your city.' })
+        return false
+      }else if(postalOrZip == '') {
+        this.setState({ errorMessage: 'Please add your postal or zip code.' })
+        return false
+      }
+    }else if(isAgree == false) {
+      this.setState({ errorMessage: 'Please check agreement.' })
+      return false
     }
     return true;
+  }
+
+  retrieveAllBuildings = () => {
+    Api.getRequest(Routes.allBuildings(), response => {
+      console.log('ALL BUILDINGS: ', response)
+      this.setState({ isLoading: false, stores: response.buildings })
+    }, error => {
+      console.log('Error: ', error)
+    })
   }
 
   render() {
     const { isLoading, errorMessage, isResponseError } = this.state;
     const { theme } = this.props.state;
     return (
-      <ScrollView style={Style.ScrollView}>
+      <ScrollView style={Style.ScrollView} showsVerticalScrollIndicator={false}>
         <View style={Style.MainContainer}>
           <Header params={"Register"}></Header>
           {
@@ -250,17 +287,83 @@ class Register extends Component {
               stores: this.state.stores,
               onSelect: (selectedItem) => {
                 // this.props.setLocation(selectedItem)
-                this.props.setStoreLocation(selectedItem);
-                this.setState({ location: selectedItem.name })
+                // this.props.setStoreLocation(selectedItem);
+                this.setState({ location: selectedItem.building_name, buildingId: selectedItem.id })
+                if(selectedItem.building_name === 'Other') {
+                  this.setState({isShowingCity: true})
+                }else{
+                  this.setState({isShowingCity: false})
+                }
               }
             }} />
-            {/* <TextInput
-              style={Style.textInput}
-              {...Style.textPlaceHolder}
-              onChangeText={(floor) => this.setState({ floor })}
-              value={this.state.floor}
-              placeholder={'Floor and unit number'}
-            /> */}
+            { this.state.isShowingCity && 
+              <View>
+                <TextInput
+                  style={Style.textInput}
+                  {...Style.textPlaceHolder}
+                  onChangeText={(streetAddress) => this.setState({streetAddress: streetAddress })}
+                  value={this.state.streetAddress}
+                  placeholder={'Street address'}
+                />
+                <TextInput
+                  style={Style.textInput}
+                  {...Style.textPlaceHolder}
+                  onChangeText={(townDistrict) => this.setState({townDistrict: townDistrict })}
+                  value={this.state.townDistrict}
+                  placeholder={'Town / District'}
+                />
+                <View style={Style.textInput}>
+                  <Picker
+                      selectedValue={this.state.selectedCity}
+                      style={[
+                        Style.textInput,
+                        {
+                          color: Color.gray
+                        }
+                      ]}
+                      onValueChange={this.selectCity}
+                    >
+                      {
+                        Helper.locations.map((el, ndx) => {
+                          return (
+                            <Picker.Item label={el} value={el} key={'city'+ndx} />
+                          )
+                        })
+                      }
+                  </Picker>
+                </View>
+                <TextInput
+                  style={Style.textInput}
+                  {...Style.textPlaceHolder}
+                  onChangeText={(postalOrZip) => this.setState({postalOrZip: postalOrZip })}
+                  value={this.state.postalOrZip}
+                  placeholder={'Postal / Zip'}
+                />
+              </View>
+            }
+            <View style={{
+              flex: 1,
+              alignItems: "center",
+              flexDirection: 'row',
+              width: width - 100,
+              marginBottom: 20
+            }}>
+              <CheckBox
+                value={this.state.isAgree}
+                onValueChange={(val) => {
+                  this.setState({isAgree: val})
+                }}
+                style={{
+                  alignSelf: "center",
+                  true: '#F15927',
+                  false: 'black' 
+                }}
+                true={Color.gray}
+              />
+              <Text style={{
+                color: Color.gray
+              }}>Terms and Condition</Text>
+            </View>
             <View style={[Style.bottomTextContainer, { paddingHorizontal: 3 }]}>
               <Text style={[{
                 textAlign: 'justify',

@@ -69,11 +69,11 @@ class SavedAddress extends Component {
       if (address) {
         // console.log('address response: ', address)
         this.setState({address: address})
-        // address.map((el, ndx) => {
-        //   if(el.default_address) {
-        //     this.setState({selectedTile: ndx})
-        //   }
-        // });
+        address.map((el, ndx) => {
+          if(el.default_address) {
+            this.setState({selectedTile: ndx})
+          }
+        });
       }
     }, error => {
       console.log('Retrieve addresses error: ', error);

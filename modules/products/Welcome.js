@@ -34,7 +34,6 @@ import {Routes} from 'common';
 import {connect} from 'react-redux';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment';
-import CurrentLocation from 'components/Location/location';
 import Alert from 'modules/generic/alert';
 
 const width = Math.round(Dimensions.get('window').width);
@@ -60,7 +59,6 @@ class Welcome extends Component {
       value: '',
       addresses: [],
       defaultIndex: null,
-      isGettingCurrentLocation: false,
       noProductFound: false
     };
   }
@@ -70,9 +68,6 @@ class Welcome extends Component {
      * Executed each time we enter in this component &&
      * will be executed after going back to this component 
     */
-    this.setState({isGettingCurrentLocation: false}, () => {
-      this.setState({isGettingCurrentLocation: true});
-    })
     this.retrieveCart();
     this.fetchAddress();
   }
@@ -154,7 +149,6 @@ class Welcome extends Component {
     /**
      * removing the event listener added in the componentDidMount()
      */
-    this.setState({isGettingCurrentLocation: false});
     this.focusListener.remove();
   }
 
@@ -169,17 +163,17 @@ class Welcome extends Component {
         console.log('address response: ', address)
         address.forEach((el, ndx) => {
           address['label'] = el.address_name
-          // if(el.default_address) {
-          //   this.setState({defaultIndex: ndx})
-          // }
+          if(el.default_address) {
+            this.setState({defaultIndex: ndx})
+          }
         });
         this.setState({addresses: address})
-        // const {setUserLocation} = this.props
-        // if(this.state.addresses[this.state.defaultIndex] !== undefined && this.state.addresses[this.state.defaultIndex] !== null) {
-        //   setUserLocation(this.state.addresses[this.state.defaultIndex])
-        // }else {
-        //   setUserLocation(null);
-        // }
+        const {setUserLocation} = this.props
+        if(this.state.addresses[this.state.defaultIndex] !== undefined && this.state.addresses[this.state.defaultIndex] !== null) {
+          setUserLocation(this.state.addresses[this.state.defaultIndex])
+        }else {
+          setUserLocation(null);
+        }
       }
     }, error => {
       console.log('Retrieve addresses error: ', error);
@@ -404,15 +398,31 @@ class Welcome extends Component {
   searchProduct = () => {
     const { storeLocation, filter , search} = this.props.state
     const { setSearch, setHomepageSettings } = this.props;
-    if(search.length > 3){
+    if(search !== null && search.length > 3){
       setSearch(search)
       let parameters =
         '?Keyword=' +
         search +
         '&StoreId=' +
         storeLocation.id +
-        (filter === null ? '' : `&CategoryIds=${filter.id}`) +
         '&CategoryType=' + this.state.menu
+
+      if(filter !== null){
+        if(filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.length < 2){
+          let ids = filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.filter((thing, index, self) =>{
+            index === self.findIndex((t) => (
+              t.id === thing.id
+            ))
+          })
+          console.log('IDS: ', ids)
+          if(ids.length > 1){
+            parameters += `&CategoryIds=${ids[0].id}`
+          }
+        }
+      }
+
+      console.log('Search Parameters: ', parameters)
+
       Api.getRequest(
         Routes.productSearch + parameters,
         response => {
@@ -434,6 +444,7 @@ class Welcome extends Component {
               objectFilter[this.state.menu === 0 ? 'restaurant' : 'deli'] = {item: item,
                 category: this.state.menu === 0 ? 'restaurant' : 'deli'
               }
+              objectFilter['CategoriesId'] = response.CategoriesId
               setFilter(objectFilter)
               setHomepageSettings({
                 type: this.state.menu,
@@ -442,7 +453,7 @@ class Welcome extends Component {
               const { setMenuProducts } = this.props
               setMenuProducts(response.products);
             }else{
-              this.setState({alertText: `Product is not Found.`, noProductFound: true})
+              this.setState({alertText: `Product not Found.`, noProductFound: true})
             }
           }
           // response.products.forEach(el => {
@@ -460,13 +471,10 @@ class Welcome extends Component {
   }
   render() {
     const { homepage, search, cart, crockeries, user, userLocation, showRating, location } = this.props.state;
-    const { isLoading, isGettingCurrentLocation } = this.state;
+    const { isLoading } = this.state;
     const { setSearch } = this.props;
     return (
       <SafeAreaView style={Style.MainContainer}>
-        {isGettingCurrentLocation &&
-          <CurrentLocation />
-        }
         <Modal
           isVisible={this.state.visibleModal}
           style={Style.modal}

@@ -21,9 +21,9 @@ const styles = StyleSheet.create({
 })
 
 const FlatListItem = ({ callback, item, selected }) => {
-    const [active, setActive] = useState(item.name == selected);
+    const [active, setActive] = useState(item.building_name == selected);
     useEffect(() => {
-        setActive(item.name == selected)
+        setActive(item.building_name == selected)
     }, [selected])
     return (
         <View>
@@ -34,7 +34,7 @@ const FlatListItem = ({ callback, item, selected }) => {
             >
                 <View>
                     <Text style={styles.item}>
-                        {item.name}
+                        {item.building_name ? item.building_name : item.name}
                     </Text>
                     <TouchableHighlight
                         style={{

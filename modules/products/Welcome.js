@@ -163,17 +163,17 @@ class Welcome extends Component {
         console.log('address response: ', address)
         address.forEach((el, ndx) => {
           address['label'] = el.address_name
-          // if(el.default_address) {
-          //   this.setState({defaultIndex: ndx})
-          // }
+          if(el.default_address) {
+            this.setState({defaultIndex: ndx})
+          }
         });
         this.setState({addresses: address})
-        // const {setUserLocation} = this.props
-        // if(this.state.addresses[this.state.defaultIndex] !== undefined && this.state.addresses[this.state.defaultIndex] !== null) {
-        //   setUserLocation(this.state.addresses[this.state.defaultIndex])
-        // }else {
-        //   setUserLocation(null);
-        // }
+        const {setUserLocation} = this.props
+        if(this.state.addresses[this.state.defaultIndex] !== undefined && this.state.addresses[this.state.defaultIndex] !== null) {
+          setUserLocation(this.state.addresses[this.state.defaultIndex])
+        }else {
+          setUserLocation(null);
+        }
       }
     }, error => {
       console.log('Retrieve addresses error: ', error);

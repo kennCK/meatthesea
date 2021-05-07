@@ -7,6 +7,7 @@ export default {
   APP_EMAIL: 'support@meatthesea.co.uk',
   APP_WEBSITE: 'www.meatthesea.co.uk',
   APP_HOST: 'com.meatthesea',
+  Country: 'Hong Kong',
   DrawerMenu: [
   {
     title: 'Dashboard',
@@ -21,7 +22,7 @@ export default {
   DrawerMenuBottom: [{
     title: 'Settings',
     route: 'Settings'
-  }
+  },
   // {
   //   title: 'Terms and Conditions',
   //   route: 'TermsAndConditions'
@@ -29,6 +30,16 @@ export default {
   //   title: 'Privacy Policy',
   //   route: 'PrivacyPolicy'
   // }
+  ],
+  locations: [
+    'Sheung Wan, Hong Kong Island',
+    'Sai Ying Pun, Hong Kong Island',
+    'Tai Ping Shan, Hong Kong Island',
+    'SoHo/Mid-levels, Hong Kong Island',
+    'Central, Hong Kong Island',
+    'Hong Kong Island',
+    'Kowloon',
+    'New Territories'
   ],
   pagerMenu: [{
     title: 'FEATURED',

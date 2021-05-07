@@ -280,7 +280,7 @@ class AppOnBoarding extends Component {
                 style={{
                   color: Color.gray,
                 }}>
-                Nearest Store
+                BUILDING
               </Text>
             </View>
             <LocationWithIcon
@@ -290,14 +290,14 @@ class AppOnBoarding extends Component {
                 placeholder: 'Current location',
                 iconHeight: 20,
                 stores: this.state.stores,
-                disabled: true,
+                disabled: false,
                 onSelect: (selectedItem) => {
                   this.props.setStoreLocation(selectedItem);
                   this.setState({ location: selectedItem.name });
                 },
               }}
             />
-            <View
+            {/* <View
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -328,7 +328,7 @@ class AppOnBoarding extends Component {
               { this.props.state.location !== null && this.props.state.location !== undefined &&
                 <Text style={{color: Color.gray}}>{this.props.state.location.address.substring(0, 40)}...</Text>
               }
-            </View>
+            </View> */}
             <TouchableHighlight
               style={[
                 BasicStyles.btn, 

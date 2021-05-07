@@ -28,7 +28,14 @@ export default {
   customerForgotPassword:apiUrl + 'customer_forgot_password/',
   customerRetrieveAddresses: id => apiUrl + 'customer_get_addresses?customerId=' + id,
   customerRetrieveDefaultAddress: (customerId, AddressId) => apiUrl + `customer_default_address?CustomerId=${customerId}&AddressId=${AddressId}`,
-  customerAddAddress: (CustomerId, FullName, PhoneNumber, Address, AddressName, Latitude, Longitude, City, PostalCode, CountryId) => apiUrl + `customer_add_address?CustomerId=${CustomerId}&Address1=${Address}&AddressName=${AddressName}&FullName=${FullName}&PhoneNumber=${PhoneNumber}&Latitude=${Latitude}&Longitude=${Longitude}&City=${City}&PostalCode=${PostalCode}&CountryId=${CountryId}`,
+  // fullName,
+  // buildingId,
+  // selectCity,
+  // postalOrZip,
+  // townDistrict, //address 1
+  // streetAddress, //address 2
+  // addressName
+  customerAddAddress: (CustomerId, FullName, BuildingId,  City, PostalCode, townDistrict, streetAddress, addressName) => apiUrl + `customer_add_address?CustomerId=${CustomerId}&FullName=${FullName}&BuildingId=${BuildingId}&City=${City}&PostalCode=${PostalCode}&Address1=${townDistrict}&Address2=${streetAddress}&AddressName=${addressName}`,
   customerRemoveAddress: (customerId, addressId) => apiUrl + `customer_delete_address?CustomerId=${customerId}&AddressId=${addressId}`,
   // Languages
   languageRetrieve: apiUrl + 'languages',
@@ -162,5 +169,9 @@ export default {
   waitListAdd: (name, email, phone) => apiUrl + `add_waitlist?FullName=${name}&Email=${email}&PhoneNumber=${phone}`,
 
   // nearest store
-  nearestStore: (lat, long) => apiUrl + `nearest_store?latitude=${lat}&longitude=${long}`
+  nearestStore: (lat, long) => apiUrl + `nearest_store?latitude=${lat}&longitude=${long}`,
+
+  //Buildings
+
+  allBuildings: () => apiUrl + 'buildings'
 };

@@ -27,6 +27,7 @@ import SettingsStack from 'modules/settings/SettingsDrawer.js';
 import AddAddressStack from 'modules/addAddress/AddAddressDrawer.js';
 import LocationStack from 'components/Location/Drawer.js';
 import LocationWithMap from 'components/Location/LocationWithMap';
+import AddAddress from 'modules/addAddress/AddAddressDrawer';
 import AddPaymentMethodStack from 'modules/addPaymentMethod/AddPaymentMethodDrawer.js';
 import CheckoutStack from 'modules/checkout/CheckoutDrawer.js';
 import AddSubscriptionStack from 'modules/addSubscription/AddSubscriptionDrawer.js';
@@ -100,7 +101,7 @@ const AppOnBoardingStack = createStackNavigator(
 
 const LocationWithMapStack = createStackNavigator(
   {
-    LocationWithMapScreen: {screen: LocationWithMap},
+    LocationWithMapScreen: {screen: AddAddress},
   },
   {
     headerMode: 'none',

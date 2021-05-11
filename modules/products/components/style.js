@@ -9,10 +9,11 @@ export default {
   },
   imageRow: {
     width: '100%',
-    paddingTop: 30,
+    // paddingTop: 30,
     paddingBottom: 5,
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    justifyContent: 'center'
   },
   productImageFull:{
     marginTop: 0,
@@ -23,7 +24,8 @@ export default {
     borderRadius: ((width/3)-20) / 2,
     width: (width/3)-20,
     height: (width/3)-20,
-    overflow: "hidden"
+    overflow: "hidden",
+    marginTop: 25
   },
   productContainer: {
     marginTop: 10,
@@ -36,7 +38,8 @@ export default {
     fontWeight: "bold",
     fontSize: BasicStyles.categoryFontSize,
     color: Color.white,
-    marginTop: 5
+    marginTop: 25,
+    marginBottom: 0
   },
   menuContainer: {
     flexDirection: 'row',

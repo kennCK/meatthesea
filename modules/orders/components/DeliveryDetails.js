@@ -40,10 +40,20 @@ class DeliveryDetails extends Component {
     if(cart == null){
       return
     }
+    
     let total = 0
     for (var i = 0; i < cart.length; i++) {
       let item = cart[i]
-      total += (parseInt(item.quantity) * parseFloat(item.product.price))
+      let temp_price = 0
+      item.product.attributes.forEach(el => {
+        let p = 0
+        el.attribute_values.forEach(le => {
+          p += le.price_adjustment 
+        })
+        temp_price += p
+      })
+
+      total += (parseInt(item.quantity) * parseFloat(item.product.price) + temp_price)
       if(i == cart.length - 1){
         const { setOrderDetails } = this.props;
         setOrderDetails({
@@ -300,23 +310,32 @@ class DeliveryDetails extends Component {
                     ]}>
                     {' '}
                     {
-                      userLocation.address1 !== null && userLocation.address1 !== '' 
+                      userLocation.address1 !== null && userLocation.address1 !== '' && userLocation.address1 !== undefined
                       ? 
-                        userLocation.address1 
+                        userLocation.address1
                       : 
-                        <TouchableOpacity onPress={() => {
-                          this.props.navigate('savedAddressStack')
-                        }}>
-                          <Text style={[
-                            BasicStyles.titleText,
-                            styles.DeliveryDetailText,
-                            {
-                              fontSize: BasicStyles.standardFontSize,
-                              left: -30,
-                              top: -2
-                            },
-                          ]}>Click to add address</Text>
-                        </TouchableOpacity>
+                        userLocation.building_name !== '' &&
+                        userLocation.building_name !== null &&
+                        userLocation.building_name !== undefined ?
+                          userLocation.building_name.length > 40 
+                          ?
+                            userLocation.building_name.substring(0, 40) + '...'
+                          :
+                            userLocation.building_name
+                        :
+                          <TouchableOpacity onPress={() => {
+                            this.props.navigate('savedAddressStack')
+                          }}>
+                            <Text style={[
+                              BasicStyles.titleText,
+                              styles.DeliveryDetailText,
+                              {
+                                fontSize: BasicStyles.standardFontSize,
+                                left: -30,
+                                top: -2
+                              },
+                            ]}>Click to add address</Text>
+                          </TouchableOpacity>
                     }
                   </Text>
                 </View>

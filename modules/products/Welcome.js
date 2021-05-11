@@ -223,7 +223,7 @@ class Welcome extends Component {
     if(index === 1 || this.props.state.user !== null){
       this.props.navigation.navigate(route);
     }else{
-      this.props.navigation.navigate('loginStack')
+      this.props.navigation.navigate('appOnBoardingStack')
     }
   }
   deliveryModal(payload) {
@@ -233,7 +233,7 @@ class Welcome extends Component {
         this.props.navigation.navigate('savedAddressStack')
       }
     }else{
-      this.props.navigation.navigate('loginStack')
+      this.props.navigation.navigate('appOnBoardingStack')
     }
   }
   changeMenu(index) {
@@ -335,9 +335,8 @@ class Welcome extends Component {
                 style={
                   [
                     {
-                      height: 40,
                       borderWidth: 1,
-                      height: 40,
+                      height: 45,
                       borderColor: Color.gray,
                       borderWidth: 1,
                       paddingLeft: 10,
@@ -368,7 +367,7 @@ class Welcome extends Component {
                   width: '90%',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  height: 20
+                  height: 40
                 }}
                 onPress={ () => {
                   this.submitFeedBack()
@@ -408,15 +407,17 @@ class Welcome extends Component {
         '&CategoryType=' + this.state.menu
 
       if(filter !== null){
-        if(filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.length < 2){
-          let ids = filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.filter((thing, index, self) =>{
-            index === self.findIndex((t) => (
-              t.id === thing.id
-            ))
-          })
-          console.log('IDS: ', ids)
-          if(ids.length > 1){
-            parameters += `&CategoryIds=${ids[0].id}`
+        if(filter[this.state.menu === 0 ? 'restaurant' : 'deli'] !== undefined){
+          if(filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.length < 2){
+            let ids = filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.filter((thing, index, self) =>{
+              index === self.findIndex((t) => (
+                t.id === thing.id
+              ))
+            })
+            console.log('IDS: ', ids)
+            if(ids.length > 1){
+              parameters += `&CategoryIds=${ids[0].id}`
+            }
           }
         }
       }
@@ -441,7 +442,8 @@ class Welcome extends Component {
               })
               const{ setFilter } = this.props;
               let objectFilter = {}
-              objectFilter[this.state.menu === 0 ? 'restaurant' : 'deli'] = {item: item,
+              objectFilter[this.state.menu === 0 ? 'restaurant' : 'deli'] = {
+                item: item,
                 category: this.state.menu === 0 ? 'restaurant' : 'deli'
               }
               objectFilter['CategoriesId'] = response.CategoriesId
@@ -642,6 +644,22 @@ class Welcome extends Component {
                         location.address
                       :
                         ''
+                  }
+                  {
+                    userLocation !== null && userLocation !== '' && userLocation !== undefined
+                    ?
+                      userLocation.building_name !== '' &&
+                      userLocation.building_name !== null &&
+                      userLocation.building_name !== undefined ?
+                        userLocation.building_name.length > 40 
+                        ?
+                          userLocation.building_name.substring(0, 40) + '...'
+                        :
+                        userLocation.building_name
+                      :
+                        ''
+                      :
+                      ''
                   }
                 </Text>
               </TouchableOpacity>
@@ -868,8 +886,12 @@ class Welcome extends Component {
                 <TouchableOpacity
                   style={{
                     position: 'absolute',
-                    top: 7,
-                    left: '5%',
+                    top: 0,
+                    left: '3%',
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    paddingRight: 20,
+                    paddingLeft: 20
                   }}
                   onPress={() => {
                     const {setShowRating} = this.props

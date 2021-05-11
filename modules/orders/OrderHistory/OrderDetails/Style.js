@@ -58,12 +58,13 @@ export default {
     fontSize: BasicStyles.standardFontSize,
   },
   itemDetails: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     width: width,
     paddingLeft: 15,
     paddingRight: 15,
     justifyContent: 'space-between',
-    marginTop: 0
+    marginTop: 0,
+    paddingLeft: 40,
   },
   detailsText: {
     fontSize: BasicStyles.standardFontSize

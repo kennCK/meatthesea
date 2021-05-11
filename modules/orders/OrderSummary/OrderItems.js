@@ -67,14 +67,15 @@ class OrderItems extends Component {
 
   returnAttributes = (type) => {
     let { data } = this.props;
-    console.log(data.attributes)
+    console.log('<><>< cart ><><>: ', data)
     if(data.product_attributes.length > 0){
       let ids = []
       let details = []
       data.product_attributes.forEach((id, ndx) => {
+        console.log('count: ', ndx)
         ids.push(parseInt(id.value))
       })
-      data.product.attributes[type].attribute_values.forEach( el => {
+      data.product.attributes[type].attribute_values.forEach( (el, ndx) => {
         if(ids.includes(el.id)){
           details.push(el)
         }

@@ -15,8 +15,9 @@ class HeaderOptions extends Component {
     };
   }
   goBack = () => {
-    let { navigationProps } = this.props
-    navigationProps.goBack(null);
+    // let { navigationProps } = this.props
+    // navigationProps.goBack(null);
+    this.props.navigation.navigate('pickupCrockeryStack');
   };
   render() {
     return (

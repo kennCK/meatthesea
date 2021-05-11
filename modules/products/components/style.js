@@ -4,12 +4,12 @@ const width = Math.round(Dimensions.get('window').width);
 export default {
   scrollContainer: {
     alignItems: 'center',
-    width: '100%',
+    width: width,
     height: '100%'
   },
   imageRow: {
     width: '100%',
-    paddingTop: 5,
+    paddingTop: 30,
     paddingBottom: 5,
     flexDirection: 'row',
     flexWrap: 'wrap'
@@ -34,7 +34,7 @@ export default {
   productName: {
     textAlign: 'center',
     fontWeight: "bold",
-    fontSize: BasicStyles.standardFontSize,
+    fontSize: BasicStyles.categoryFontSize,
     color: Color.white,
     marginTop: 5
   },

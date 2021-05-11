@@ -33,7 +33,7 @@ class Register extends Component {
       stores: [],
       c_password: '',
       isShowingCity: false,
-      selectedCity: '',
+      selectedCity: Helper.locations[0],
       countries: [],
       countryId: null,
       buildingId: null,
@@ -95,6 +95,7 @@ class Register extends Component {
   }
 
   selectCity = (itemValue, itemIndex) => {
+    console.log('ITEM: VALUE: ', itemValue)
     this.setState({selectedCity: itemValue})
   }
 
@@ -189,6 +190,9 @@ class Register extends Component {
     } else if(location == '') {
       this.setState({ errorMessage: 'Please choose your location.' })
       return false
+    }else if(isAgree == false) {
+      this.setState({ errorMessage: 'Please check agreement.' })
+      return false
     } else if(location == 'Other'){
       if(streetAddress == '') {
         this.setState({ errorMessage: 'Please add your street address.' })
@@ -203,9 +207,6 @@ class Register extends Component {
         this.setState({ errorMessage: 'Please add your postal or zip code.' })
         return false
       }
-    }else if(isAgree == false) {
-      this.setState({ errorMessage: 'Please check agreement.' })
-      return false
     }
     return true;
   }

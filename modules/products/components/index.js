@@ -118,7 +118,9 @@ class Products extends Component {
             showsHorizontalScrollIndicator={false}
           >
             <View style={Style.scrollContainer}>
-              <Image source={require('assets/products/res.png')}/>
+              <Image source={require('assets/products/res.png')} style={{
+                width: '100%',
+              }}/>
               <View style={Style.imageRow}>
                 {restaurant != null &&
                   restaurant.map((data, idx) => {
@@ -145,7 +147,9 @@ class Products extends Component {
             style={this.props.active == 1 ? Style.showScroll : Style.hideScroll}
             showsVerticalScrollIndicator={false}>
             <View style={Style.scrollContainer}>
-              <Image source={require('assets/products/deli.png')} />
+              <Image source={require('assets/products/deli.png')} style={{
+                width: '100%'
+              }} />
               <View style={Style.imageRow}>
                 {deliStore != null &&
                   deliStore.map((data, idx) => {

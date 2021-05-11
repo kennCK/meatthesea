@@ -73,7 +73,7 @@ const Api = {
     };
     fetch(route, fetchOptions)
       .then((response) => {
-        console.log(response.status);
+        console.log('POST REQUEST: ', response);
         if (response.ok || response.status == 200) {
           return response.json();
         }

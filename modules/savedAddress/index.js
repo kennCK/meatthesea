@@ -69,9 +69,14 @@ class SavedAddress extends Component {
       if (address) {
         // console.log('address response: ', address)
         this.setState({address: address})
-        address.map((el, ndx) => {
+        address.forEach((el, ndx) => {
           if(el.default_address) {
-            this.setState({selectedTile: ndx})
+            this.setState({selectedTile: ndx}, () => {
+              if(this.state.address[this.state.selectedTile] !== undefined && this.state.address[this.state.selectedTile] !== null) {
+                const {setUserLocation} = this.props
+                setUserLocation(this.state.address[this.state.selectedTile])
+              }
+            })
           }
         });
       }

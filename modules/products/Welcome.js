@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Style from './Style.js';
 import {
   View,
@@ -11,9 +11,9 @@ import {
   Dimensions,
   SafeAreaView
 } from 'react-native';
-import {BasicStyles, Color} from 'common';
+import { BasicStyles, Color } from 'common';
 import Modal from 'react-native-modal';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faTimes,
   faEdit,
@@ -28,15 +28,16 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Products from './components/';
 import DeliveryDetails from './components/deliveryDetails';
 import Menu from './components/menu.js';
-import {Spinner} from 'components';
+import { Spinner } from 'components';
 import Api from 'services/apiv2/index.js';
-import {Routes} from 'common';
-import {connect} from 'react-redux';
+import { Routes } from 'common';
+import { connect } from 'react-redux';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment';
 import Alert from 'modules/generic/alert';
 
 const width = Math.round(Dimensions.get('window').width);
+const height = Math.round(Dimensions.get('window').height);
 class Welcome extends Component {
   constructor(props) {
     super(props);
@@ -63,7 +64,7 @@ class Welcome extends Component {
     };
   }
 
-   onFocusFunction = async () => {
+  onFocusFunction = async () => {
     /**
      * Executed each time we enter in this component &&
      * will be executed after going back to this component 
@@ -73,16 +74,16 @@ class Welcome extends Component {
   }
 
   retrieveProducts = () => {
-    const {filter, search, storeLocation} = this.props.state;
+    const { filter, search, storeLocation } = this.props.state;
     const { setMenuProducts } = this.props
     if (filter == null) {
       return;
     }
     if (search == null || search == '' || storeLocation == null) {
       let params = ''
-      if(filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.length > 0) {
+      if (filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.length > 0) {
         params = (filter === null ? '' : `?CategoryId=${filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true'
-      }else{
+      } else {
         params = (filter === null ? '' : `?CategoryId=${filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true'
       }
       console.log(params)
@@ -107,7 +108,7 @@ class Welcome extends Component {
       Api.getRequest(
         Routes.productSearch + parameters,
         response => {
-          if(response !== undefined && response !== null){
+          if (response !== undefined && response !== null) {
             const { setMenuProducts } = this.props
             setMenuProducts(response.products);
           }
@@ -119,21 +120,21 @@ class Welcome extends Component {
       );
     }
   };
-  
+
   isLoading(data) {
-    this.setState({isLoading: data});
+    this.setState({ isLoading: data });
   }
 
   componentDidMount() {
     const { filter } = this.props.state;
     const { setHomepageSettings } = this.props;
     console.log('[PROPS]', this.props.state.deliveryTime);
-    if(filter){
+    if (filter) {
       setHomepageSettings({
         type: filter.category == 'restaurant' ? 0 : 1,
         selectedMenu: filter.category == 'restaurant' ? 0 : 1
       })
-    }else{
+    } else {
       setHomepageSettings({
         type: null,
         selectedMenu: null
@@ -145,7 +146,7 @@ class Welcome extends Component {
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     /**
      * removing the event listener added in the componentDidMount()
      */
@@ -154,7 +155,7 @@ class Welcome extends Component {
 
   fetchAddress = () => {
     const { user } = this.props.state
-    if(user == null){
+    if (user == null) {
       return
     }
     Api.getRequest(Routes.customerRetrieveAddresses(user.id), response => {
@@ -163,15 +164,15 @@ class Welcome extends Component {
         console.log('address response: ', address)
         address.forEach((el, ndx) => {
           address['label'] = el.address_name
-          if(el.default_address) {
-            this.setState({defaultIndex: ndx})
+          if (el.default_address) {
+            this.setState({ defaultIndex: ndx })
           }
         });
-        this.setState({addresses: address})
-        const {setUserLocation} = this.props
-        if(this.state.addresses[this.state.defaultIndex] !== undefined && this.state.addresses[this.state.defaultIndex] !== null) {
+        this.setState({ addresses: address })
+        const { setUserLocation } = this.props
+        if (this.state.addresses[this.state.defaultIndex] !== undefined && this.state.addresses[this.state.defaultIndex] !== null) {
           setUserLocation(this.state.addresses[this.state.defaultIndex])
-        }else {
+        } else {
           setUserLocation(null);
         }
       }
@@ -183,22 +184,22 @@ class Welcome extends Component {
 
   retrieveCart = () => {
     const { user, storeLocation } = this.props.state;
-    if(user == null){
+    if (user == null) {
       return
     }
     this.isLoading(true);
     Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
-        console.log('RETRIEVE CART: ', response)
-        this.isLoading(false);
-        const { setCart } = this.props;
-        setCart(response.shopping_carts)
-      }, (error) => {
-        this.isLoading(false);
-        console.log(error);
+      console.log('RETRIEVE CART: ', response)
+      this.isLoading(false);
+      const { setCart } = this.props;
+      setCart(response.shopping_carts)
+    }, (error) => {
+      this.isLoading(false);
+      console.log(error);
     });
 
     let params = `get_crockery?StoreId=${storeLocation.id}&Status=10&Status=40&CustomerId=${user.id}`;
-    Api.getRequest(Routes.crockeryRetrieve + params , response => {
+    Api.getRequest(Routes.crockeryRetrieve + params, response => {
       const { setPickupCrockeries } = this.props;
       setPickupCrockeries(response.crockery)
       console.log('\n\nRETRIEVING CROCKERY RESPONSE: ', response, '\n\n')
@@ -209,7 +210,7 @@ class Welcome extends Component {
 
   changeSelectedMenu(data, type) {
     if (data == null) {
-      this.setState({products: null});
+      this.setState({ products: null });
     } else {
     }
     const { setHomepageSettings } = this.props;
@@ -220,43 +221,43 @@ class Welcome extends Component {
   }
   redirect(index) {
     let route = this.state.redirects[index];
-    if(index === 1 || this.props.state.user !== null){
+    if (index === 1 || this.props.state.user !== null) {
       this.props.navigation.navigate(route);
-    }else{
-      this.props.navigation.navigate('loginStack')
+    } else {
+      this.props.navigation.navigate('appOnBoardingStack')
     }
   }
   deliveryModal(payload) {
-    if(this.props.state.user !== null){
-      this.setState({deliveryModal: this.state.deliveryModal ? false : true});
-      if(payload === 'redirecting') {
+    if (this.props.state.user !== null) {
+      this.setState({ deliveryModal: this.state.deliveryModal ? false : true });
+      if (payload === 'redirecting') {
         this.props.navigation.navigate('savedAddressStack')
       }
-    }else{
-      this.props.navigation.navigate('loginStack')
+    } else {
+      this.props.navigation.navigate('appOnBoardingStack')
     }
   }
   changeMenu(index) {
-    this.setState({visibleModal: false});
+    this.setState({ visibleModal: false });
     if (index == 2) {
       // this.props.navigation.navigate('appOnBoardingStack');
     } else {
-      this.setState({menu: index});
+      this.setState({ menu: index });
     }
   }
 
-  submitRating(index){
-    const {user, storeLocation} = this.props.state
-    this.setState({isLoading: true})
+  submitRating(index) {
+    const { user, storeLocation } = this.props.state
+    this.setState({ isLoading: true })
     Api.postRequest(Routes.addRatings(user.id, storeLocation.id, index + 1), {}, response => {
       console.log("ADD RATING RESPONSE: ", response)
-      this.setState({isAddingComment: true})
+      this.setState({ isAddingComment: true })
       this.setState({
         isLoading: false,
         ratingIndex: index,
         isAddingComment: true
       })
-      
+
     }, error => {
       this.isLoading(false)
       console.log('Add Ratings Error: ', error)
@@ -264,13 +265,13 @@ class Welcome extends Component {
   }
 
   submitFeedBack() {
-    const {user, storeLocation} = this.props.state
+    const { user, storeLocation } = this.props.state
     console.log("Comment : ", this.state.value)
-    this.setState({isLoading: true})
+    this.setState({ isLoading: true })
     Api.postRequest(Routes.addFeedback(user.id, storeLocation.id, this.state.value), {}, response => {
       console.log('Add Feedback Response: ', response)
-      this.setState({isAddingComment: false, isLoading: false})
-      const {setShowRating} = this.props
+      this.setState({ isAddingComment: false, isLoading: false })
+      const { setShowRating } = this.props
       setShowRating(false)
     }, error => {
       this.isLoading(false)
@@ -279,13 +280,13 @@ class Welcome extends Component {
   }
 
   selectHandler = index => {
-    this.setState({defaultIndex: index});
+    this.setState({ defaultIndex: index });
     console.log('========================testing ========================== ', index)
     Api.postRequest(
       Routes.customerRetrieveDefaultAddress(this.props.state.user.id, this.state.addresses[index].id),
       {},
       response => {
-        const {setUserLocation} = this.props
+        const { setUserLocation } = this.props
         setUserLocation(this.state.addresses[index])
       },
       error => {
@@ -294,28 +295,28 @@ class Welcome extends Component {
     )
   };
 
-  rating(){
+  rating() {
     let stars = []
-    for(let i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       stars.push(
         <TouchableOpacity onPress={() => this.submitRating(i)} key={'start' + i}>
           <FontAwesomeIcon
-          icon={ i <= this.state.ratingIndex === i ? faStar : faStarRegular}
-          size={40}
-          style={{
-            color: Color.secondary
-          }}
-          key={i}
+            icon={i <= this.state.ratingIndex === i ? faStar : faStarRegular}
+            size={40}
+            style={{
+              color: Color.secondary
+            }}
+            key={i}
           />
         </TouchableOpacity>
       )
     }
-    return(
+    return (
       <View style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'row'
-        }}>
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row'
+      }}>
         { !this.state.isAddingComment &&
           stars
         }
@@ -331,13 +332,12 @@ class Welcome extends Component {
                 alignItems: 'center'
               }}
             >
-              <TextInput 
+              <TextInput
                 style={
                   [
                     {
-                      height: 40,
                       borderWidth: 1,
-                      height: 40,
+                      height: 45,
                       borderColor: Color.gray,
                       borderWidth: 1,
                       paddingLeft: 10,
@@ -348,7 +348,7 @@ class Welcome extends Component {
                     }
                   ]
                 }
-                onChangeText={value => this.setState({value})}
+                onChangeText={value => this.setState({ value })}
                 value={this.state.value}
                 placeholder={'Write here...'}
                 placeholderTextColor={Color.lightYellow}
@@ -368,9 +368,9 @@ class Welcome extends Component {
                   width: '90%',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  height: 20
+                  height: 40
                 }}
-                onPress={ () => {
+                onPress={() => {
                   this.submitFeedBack()
                 }}
               >
@@ -390,15 +390,15 @@ class Welcome extends Component {
   }
 
   deliveryTimeHandler = (data) => {
-    const {setSelectedDeliveryTime} = this.props
+    const { setSelectedDeliveryTime } = this.props
     let deliveryTime = moment(data).format('HH:mm')
     setSelectedDeliveryTime(deliveryTime)
   }
 
   searchProduct = () => {
-    const { storeLocation, filter , search} = this.props.state
+    const { storeLocation, filter, search } = this.props.state
     const { setSearch, setHomepageSettings } = this.props;
-    if(search !== null && search.length > 3){
+    if (search !== null && search.length > 3) {
       setSearch(search)
       let parameters =
         '?Keyword=' +
@@ -407,16 +407,18 @@ class Welcome extends Component {
         storeLocation.id +
         '&CategoryType=' + this.state.menu
 
-      if(filter !== null){
-        if(filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.length < 2){
-          let ids = filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.filter((thing, index, self) =>{
-            index === self.findIndex((t) => (
-              t.id === thing.id
-            ))
-          })
-          console.log('IDS: ', ids)
-          if(ids.length > 1){
-            parameters += `&CategoryIds=${ids[0].id}`
+      if (filter !== null) {
+        if (filter[this.state.menu === 0 ? 'restaurant' : 'deli'] !== undefined) {
+          if (filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.length < 2) {
+            let ids = filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.filter((thing, index, self) => {
+              index === self.findIndex((t) => (
+                t.id === thing.id
+              ))
+            })
+            console.log('IDS: ', ids)
+            if (ids.length > 1) {
+              parameters += `&CategoryIds=${ids[0].id}`
+            }
           }
         }
       }
@@ -427,21 +429,22 @@ class Welcome extends Component {
         Routes.productSearch + parameters,
         response => {
           // console.log('SEARCH RESPONSE: ', response)
-          if(response !== undefined && response !== null){
-            if(response.products.length > 0) {
-              const {restaurant, deliStore} = this.props.state
+          if (response !== undefined && response !== null) {
+            if (response.products.length > 0) {
+              const { restaurant, deliStore } = this.props.state
               let temp = this.state.menu === 0 ? restaurant : deliStore
               let item = []
               temp.forEach(el => {
                 response.products.forEach(le => {
-                  if(el.id === le.category_id) {
+                  if (el.id === le.category_id) {
                     item.push(el)
                   }
                 })
               })
-              const{ setFilter } = this.props;
+              const { setFilter } = this.props;
               let objectFilter = {}
-              objectFilter[this.state.menu === 0 ? 'restaurant' : 'deli'] = {item: item,
+              objectFilter[this.state.menu === 0 ? 'restaurant' : 'deli'] = {
+                item: item,
                 category: this.state.menu === 0 ? 'restaurant' : 'deli'
               }
               objectFilter['CategoriesId'] = response.CategoriesId
@@ -452,8 +455,8 @@ class Welcome extends Component {
               })
               const { setMenuProducts } = this.props
               setMenuProducts(response.products);
-            }else{
-              this.setState({alertText: `Product not Found.`, noProductFound: true})
+            } else {
+              this.setState({ alertText: `Product not Found.`, noProductFound: true })
             }
           }
           // response.products.forEach(el => {
@@ -464,7 +467,7 @@ class Welcome extends Component {
           console.log(error);
         },
       );
-    }else{
+    } else {
       setSearch(null)
       setHomepageSettings(null)
     }
@@ -479,7 +482,7 @@ class Welcome extends Component {
           isVisible={this.state.visibleModal}
           style={Style.modal}
           onRequestClose={() => {
-            this.setState({visibleModal: false});
+            this.setState({ visibleModal: false });
           }}>
           {/* {location === null && userLocation === null ? <Spinner mode="overlay" style={{zIndex: 999}}/> : null } */}
           <TouchableHighlight
@@ -499,7 +502,7 @@ class Welcome extends Component {
             onPress={() => {
               this.changeMenu(2)
             }}
-            >
+          >
             <Text
               style={[
                 {
@@ -514,56 +517,69 @@ class Welcome extends Component {
                   fontWeight: 'bold'
                 }
               ]}
-              >&times;</Text>
+            >&times;</Text>
           </TouchableHighlight>
-          <View style={Style.circle}>
-            <View style={Style.LogoContainer}>
-              <Image
-                source={require('assets/groceries.png')}
-                style={Style.LogoSize}
-              />
-            </View>
-            <View style={Style.TextContainer}>
-              <Text style={[Style.textSecondary]}>
-                Products from our deli store right at your finger tips
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            style={{
+              height: height - 30
+            }}
+          >
+            <SafeAreaView style={{
+              paddingTop: 50,
+              paddingBottom: 15
+            }}>
+              <View style={Style.circle}>
+                <View style={Style.LogoContainer}>
+                  <Image
+                    source={require('assets/groceries.png')}
+                    style={Style.LogoSize}
+                  />
+                </View>
+                <View style={Style.TextContainer}>
+                  <Text style={[Style.textSecondary]}>
+                    Products from our deli store right at your finger tips
                 {/* {this.props.state.location !== null && this.props.state.location !==  '' && this.props.state.location !==  undefined ? this.props.state.location.address : ''} */}
-              </Text>
-            </View>
-            <TouchableOpacity
-              disabled={location === null && userLocation === null}
-              activeOpacity={0.6}
-              underlayColor={Color.lightGray}
-              style={[
-                Style.btnWhite
-              ]}
-              onPress={() => this.changeMenu(1)}>
-              <Text style={[Style.textPrimary]}>GO TO GROCERIES</Text>
-            </TouchableOpacity>
-          </View>
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  disabled={location === null && userLocation === null}
+                  activeOpacity={0.6}
+                  underlayColor={Color.lightGray}
+                  style={[
+                    Style.btnWhite
+                  ]}
+                  onPress={() => this.changeMenu(1)}>
+                  <Text style={[Style.textPrimary]}>GO TO GROCERIES</Text>
+                </TouchableOpacity>
+              </View>
 
-          <View style={Style.circle}>
-            <View style={Style.LogoContainer}>
-              <Image
-                source={require('assets/restaurants.png')}
-                style={Style.LogoSize}
-              />
-            </View>
-            <View style={Style.TextContainer}>
-              <Text style={[Style.textSecondary]}>
-                Meals from our kitchen straight to your dinner table
+              <View style={Style.circle}>
+                <View style={Style.LogoContainer}>
+                  <Image
+                    source={require('assets/restaurants.png')}
+                    style={Style.LogoSize}
+                  />
+                </View>
+                <View style={Style.TextContainer}>
+                  <Text style={[Style.textSecondary]}>
+                    Meals from our kitchen straight to your dinner table
               </Text>
-            </View>
-            <TouchableHighlight
-              disabled={location === null && userLocation === null}
-              activeOpacity={0.6}
-              underlayColor={Color.lightGray}
-              style={[
-                Style.btnWhite
-              ]}
-              onPress={() => this.changeMenu(0)}>
-              <Text style={[Style.textPrimary]}>GO TO RESTAURANTS</Text>
-            </TouchableHighlight>
-          </View>
+                </View>
+                <TouchableHighlight
+                  disabled={location === null && userLocation === null}
+                  activeOpacity={0.6}
+                  underlayColor={Color.lightGray}
+                  style={[
+                    Style.btnWhite
+                  ]}
+                  onPress={() => this.changeMenu(0)}>
+                  <Text style={[Style.textPrimary]}>GO TO RESTAURANTS</Text>
+                </TouchableHighlight>
+              </View>
+            </SafeAreaView>
+          </ScrollView>
         </Modal>
 
         <DeliveryDetails
@@ -591,10 +607,10 @@ class Welcome extends Component {
                 width: '100%'
               }
             }>
-              <Text style={[{fontSize: BasicStyles.standardFontSize}]}>
+              <Text style={[{ fontSize: BasicStyles.standardFontSize }]}>
                 Deliver to:{' '}
               </Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={
                   () => {
                     this.props.navigation.navigate('savedAddressStack')
@@ -604,54 +620,70 @@ class Welcome extends Component {
                 <Text
                   style={[
                     Style.textPrimary,
-                    {fontSize: BasicStyles.standardFontSize},
+                    { fontSize: BasicStyles.standardFontSize },
                   ]}>
                   {
-                    userLocation !== null && userLocation !== '' 
-                    ?
+                    userLocation !== null && userLocation !== ''
+                      ?
                       userLocation.address1 !== "" &&
-                      userLocation.address1 !== null &&
-                      userLocation.address1 !== undefined
-                      ?
-                        userLocation.address1.length > 40 
+                        userLocation.address1 !== null &&
+                        userLocation.address1 !== undefined
                         ?
-                          userLocation.address1.substring(0, 40) + '...'
-                        :
-                        userLocation.address1
-                      :
-                        userLocation.address2 !== "" &&
-                        userLocation.address2 !== null &&
-                        userLocation.address2 !== undefined 
-                        ? 
-                          userLocation.address2.length > 40 
+                        userLocation.address1.length > 40
                           ?
-                            userLocation.address2.substring(0, 40) + '...'
+                          userLocation.address1.substring(0, 40) + '...'
                           :
-                          userLocation.address2
+                          userLocation.address1
                         :
+                        userLocation.address2 !== "" &&
+                          userLocation.address2 !== null &&
+                          userLocation.address2 !== undefined
+                          ?
+                          userLocation.address2.length > 40
+                            ?
+                            userLocation.address2.substring(0, 40) + '...'
+                            :
+                            userLocation.address2
+                          :
                           ''
-                    :
-                      location !== null && (location.address !== "" &&
-                      location.address !== null &&
-                      location.address !== undefined )
-                      ?
-                      location.address.length > 40 
-                        ?
-                        location.address.substring(0, 40) + '...'
-                        :
-                        location.address
                       :
+                      location !== null && (location.address !== "" &&
+                        location.address !== null &&
+                        location.address !== undefined)
+                        ?
+                        location.address.length > 40
+                          ?
+                          location.address.substring(0, 40) + '...'
+                          :
+                          location.address
+                        :
                         ''
+                  }
+                  {
+                    userLocation !== null && userLocation !== '' && userLocation !== undefined
+                      ?
+                      userLocation.building_name !== '' &&
+                        userLocation.building_name !== null &&
+                        userLocation.building_name !== undefined ?
+                        userLocation.building_name.length > 40
+                          ?
+                          userLocation.building_name.substring(0, 40) + '...'
+                          :
+                          userLocation.building_name
+                        :
+                        ''
+                      :
+                      ''
                   }
                 </Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-              style={[{flex: 0}]}
+              style={[{ flex: 0 }]}
               onPress={() => this.deliveryModal()}>
               <FontAwesomeIcon
                 icon={faEdit}
-                style={{color: Color.darkGray}}
+                style={{ color: Color.darkGray }}
                 size={BasicStyles.iconSize}
               />
             </TouchableOpacity>
@@ -663,31 +695,31 @@ class Welcome extends Component {
             }
           ]}>
             <View style={Style.searchBar}>
-              <TouchableOpacity 
-                style={[{flex: 1}]}
-                onPress={() => {this.searchProduct()}}
+              <TouchableOpacity
+                style={[{ flex: 1 }]}
+                onPress={() => { this.searchProduct() }}
               >
                 <FontAwesomeIcon
                   icon={faSearch}
-                  style={{color: Color.darkGray, marginLeft: 10}}
+                  style={{ color: Color.darkGray, marginLeft: 10 }}
                   size={BasicStyles.iconSize}
                 />
               </TouchableOpacity>
               <TextInput
-                style={[{height: 37, flex: 7, width: '100%'}]}
+                style={[{ height: 37, flex: 7, width: '100%' }]}
                 placeholder={'Search'}
                 onChangeText={(searches) => {
-                    setSearch(searches)
-                    if(search !== null && search === '') {
-                      this.retrieveProducts();
-                    }
+                  setSearch(searches)
+                  if (search !== null && search === '') {
+                    this.retrieveProducts();
                   }
+                }
                 }
                 value={search}
               />
               <TouchableOpacity
                 style={[
-                  {flex: 0, borderLeftColor: Color.gray, borderLeftWidth: 1},
+                  { flex: 0, borderLeftColor: Color.gray, borderLeftWidth: 1 },
                 ]}
                 onPress={() => this.redirect(1)}>
                 <FontAwesomeIcon
@@ -704,11 +736,11 @@ class Welcome extends Component {
             {
               // this.props.state.user &&
               <TouchableOpacity
-                style={[{flex: 0}]}
+                style={[{ flex: 0 }]}
                 onPress={() => this.redirect(0)}>
                 <FontAwesomeIcon
                   icon={faUserCircle}
-                  style={{color: Color.primary}}
+                  style={{ color: Color.primary }}
                   size={40}
                 />
               </TouchableOpacity>
@@ -765,7 +797,7 @@ class Welcome extends Component {
                     ]}>
                     <FontAwesomeIcon
                       icon={faHandHolding}
-                      style={{color: Color.secondary}}
+                      style={{ color: Color.secondary }}
                       size={30}
                     />
                     {
@@ -817,7 +849,7 @@ class Welcome extends Component {
                     ]}>
                     <FontAwesomeIcon
                       icon={faShoppingBasket}
-                      style={{color: Color.secondary}}
+                      style={{ color: Color.secondary }}
                       size={30}
                     />
                     {
@@ -843,7 +875,7 @@ class Welcome extends Component {
                       )
                     }
                     <Text style={Style.bottomMenuText}>Basket</Text>
-                    
+
                   </View>
                 </TouchableOpacity>
               </ScrollView>
@@ -864,17 +896,21 @@ class Welcome extends Component {
               zIndex: 10,
               paddingBottom: 10
             }}>
-              { this.state.isAddingComment && 
+              { this.state.isAddingComment &&
                 <TouchableOpacity
                   style={{
                     position: 'absolute',
-                    top: 7,
-                    left: '5%',
+                    top: 0,
+                    left: '3%',
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    paddingRight: 20,
+                    paddingLeft: 20
                   }}
                   onPress={() => {
-                    const {setShowRating} = this.props
+                    const { setShowRating } = this.props
                     setShowRating(false)
-                    this.setState({isAddingComment: false})
+                    this.setState({ isAddingComment: false })
                   }}
                 >
                   <Text
@@ -890,7 +926,7 @@ class Welcome extends Component {
                 justifyContent: 'center',
                 alignItems: 'center'
               }}>
-                { !this.state.isAddingComment && 
+                {!this.state.isAddingComment &&
                   <Text style={{
                     color: Color.secondary,
                     fontWeight: 'bold',
@@ -899,7 +935,7 @@ class Welcome extends Component {
                     paddingBottom: 15
                   }}>RATE YOUR EXPERIENCE</Text>
                 }
-                { this.state.isAddingComment &&
+                {this.state.isAddingComment &&
                   <View
                     style={{
                       width: '70%',
@@ -920,7 +956,7 @@ class Welcome extends Component {
                     >
                       Please help us improve our services and send us your feedback
                     </Text>
-                </View>
+                  </View>
                 }
               </View>
               <View>
@@ -929,13 +965,13 @@ class Welcome extends Component {
             </View>
           )
         }
-        <Alert 
+        <Alert
           show={this.state.noProductFound}
           text={this.state.alertText}
-          onClick={()=> this.setState({ noProductFound: false}) }
+          onClick={() => this.setState({ noProductFound: false })}
           alertType={'primary'}
         />
-        {isLoading ? <Spinner mode="overlay"/> : null }
+        {isLoading ? <Spinner mode="overlay" /> : null}
       </SafeAreaView>
     );
   }
@@ -945,7 +981,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => {
-  const {actions} = require('@redux');
+  const { actions } = require('@redux');
   return {
     setStores: (stores) => dispatch(actions.setStores(stores)),
     setSearch: (search) => dispatch(actions.setSearch(search)),

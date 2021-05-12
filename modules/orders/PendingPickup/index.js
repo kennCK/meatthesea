@@ -15,9 +15,8 @@ class HeaderOptions extends Component {
     };
   }
   goBack = () => {
-    // let { navigationProps } = this.props
-    // navigationProps.goBack(null);
-    this.props.navigation.navigate('pickupCrockeryStack');
+    let { navigationProps } = this.props
+    navigationProps.navigation.navigate('pickupCrockeryStack');
   };
   render() {
     return (
@@ -60,7 +59,7 @@ let Header = connect(
 const StackNavigator = createStackNavigator({
   pendingPickupScreen: {
     screen: PendingPickupScreen,
-    navigationOptions: ({ navigation }) => ({
+    navigationOptions: (navigation) => ({
       title: 'Pending Pickup',
       headerLeft: () => <Header navigationProps={navigation} />,
       headerTintColor: 'black',

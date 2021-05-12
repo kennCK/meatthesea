@@ -12,7 +12,8 @@ class HeaderOptions extends Component {
     super(props);
   }
   back = () => {
-    this.props.navigationProps.pop();
+    let { navigationProps } = this.props
+    navigationProps.navigation.navigate('pickupCrockeryStack');
   };
   render() {
     return (
@@ -42,7 +43,7 @@ const mapDispatchToProps = dispatch => {
 const ScheduledPickupStack = createStackNavigator({
   scheduledPickupScreen: {
     screen: ScheduledPickup,
-    navigationOptions: ({navigation}) => ({
+    navigationOptions: (navigation) => ({
       title: 'SCHEDULED PICK-UP',
       headerLeft: <HeaderOptions navigationProps={navigation} />,
 

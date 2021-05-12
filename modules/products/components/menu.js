@@ -280,7 +280,7 @@ class Menu extends Component {
       })
       if(this.state.addOn1 !== undefined) {
         if(Object.keys(this.state.addOn1).length > 0){
-          this.state.addOn1.attribute_values.forEach(el => {
+          this.state.addOn1.attribute_values.forEach((el, ndx) => {
             parameters += `&AttributesId=${this.state.addOn1.id}-${el.id}`
           })
         }

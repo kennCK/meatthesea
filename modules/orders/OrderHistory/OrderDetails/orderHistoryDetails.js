@@ -15,6 +15,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import Api from 'services/apiv2/index.js';
 
+const height = Math.round(Dimensions.get('window').height);
+
 class OrderHistoryDetails extends Component {
 
   constructor(props){
@@ -53,7 +55,10 @@ class OrderHistoryDetails extends Component {
       }
       await this.setState({store: store})
       await this.setState({restaurant: rest})
+      
     })
+    console.log('TESTING: ', rest[0].product.attributes)
+    console.log('\n\n\n: ', store)
   }
 
   itemMenu = (stateVariable) => {
@@ -61,14 +66,79 @@ class OrderHistoryDetails extends Component {
     return (
       this.state[stateVariable].map((el, index) => {
         return (
-          <View style={Style.width} key={index + 'orderItems ' + el.product.id}>
+          <View style={[
+            Style.width, 
+            {
+              marginTop: 5,
+              marginBottom: 5
+            }
+          ]} key={index + 'orderItems ' + el.product.id}>
             <View style={Style.itemRow}> 
               <Text style={Style.itemName}> {el.product.name} </Text> 
-              <Text style={Style.itemPrice}> {currency} {el.product.price} </Text> 
+              <Text style={[
+                Style.itemPrice,
+                {
+                  fontSize: BasicStyles.standardFontSize
+                }
+              ]}> HK$  {el.product.price} </Text> 
             </View>
             <View style={Style.itemDetails}> 
-              <Text style={Style.detailsText}> + {el.product.short_description} </Text> 
-              <Text> </Text> 
+              {/* <Text style={Style.detailsText}> + {el.product.short_description} </Text> 
+              <Text> </Text>  */}
+              { el.product.attributes.length > 0 && (
+                el.product.attributes[0].attribute_values.map((le, ndx) => {
+                  return (
+                    <View key={ndx + 'add-ons1'} style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between'
+                    }}>
+                      <Text
+                        style={[
+                          {
+                            color: Color.black,
+                            marginTop: 2,
+                            marginBottom: 2
+                          },
+                          BasicStyles.standardFontSize
+                        ]}
+                      >
+                        + {le.name }
+                      </Text>
+                      <Text>
+                        {'HK$ ' + le.price_adjustment}
+                      </Text>
+                    </View>
+                  )
+                })
+                )
+              }
+              { el.product.attributes.length > 0 && (
+                el.product.attributes[1].attribute_values.map((le, ndx) => {
+                  return (
+                    <View key={ndx + 'add-ons2'} style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between'
+                    }}>
+                      <Text
+                        style={[
+                          {
+                            color: Color.black,
+                            marginTop: 2,
+                            marginBottom: 2
+                          },
+                          BasicStyles.standardFontSize
+                        ]}
+                      >
+                        + {le.name }
+                      </Text>
+                      <Text>
+                        {'HK$ ' + le.price_adjustment}
+                      </Text>
+                    </View>
+                  )
+                })
+                )
+              }
             </View>
           </View>
         )
@@ -114,7 +184,7 @@ class OrderHistoryDetails extends Component {
       stars.push(
         <TouchableOpacity onPress={() => this.submitRating(i)} key={'start' + i}>
           <FontAwesomeIcon
-          icon={ i <= this.state.ratingIndex ? faStar : faStarRegular}
+          icon={  i <= this.state.ratingIndex === i ? faStar : faStarRegular}
           size={40}
           style={{
             color: Color.secondary
@@ -128,7 +198,7 @@ class OrderHistoryDetails extends Component {
       <View style={{
           alignItems: 'center',
           justifyContent: 'center',
-          flexDirection: 'row'
+          flexDirection: 'row',
         }}>
         { !this.state.isAddingComment &&
           stars
@@ -149,9 +219,8 @@ class OrderHistoryDetails extends Component {
                 style={
                   [
                     {
-                      height: 40,
                       borderWidth: 1,
-                      height: 40,
+                      height: 45,
                       borderColor: Color.gray,
                       borderWidth: 1,
                       paddingLeft: 10,
@@ -181,7 +250,7 @@ class OrderHistoryDetails extends Component {
                   width: '90%',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  height: 20
+                  height: 40
                 }}
                 onPress={ () => {
                   this.submitFeedBack()
@@ -208,7 +277,9 @@ class OrderHistoryDetails extends Component {
     const {showRatings} = this.state
     return (
       <View>
-        <ScrollView>
+        <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={{
+          height: height
+        }}>
           <View style={Style.orderNo}>
             <Text style={Style.orderNoText}> Order number {data.id} </Text>
           </View>
@@ -295,7 +366,7 @@ class OrderHistoryDetails extends Component {
           showRatings && user && (
             <View style={{
               position: 'absolute',
-              bottom: 0,
+              bottom: 80,
               left: 0,
               minHeight: 125,
               borderTopLeftRadius: 15,
@@ -309,8 +380,12 @@ class OrderHistoryDetails extends Component {
                 <TouchableOpacity
                   style={{
                     position: 'absolute',
-                    top: 7,
-                    left: '5%',
+                    top: 0,
+                    left: '3%',
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    paddingRight: 20,
+                    paddingLeft: 20
                   }}
                   onPress={() => {
                     this.setState({showRatings: false})

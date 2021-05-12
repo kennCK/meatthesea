@@ -12,8 +12,8 @@ class HeaderOptions extends Component {
     super(props);
   }
   back = () => {
-    this.props.navigationProps.pop();
-    this.props.navigationProps.pop();
+    let { navigationProps } = this.props
+    navigationProps.navigation.navigate('pickupCrockeryStack');
   };
   render() {
     return (
@@ -43,7 +43,7 @@ const mapDispatchToProps = dispatch => {
 const ReturnInPersonStack = createStackNavigator({
   returnInPersonScreen: {
     screen: ReturnInPerson,
-    navigationOptions: ({navigation}) => ({
+    navigationOptions: (navigation) => ({
       title: 'RETURN IN PERSON',
       headerLeft: <HeaderOptions navigationProps={navigation} />,
 

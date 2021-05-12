@@ -40,8 +40,6 @@ class AppOnBoarding extends Component {
     };
   }
 
-  getLocations() { }
-
   onFocusFunction = async () => {
     /**
      * Executed each time we enter in this component &&
@@ -55,29 +53,38 @@ class AppOnBoarding extends Component {
     });
     Linking.addEventListener('url', this.handleOpenURL);
 
-    await this.setState({ isLoading: true });
     await this.getData();
-    await Api.getRequest(
-      Routes.storeRetrieveAll,
-      (response) => {
-        this.setState({ isLoading: false });
-        this.setState({ stores: response.stores });
-        this.props.setStores(response.stores);
-        if (this.state.locationId != null) {
-          let selectedItem = response.stores.map((item) => {
-            if (parseInt(item.id) == this.state.locationId) {
-              return item
-            }
-          })
-          this.props.setStoreLocation(selectedItem)
-        }
-      },
-      (error) => {
-        this.setState({ isLoading: false });
-        alert('Something went wrong');
-      },
-    );
+    await this.retrieveAllBuildings();
+    // await Api.getRequest(
+    //   Routes.storeRetrieveAll,
+    //   (response) => {
+    //     this.setState({ isLoading: false });
+    //     this.setState({ stores: response.stores });
+    //     this.props.setStores(response.stores);
+    //     if (this.state.locationId != null) {
+    //       let selectedItem = response.stores.map((item) => {
+    //         if (parseInt(item.id) == this.state.locationId) {
+    //           return item
+    //         }
+    //       })
+    //       this.props.setStoreLocation(selectedItem)
+    //     }
+    //   },
+    //   (error) => {
+    //     this.setState({ isLoading: false });
+    //     alert('Something went wrong');
+    //   },
+    // );
     this.firebaseNotification()
+  }
+
+  retrieveAllBuildings = () => {
+    this.setState({ isLoading: true });
+    Api.getRequest(Routes.allBuildings(), response => {
+      this.setState({ isLoading: false, stores: response.buildings })
+    }, error => {
+      console.log('Error: ', error)
+    })
   }
 
   async componentDidMount() {
@@ -177,9 +184,9 @@ class AppOnBoarding extends Component {
 
   directLogin() {
     // const { location } = this.state;
-    if (this.validate() == false) {
-      return;
-    }
+    // if (this.state.location == '') {
+    //   return;
+    // }
     const { email, password } = this.state;
     const { login } = this.props;
     if ((email != null && email != '') && (password != null && password != '')) {
@@ -200,11 +207,15 @@ class AppOnBoarding extends Component {
   }
 
   validate() {
-    const { locationId, location } = this.state;
-    if (!locationId && !location) {
-      this.setState({ errorMessage: 'Please select your location.' });
-      return false;
-    }
+    /**
+     * validation on browse-as-guest is removed
+     */
+    return true
+    // const { locationId, location } = this.state;
+    // if (!locationId && !location) {
+    //   this.setState({ errorMessage: 'Please select your location.' });
+    //   return false;
+    // }
   }
 
   retrieveNearestStore() {
@@ -279,11 +290,12 @@ class AppOnBoarding extends Component {
               <Text
                 style={{
                   color: Color.gray,
+                  marginBottom: 20
                 }}>
-                BUILDING
+                Deliver To:
               </Text>
             </View>
-            <LocationWithIcon
+            {/* <LocationWithIcon
               {...{
                 style: { height: 50, marginTop: 15 },
                 selected: this.state.location,
@@ -296,7 +308,23 @@ class AppOnBoarding extends Component {
                   this.setState({ location: selectedItem.name });
                 },
               }}
-            />
+            /> */}
+            <LocationWithIcon {...{
+              style: Style.textInput,
+              selected: this.state.location,
+              placeholder: "Select location",
+              iconHeight: 20,
+              stores: this.state.stores.filter(el => {
+                return el.building_name !== 'Other'
+              }),
+              onSelect: (selectedItem) => {
+                // this.props.setLocation(selectedItem)
+                // this.props.setStoreLocation(selectedItem);
+                this.setState({location: selectedItem.building_name})
+                this.props.setUserLocation(selectedItem)
+                console.log('SELECTED ITEM: ', selectedItem)
+              }
+            }} />
             {/* <View
               style={{
                 justifyContent: 'center',
@@ -334,7 +362,7 @@ class AppOnBoarding extends Component {
                 BasicStyles.btn, 
                 Style.btnWhite, 
                 {
-                  marginTop: 20
+                  marginTop: 5
                 }
               ]}
               onPress={() => this.submit()}
@@ -349,15 +377,22 @@ class AppOnBoarding extends Component {
               </Text>
             </TouchableHighlight>
 
-            <View style={{ marginTop: 70 }}>
+            <Text style={{
+              color: Color.white,
+              marginTop: 20,
+              marginBottom: 45
+            }}>OR</Text>
+
+            <View>
               <TouchableHighlight
                 style={[BasicStyles.btn, Style.btnWhite]}
                 onPress={() => {
-                  if(this.state.location !== '') {
-                    this.redirect('loginStack')
-                  }else {
-                    this.setState({errorMessage: 'Choose your location'})
-                  }
+                  this.redirect('loginStack')
+                  // if(this.state.location !== '') {
+                  //   this.redirect('loginStack')
+                  // }else {
+                  //   this.setState({errorMessage: 'Choose your location'})
+                  // }
                 }}
                 underlayColor={Color.gray}>
                 <Text
@@ -408,7 +443,8 @@ const mapDispatchToProps = (dispatch) => {
     setStores: (stores) => dispatch(actions.setStores(stores)),
     logout: () => dispatch(actions.logout()),
     login: (email, password, user, token) => dispatch(actions.login(email, password, user, token)),
-    setIsLocationRetrieve: (isLocationRetrieve) => dispatch(actions.setIsLocationRetrieve(isLocationRetrieve))
+    setIsLocationRetrieve: (isLocationRetrieve) => dispatch(actions.setIsLocationRetrieve(isLocationRetrieve)),
+    setUserLocation: location => dispatch(actions.setUserLocation(location)),
   };
 };
 

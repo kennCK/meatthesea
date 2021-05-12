@@ -132,7 +132,9 @@ const initialState = {
   crockeries: null,
   deliveryTime: 'ASAP',
   order: null,
-  storeLocation: null,
+  storeLocation: {
+    id: 1
+  },
   requestPickUpCrockery: null,
   paypalSuccessData: null,
   menuProducts: null,

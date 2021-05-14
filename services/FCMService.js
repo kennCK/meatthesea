@@ -4,7 +4,9 @@ import { Helper } from 'common'
 
 
 class FCMService{
-  register = (onRegister, onNotification, onOpenNotification) => {
+  #userId = null
+  register = (userId, onRegister, onNotification, onOpenNotification) => {
+    this.#userId = userId
     this.checkPermission(onRegister)
     this.createNotificationListeners(onRegister, onNotification, onOpenNotification)
   }
@@ -34,8 +36,8 @@ class FCMService{
     .then(fcmToken => {
       if(fcmToken){
         messaging()
-        .subscribeToTopic(Helper.APP_NAME_BASIC)
-        .then(() => console.log('[FCMServices] Subscribed to topic ' + Helper.APP_NAME_BASIC));
+        .subscribeToTopic(Helper.APP_NAME_BASIC + `-${this.#userId}`)
+        .then(() => console.log('[FCMServices] Subscribed to topic ' + Helper.APP_NAME_BASIC + `-${this.#userId}`));
         onRegister(fcmToken)
       }else{
         console.log("[FCMServices] User does not have a device token")

@@ -11,6 +11,7 @@ import {connect} from 'react-redux';
 import Api from 'services/apiv2/index.js';
 import Confirm from 'modules/generic/confirm';
 import { faAlignJustify } from '@fortawesome/free-solid-svg-icons';
+import Alert from 'modules/generic/alert';
 
 class OrderItems extends Component {
   constructor(props) {
@@ -19,7 +20,9 @@ class OrderItems extends Component {
       items: this.props.data.items,
       isAddingAddressName: false,
       visibleModal: false,
-      alertText: ''
+      alertText: '',
+      isError: true,
+      isAlert: false
     };
   }
 
@@ -32,9 +35,40 @@ class OrderItems extends Component {
     if(user == null || storeLocation == null || data == null){
       return
     }
+    console.log('testing: ', data)
     let quantity = increment == false ? parseInt(data.quantity) - 1 : parseInt(data.quantity) + 1
-    let parameters = '?CustomerId=' + user.id + '&CartId=' + data.id + '&Quantity=' + quantity;
-    Api.postRequest(Routes.shoppingCartItemsUpdateCart + parameters, {}, (response) => {
+    let parameters = `?CustomerId=${user.id}&StoreId=${storeLocation.id}&ProductId=${data.product.id}&Quantity=${quantity}&CartType=1`
+    console.log('parameters: ', Routes.shoppingCartItemsAddToCart + parameters)
+    Api.postRequest(Routes.shoppingCartItemsAddToCart + parameters, {}, (response) => {
+        let error = {}
+        if(typeof response == 'string'){
+          error = JSON.parse(response)
+        }
+        if(error.errors) {
+          if(error.errors.updatecart != undefined) {
+            this.setState({
+              alertText: error.errors.updatecart[0],
+              isError: true
+            }, () => {
+              this.setState({isAlert: true})
+            })
+          }else if(error.errors.add_to_shopping_cart != undefined) {
+            this.setState({
+              alertText: error.errors.add_to_shopping_cart[0],
+              isError: true
+            }, () => {
+              this.setState({isAlert: true})
+            })
+          }else if(error.errors.addcart != undefined) {
+            this.setState({
+              alertText: error.errors.addcart[0],
+              isError: true
+            }, () => {
+              this.setState({isAlert: true})
+            })
+          }
+          return
+        }
         this.props.onUpdate()
       }, (error) => {
         console.log(error);
@@ -67,12 +101,10 @@ class OrderItems extends Component {
 
   returnAttributes = (type) => {
     let { data } = this.props;
-    console.log('<><>< cart ><><>: ', data)
     if(data.product_attributes.length > 0){
       let ids = []
       let details = []
       data.product_attributes.forEach((id, ndx) => {
-        console.log('count: ', ndx)
         ids.push(parseInt(id.value))
       })
       data.product.attributes[type].attribute_values.forEach( (el, ndx) => {
@@ -195,6 +227,12 @@ class OrderItems extends Component {
           text={this.state.alertText}
           onCancel={()=> {this.setState({ isAddingAddressName: false})} }
           onSuccess={()=> {this.removingItem(data)} }
+        />
+        <Alert
+          show={this.state.isAlert}
+          text={this.state.alertText}
+          onClick={()=> this.setState({ isAlert: false}) }
+          alertType={this.state.isError == true ? 'error' : 'primary'}
         />
         <Separator />
       </View>

@@ -35,6 +35,8 @@ import { connect } from 'react-redux';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import moment from 'moment';
 import Alert from 'modules/generic/alert';
+import { fcmService } from 'services/FCMService';
+import { localNotificationService } from 'services/LocalNotificationService';
 
 const width = Math.round(Dimensions.get('window').width);
 const height = Math.round(Dimensions.get('window').height);
@@ -71,6 +73,7 @@ class Welcome extends Component {
     */
     this.retrieveCart();
     this.fetchAddress();
+    this.firebaseNotification()
   }
 
   retrieveProducts = () => {
@@ -144,6 +147,39 @@ class Welcome extends Component {
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
     })
+  }
+
+  firebaseNotification(){
+    const { user } = this.props.state
+    fcmService.registerAppWithFCM()
+    fcmService.register(user.id, this.onRegister, this.onNotification, this.onOpenNotification)
+    localNotificationService.configure(this.onOpenNotification)
+    return () => {
+      console.log("[App] unRegister")
+      fcmService.unRegister()
+      localNotificationService.unRegister()
+    }
+  }
+
+  onRegister = (token) => {
+    console.log("[App] onRegister", token)
+  }
+
+  onNotification = (notify) => {
+    const {user} = this.props.state; 
+    console.log("[App] onNotification", notify)
+
+    // localNotificationService.showNotification(
+    //   0,
+    //   notify.title,
+    //   notify.body,
+    //   notify,
+    //   user
+    // )
+  }
+
+  onOpenNotification = (notify) => {
+    console.log("[App] onOpenNotification", notify )
   }
 
   componentWillUnmount() {

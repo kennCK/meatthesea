@@ -45,10 +45,16 @@ class DeliveryDetails extends Component {
     for (var i = 0; i < cart.length; i++) {
       let item = cart[i]
       let temp_price = 0
-      item.product.attributes.forEach(el => {
+      item.product_attributes.forEach(el => {
         let p = 0
-        el.attribute_values.forEach(le => {
-          p += le.price_adjustment 
+        item.product.attributes.forEach(le => {
+          if(el.id === le.id) {
+            le.attribute_values.forEach(me => {
+              if(el.value == me.id){
+                p += me.price_adjustment
+              }
+            })
+          }
         })
         temp_price += p
       })
@@ -68,7 +74,6 @@ class DeliveryDetails extends Component {
   render() {
     let { isSummary, errorMessage } = this.props;
     const { orderDetails, userLocation, paymentMethod, deliveryTime, cart } = this.props.state;
-    console.log('errorMessage', errorMessage)
     return (
       <View>
         {(orderDetails) && (
@@ -302,30 +307,30 @@ class DeliveryDetails extends Component {
                     icon={faMapMarkerAlt}
                     size={BasicStyles.standardFontSize}
                   />
-                  <Text
-                    style={[
-                      BasicStyles.titleText,
-                      styles.DeliveryDetailText,
-                      {fontSize: BasicStyles.standardFontSize},
-                    ]}>
-                    {' '}
-                    {
-                      userLocation.address1 !== null && userLocation.address1 !== '' && userLocation.address1 !== undefined
-                      ? 
-                        userLocation.address1
-                      : 
-                        userLocation.building_name !== '' &&
-                        userLocation.building_name !== null &&
-                        userLocation.building_name !== undefined ?
-                          userLocation.building_name.length > 40 
-                          ?
-                            userLocation.building_name.substring(0, 40) + '...'
+                  <TouchableOpacity onPress={() => {
+                    this.props.navigate('savedAddressStack')
+                  }}>
+                    <Text
+                      style={[
+                        BasicStyles.titleText,
+                        styles.DeliveryDetailText,
+                        {fontSize: BasicStyles.standardFontSize},
+                      ]}>
+                      {' '}
+                      {
+                        userLocation.address1 !== null && userLocation.address1 !== '' && userLocation.address1 !== undefined
+                        ? 
+                          userLocation.address1
+                        : 
+                          userLocation.building_name !== '' &&
+                          userLocation.building_name !== null &&
+                          userLocation.building_name !== undefined ?
+                            userLocation.building_name.length > 40 
+                            ?
+                              userLocation.building_name.substring(0, 40) + '...'
+                            :
+                              userLocation.building_name
                           :
-                            userLocation.building_name
-                        :
-                          <TouchableOpacity onPress={() => {
-                            this.props.navigate('savedAddressStack')
-                          }}>
                             <Text style={[
                               BasicStyles.titleText,
                               styles.DeliveryDetailText,
@@ -335,9 +340,9 @@ class DeliveryDetails extends Component {
                                 top: -2
                               },
                             ]}>Click to add address</Text>
-                          </TouchableOpacity>
-                    }
-                  </Text>
+                      }
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               )
             }

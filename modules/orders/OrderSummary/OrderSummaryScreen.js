@@ -19,8 +19,7 @@ import Api from 'services/apiv2/index.js';
 import ModalStyle from '../components/style';
 import {Spinner} from 'components';
 import moment from 'moment';
-import AddressModal from 'modules/generic/addAddressModal';
-import Confirm from 'modules/generic/confirm';
+import Alert from 'modules/generic/alert';
 
 const width = Math.round(Dimensions.get('window').width);
 const height = Math.round(Dimensions.get('window').height);
@@ -41,10 +40,10 @@ class OrderSummaryScreen extends Component {
       date: '',
       countries: [],
       isAddingAddressName: false,
-      value: '',
-      postalCode: '',
       showAddAddressConfirmation: false,
-      addresses: []
+      addresses: [],
+      alertText: '',
+      isError: false
     };
   }
   
@@ -157,12 +156,12 @@ class OrderSummaryScreen extends Component {
      * Should not proceed to confirm order if conditions below meet
      */
     
-    // if(userLocation == null){
-    //   this.setState({
-    //     errorMessage: 'Address is required.'
-    //   })
-    //   return
-    // }
+    if(userLocation == null){
+      this.setState({
+        errorMessage: 'Address is required.'
+      })
+      return
+    }
 
     // if(userLocation.address1 == '' || userLocation.address1 == null || userLocation.address1 == undefined){
     //   this.setState({
@@ -197,7 +196,7 @@ class OrderSummaryScreen extends Component {
     }
     // this.executeOrderPlacement()
     if(userLocation === null || userLocation === '' || userLocation === undefined) {
-      this.setState({showAddAddressConfirmation: true})
+      // this.setState({showAddAddressConfirmation: true})
     }else{
       this.executeOrderPlacement()
     }
@@ -209,46 +208,6 @@ class OrderSummaryScreen extends Component {
     }, error => {
       console.log('RETRIEVE COUNTRIES ERROR: ', error)
     })
-  }
-
-  saveAddress = () => {
-    const {userLocation} = this.props.state
-    if(userLocation === null || userLocation === '' || userLocation === undefined){
-      const { user, location } = this.props.state;
-      const { countries } = this.state
-      let temp = location.address.replace(/ /g, '');
-      
-      let countryObject = countries.find(el => {
-        return el.country_name.toLowerCase() === location.country.toLowerCase()
-      })
-
-      // CustomerId, FullName, PhoneNumber, Address, AddressName, Latitude, Longitude, City, PostalCode, CountryId
-  
-      Api.postRequest(
-        Routes.customerAddAddress(
-          user.id, 
-          user.first_name + ' ' + user.last_name, 
-          null, 
-          location.address, 
-          this.state.value, 
-          location.latitude, 
-          location.longitude, 
-          location.locality, 
-          this.state.postalCode, 
-          countryObject !== null && countryObject !== undefined ? countryObject.id : 131
-        ),
-        {}, response => {
-          let data = response.address
-          const{setUserLocation} = this.props
-          this.setState({isAddingAddressName: false, value: '', postalCode: ''})
-          setUserLocation(response.address[data.length - 1]);
-          this.executeOrderPlacement()
-        }, error => {
-          console.log("Adding address error: ", error);
-        });
-    }else{
-      this.executeOrderPlacement()
-    }
   }
   
   executeOrderPlacement = async () => {
@@ -263,9 +222,24 @@ class OrderSummaryScreen extends Component {
         userLocation.id, 
         storeLocation.id
       ), {}, response => {
+        this.setState({isLoading: false});
+        let error = {}
+        if(typeof response == 'string'){
+          error = JSON.parse(response)
+        }
+        if(error.errors) {
+          if(error.errors.paypal_create_order != undefined) {
+            this.setState({
+              alertText: error.errors.paypal_create_order[0],
+              isError: true
+            }, () => {
+              this.setState({isAddingAddressName: true})
+            })
+          }
+          return
+        }
         const { setPaypalSuccessData } = this.props;
         setPaypalSuccessData(response);
-        this.setState({isLoading: false});
         let approve = response.paypal.links.filter(el => {
           return el.rel.toLowerCase() === 'approve';
         })
@@ -297,49 +271,9 @@ class OrderSummaryScreen extends Component {
     setSelectedDeliveryTime(deliveryTime)
   }
 
-  handleName = (value) => {
-    this.setState({value: value})
-  }
-
-  handleCode = (value) => {
-    this.setState({postalCode: value});
-  }
-
-  onAdd = () => {
-    this.saveAddress()
-  }
-
-  onClose = () => {
-    this.setState({isAddingAddressName: false})
-  }
-
-  updatingUserLocation = async (checker) => {
-    const {setUserLocation} = await this.props
-    await setUserLocation(this.state.addresses[checker])
-    await this.setState({ showAddAddressConfirmation: false}, () => {
-      this.saveAddress()
-    })
-  }
-
-  onSuccess = () => {
-    let checker = null;
-    let addresses = this.state.addresses
-    const{location} = this.props.state
-    addresses.forEach((el, ndx) => {
-      if(el.address1 === location.address){
-        checker = ndx
-      }
-    })
-    if(checker !== null){
-      this.updatingUserLocation(checker)
-    }else{
-      this.setState({ showAddAddressConfirmation: false, isAddingAddressName: true})
-    }
-  }
-  
   render() {
-    const { cart, orderDetails, deliveryTime, location, userLocation } = this.props.state;
-    const { isAddingAddressName, errorMessage, isLoading, date, value, postalCode, showAddAddressConfirmation } = this.state;
+    const { cart, orderDetails, deliveryTime } = this.props.state;
+    const { errorMessage, isLoading, date } = this.state;
     return (
       <View style={{ flex: 1 }} key={this.state.key}>
         <Modal visible={this.state.isSubmit > 0 ? true : false}>
@@ -488,15 +422,15 @@ class OrderSummaryScreen extends Component {
             </Text>
           </TouchableHighlight>
         </View>
-        <Confirm
+        {/* <Confirm
           show={showAddAddressConfirmation}
           text={'Do you want to use your current Location?'}
           onCancel={()=> {this.setState({ showAddAddressConfirmation: false})}}
           onSuccess={()=> {
             this.onSuccess()
           }}
-        />
-        <AddressModal
+        /> */}
+        {/* <AddressModal
           {...this.props}
           onAdd={this.onAdd}
           onClose={this.onClose}
@@ -515,8 +449,14 @@ class OrderSummaryScreen extends Component {
           postalCode={postalCode}
           handleName={this.handleName}
           handleCode={this.handleCode}
-        />
+        /> */}
         {isLoading ? <Spinner mode="overlay"/> : null }
+        <Alert
+          show={this.state.isAddingAddressName}
+          text={this.state.alertText}
+          onClick={()=> this.setState({ isAddingAddressName: false}) }
+          alertType={this.state.isError == true ? 'error' : 'primary'}
+        />
       </View>
     );
   }

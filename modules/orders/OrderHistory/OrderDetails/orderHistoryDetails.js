@@ -10,12 +10,38 @@ import {
 } from 'react-native';
 import {Color, BasicStyles, Routes} from 'common';
 import Style from './Style.js';
-import { faMapMarkerAlt, faClock, faCreditCard, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faClock, faCreditCard, faStar, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import Api from 'services/apiv2/index.js';
+import StepIndicator from 'react-native-step-indicator';
 
 const height = Math.round(Dimensions.get('window').height);
+const labels = ["Order received","Processing your order","Out for delivery","Delivered"];
+const customStyles = {
+  stepIndicatorSize: 40,
+  currentStepIndicatorSize: 40,
+  separatorStrokeWidth: 2,
+  currentStepStrokeWidth: 3,
+  stepStrokeCurrentColor: Color.success,
+  stepStrokeWidth: 3,
+  separatorStrokeFinishedWidth: 3,
+  stepStrokeFinishedColor: Color.success,
+  stepStrokeUnFinishedColor: '#aaaaaa',
+  separatorFinishedColor: Color.success,
+  separatorUnFinishedColor: '#aaaaaa',
+  stepIndicatorFinishedColor: Color.success,
+  stepIndicatorUnFinishedColor: '#ffffff',
+  stepIndicatorCurrentColor: '#ffffff',
+  stepIndicatorLabelFontSize: 13,
+  currentStepIndicatorLabelFontSize: 13,
+  stepIndicatorLabelCurrentColor: Color.success,
+  stepIndicatorLabelFinishedColor: '#ffffff',
+  stepIndicatorLabelUnFinishedColor: '#aaaaaa',
+  labelColor: '#999999',
+  labelSize: BasicStyles.standardFontSize,
+  currentStepLabelColor: Color.success,
+}
 
 class OrderHistoryDetails extends Component {
 
@@ -27,7 +53,8 @@ class OrderHistoryDetails extends Component {
       showRatings: false,
       ratingIndex: null,
       isAddingComment: false,
-      value: ''
+      value: '',
+      currentPosition: 0
     }
   }
 
@@ -37,6 +64,23 @@ class OrderHistoryDetails extends Component {
 
   filterOrder = () => {
     console.log('\n\n-----> ordered items <----- ', this.props.state.orderDetails, '\n---------------------------------------------------------------------------------')
+    let data = this.props.state.orderDetails
+    let rtn = 0
+    switch (data.order_status) {
+      case 'Pending':
+        rtn = 0;
+        break;
+      case 'Processing':
+        rtn = 1;
+        break;
+      case 'Delivering':
+        rtn = 2;
+        break;
+      case 'Complete':
+        rtn = 3;
+        break;
+    }
+    this.setState({currentPosition: rtn})
     /**
      * 
      * categorization of ordered products for restaurant and deli-shop
@@ -60,6 +104,11 @@ class OrderHistoryDetails extends Component {
     console.log('TESTING: ', rest[0].product.attributes)
     console.log('\n\n\n: ', store)
   }
+   
+  onStepPress = (position) => {
+    this.setState({currentPosition: position})
+  };
+
 
   itemMenu = (stateVariable) => {
     const currency = this.props.state.orderDetails.customer_currency_code
@@ -271,6 +320,11 @@ class OrderHistoryDetails extends Component {
     );
   }
 
+  renderStepIndicator(stepPosition, stepStatus) {
+    return 
+  }
+  
+
   render(){
     const data = this.props.state.orderDetails
     const {user} = this.props.state
@@ -280,6 +334,23 @@ class OrderHistoryDetails extends Component {
         <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={{
           height: height
         }}>
+          <View
+            style={{
+              marginTop: 30
+            }}
+          >
+            <StepIndicator
+              customStyles={customStyles}
+              currentPosition={this.state.currentPosition}
+              stepCount={4}
+              renderStepIndicator={(args) => {
+                return [<FontAwesomeIcon icon={faCheck} size={BasicStyles.iconSize} style={{
+                  color: args.stepStatus == 'finished' ? Color.white : Color.success }}
+                />]
+              }}
+              labels={labels}
+            />
+          </View>
           <View style={Style.orderNo}>
             <Text style={Style.orderNoText}> Order number {data.id} </Text>
           </View>

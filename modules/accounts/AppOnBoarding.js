@@ -18,9 +18,6 @@ import CustomError from 'components/Modal/Error.js';
 import Header from './Header';
 import config from 'src/config';
 import LocationWithIcon from './components/LocationInput.js';
-import { fcmService } from 'services/FCMService';
-import { localNotificationService } from 'services/LocalNotificationService';
-import CurrentLocation from 'components/Location/location';
 class AppOnBoarding extends Component {
   //Screen1 Component
   constructor(props) {
@@ -35,8 +32,7 @@ class AppOnBoarding extends Component {
       stores: [],
       email: null,
       password: null,
-      locationId: null,
-      willRetrieveCurrentLocation: false
+      locationId: null
     };
   }
 
@@ -46,7 +42,6 @@ class AppOnBoarding extends Component {
      * will be executed after going back to this component 
     */
    this.setState({location: ''})
-   this.setState({willRetrieveCurrentLocation: true})
     Linking.getInitialURL().then(url => {
       console.log(`from initial url ${url}, call navigate`)
       this.navigate(url);
@@ -75,7 +70,6 @@ class AppOnBoarding extends Component {
     //     alert('Something went wrong');
     //   },
     // );
-    this.firebaseNotification()
   }
 
   retrieveAllBuildings = () => {
@@ -98,38 +92,6 @@ class AppOnBoarding extends Component {
      * removing the event listener added in the componentDidMount()
      */
     this.focusListener.remove()
-  }
-
-  firebaseNotification(){
-    fcmService.registerAppWithFCM()
-    fcmService.register(this.onRegister, this.onNotification, this.onOpenNotification)
-    localNotificationService.configure(this.onOpenNotification)
-    return () => {
-      console.log("[App] unRegister")
-      fcmService.unRegister()
-      localNotificationService.unRegister()
-    }
-  }
-
-  onRegister = (token) => {
-    console.log("[App] onRegister", token)
-  }
-
-  onNotification = (notify) => {
-    const {user} = this.props.state; 
-    console.log("[App] onNotification", notify)
-
-    // localNotificationService.showNotification(
-    //   0,
-    //   notify.title,
-    //   notify.body,
-    //   notify,
-    //   user
-    // )
-  }
-
-  onOpenNotification = (notify) => {
-    console.log("[App] onOpenNotification", notify )
   }
 
   componentWillUnmount() { // C
@@ -231,7 +193,6 @@ class AppOnBoarding extends Component {
       }else{
         this.setState({ errorMessage: 'There is no nearest store available.' });
       }
-      this.setState({willRetrieveCurrentLocation: false})
     }, error => {
       console.log('RETRIEVING NEAREST STORE ERROR: ', error);
     })
@@ -247,13 +208,10 @@ class AppOnBoarding extends Component {
   }
 
   render() {
-    const { isLoading, errorMessage, isResponseError, willRetrieveCurrentLocation } = this.state;
+    const { isLoading, errorMessage, isResponseError } = this.state;
     const { isLocationRetrieve } = this.props.state
     return (
       <ScrollView style={Style.ScrollView} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
-        { willRetrieveCurrentLocation &&
-          <CurrentLocation />
-        }
         {isLoading ? <Spinner mode="overlay" /> : null}
           <Header params={'AppOnBoarding'} lg></Header>
           <View style={Style.MainContainer}>

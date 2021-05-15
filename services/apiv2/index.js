@@ -73,26 +73,25 @@ const Api = {
     };
     fetch(route, fetchOptions)
       .then((response) => {
-        console.log('POST REQUEST: ', response);
+        console.log('POST STATUS: ', response.status)
         if (response.ok || response.status == 200) {
           return response.json();
         }
         if (response.status >= 400 && response.status < 500) {
-          // console.log('error status :', response);
-          errorCallback({
-            response,
-            message: 'Request failed',
-          });
+          // let temp = response.text()
+          // errorCallback(temp);
+          return response.text()
         }
       })
       .then((json) => {
-        console.log('json->', json);
+        console.log('json->', json)
         callback(json);
       })
       .catch((error) => {
-        if (errorCallback) {
-          errorCallback(error);
-        }
+        console.log('POST ERROR: ', error)
+        // if (errorCallback) {
+        //   errorCallback(error);
+        // }
       });
   },
   getRequest: async (route, callback, errorCallback = null) => {

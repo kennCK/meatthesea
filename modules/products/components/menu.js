@@ -46,7 +46,7 @@ class Menu extends Component {
       isError: true,
       addOn1: {},
       addOn2: {},
-      selectedIds: []
+      selectedIds: [],
     };
   }
 
@@ -285,37 +285,57 @@ class Menu extends Component {
           })
         }
       }
-      console.log('ADD TO CART PARAMETERS: ', parameters)
-      console.log('TEST: ', this.state.addOn1, this.state.addOn2)
+      console.log('ADD TO CART PARAMETERS: ', Routes.shoppingCartItemsAddToCart + parameters)
     Api.postRequest(
-      (productInCart ? Routes.shoppingCartItemsUpdateCart : Routes.shoppingCartItemsAddToCart) + parameters,
+      Routes.shoppingCartItemsAddToCart + parameters,
       {},
       response => {
-        this.retrieveCart();
-        if(response != undefined) {
-          let temp = {
-            addToBasketResponse : {
-              
-              isError: false
-            }
-          }
-          this.setState({
-            alertText: 'Added to basket successfully!',
-            isError: false,
-            isAddingAddressName: true
-          })
+        let error = {}
+        if(typeof response == 'string'){
+          error = JSON.parse(response)
         }
+        if(error.errors) {
+          if(error.errors.updatecart != undefined) {
+            this.setState({
+              alertText: error.errors.updatecart[0],
+              isError: true
+            }, () => {
+              this.setState({isAddingAddressName: true})
+            })
+          }else if(error.errors.add_to_shopping_cart != undefined) {
+            this.setState({
+              alertText: error.errors.add_to_shopping_cart[0],
+              isError: true
+            }, () => {
+              this.setState({isAddingAddressName: true})
+            })
+          }
+          return
+        }
+        this.retrieveCart();
+        this.setState({
+          alertText: 'Added to basket successfully!',
+          isError: false,
+          isAddingAddressName: true
+        })
         // this.alertMethod('Success Added!', 'Test');
       },
       error => {
-
-        this.setState({
-          alertText: 'Product requested to be added in the cart is not allowed.',
-          isError: true
-        }, () => {
-          this.setState({isAddingAddressName: true})
-          console.log('\nAdd to basket error: ', this.state.addToBasketResponse);
-        })
+        if(error.errors.updatecart){
+          this.setState({
+            alertText: error.errors.updatecart[0],
+            isError: true
+          }, () => {
+            this.setState({isAddingAddressName: true})
+          })
+        }else {
+          this.setState({
+            alertText: 'Product requested to be added in the cart is not allowed.',
+            isError: true
+          }, () => {
+            this.setState({isAddingAddressName: true})
+          })
+        }
       },
     );
   }

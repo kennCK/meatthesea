@@ -1,5 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import {Color} from 'common';
+let height = Math.round(Dimensions.get('window').height)
 
 const getWidth = () => {
   return Math.round(Dimensions.get('window').width);
@@ -11,7 +12,7 @@ const getHeight = () => {
 const styles = {
   AddAddressContainer: {
     justifyContent: 'flex-start',
-    height: '15%',
+    height: height,
     paddingHorizontal: 20,
   },
   InputContainer: {
@@ -20,10 +21,10 @@ const styles = {
     width: '90%',
   },
   textInput: {
-    height: 40,
+    height: 45,
     borderColor: Color.primary,
     borderWidth: 1,
-    width: getWidth() - 100,
+    width: '100%',
     paddingLeft: 10,
     marginBottom: 20,
     borderRadius: 5,
@@ -48,11 +49,11 @@ const styles = {
   btnWhite: {
     height: 50,
     backgroundColor: Color.tertiary,
-    width: getWidth() - 100,
+    width: '100%',
     marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 5
+    borderRadius: 0
   },
 };
 

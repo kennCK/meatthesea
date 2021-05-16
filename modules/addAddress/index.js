@@ -191,156 +191,172 @@ class AddAddress extends Component {
 
   render() {
     return (
-      <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-        <View style={[
-          Style.AddAddressContainer,
-          {
-            paddingTop: 30,
-            paddingBottom: 30,
-            minHeight: height,
-            alignItems: 'center'
-          }
-        ]}>
-          {/* <Location
-          // setLocation={location => {
-          //   console.log('location', location);
-          //   this.setState({location: location});
-          // }}
-          /> */}
-          { this.state.errorMessage !== '' &&
-            <Text style={{
-              color: Color.danger,
-              marginBottom: 20
-            }}>{this.state.errorMessage}</Text>
-          }
-          <TextInput
-            style={Style.textInput}
-            {...Style.textPlaceHolder}
-            onChangeText={(addressName) => this.setState({ addressName })}
-            value={this.state.addressName}
-            placeholder={'Address name'}
-          />
-          <TextInput
-            style={Style.textInput}
-            {...Style.textPlaceHolder}
-            onChangeText={(fullName) => this.setState({ fullName })}
-            value={this.state.fullName}
-            placeholder={'Full name'}
-          />
-          {/* <TextInput
-            style={Style.textInput}
-            {...Style.textPlaceHolder}
-            onChangeText={(email) => this.setState({ email })}
-            value={this.state.email}
-            placeholder={'Email'}
-          /> */}
-
-          {/* <TextInput
-            style={Style.textInput}
-            {...Style.textPlaceHolder}
-            onChangeText={(phoneNumber) => this.setState({ phoneNumber })}
-            value={this.state.phoneNumber}
-            placeholder={'Phone number'}
-          /> */}
-          <LocationWithIcon {...{
-            style: [
-              Style.textInput,
-              {
-                backgroundColor: Color.white,
-                color: Color.primary
-              },
-              Style.textPlaceHolder
-            ],
-            selected: this.state.location,
-            placeholder: "Select location",
-            placeholderColor: Color.primary,
-            iconHeight: 20,
-            stores: this.state.stores,
-            onSelect: (selectedItem) => {
-              // this.props.setLocation(selectedItem)
-              // this.props.setStoreLocation(selectedItem);
-              this.setState({ location: selectedItem.building_name, buildingId: selectedItem.id })
-              if (selectedItem.building_name === 'Other') {
-                this.setState({ isShowingCity: true })
-              } else {
-                this.setState({ isShowingCity: false })
-              }
+      <View style={{
+        flex: 1,
+        paddingLeft: 20,
+        paddingRight: 20
+      }}>
+        <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+          <View style={{
+              minHeight: height,
+              alignItems: 'center',
+              width: '100%'
+            }}>
+            {/* <Location
+            // setLocation={location => {
+            //   console.log('location', location);
+            //   this.setState({location: location});
+            // }}
+            /> */}
+            { this.state.errorMessage !== '' &&
+              <Text style={{
+                color: Color.danger,
+                marginBottom: 20,
+                marginTop: 25
+              }}>{this.state.errorMessage}</Text>
             }
-          }} />
-          { this.state.isShowingCity &&
-            <View>
-              <TextInput
-                style={Style.textInput}
-                {...Style.textPlaceHolder}
-                onChangeText={(streetAddress) => this.setState({ streetAddress: streetAddress })}
-                value={this.state.streetAddress}
-                placeholder={'Street address'}
-              />
-              <TextInput
-                style={Style.textInput}
-                {...Style.textPlaceHolder}
-                onChangeText={(townDistrict) => this.setState({ townDistrict: townDistrict })}
-                value={this.state.townDistrict}
-                placeholder={'Town / District'}
-              />
-              <View style={Style.textInput}>
-                <Picker
-                  selectedValue={this.state.selectedCity}
-                  style={[
-                    Style.textInput,
-                    {
-                      color: Color.primary
-                    }
-                  ]}
-                  onValueChange={this.selectCity}
-                >
+            <TextInput
+              style={{
+                ...Style.textInput,
+                marginTop: this.state.errorMessage !== '' ? 0 : 25
+              }}
+              {...Style.textPlaceHolder}
+              onChangeText={(addressName) => this.setState({ addressName })}
+              value={this.state.addressName}
+              placeholder={'Address name'}
+            />
+            <TextInput
+              style={Style.textInput}
+              {...Style.textPlaceHolder}
+              onChangeText={(fullName) => this.setState({ fullName })}
+              value={this.state.fullName}
+              placeholder={'Full name'}
+            />
+            {/* <TextInput
+              style={Style.textInput}
+              {...Style.textPlaceHolder}
+              onChangeText={(email) => this.setState({ email })}
+              value={this.state.email}
+              placeholder={'Email'}
+            /> */}
+
+            {/* <TextInput
+              style={Style.textInput}
+              {...Style.textPlaceHolder}
+              onChangeText={(phoneNumber) => this.setState({ phoneNumber })}
+              value={this.state.phoneNumber}
+              placeholder={'Phone number'}
+            /> */}
+            <View style={{
+              width: '100%'
+            }}>
+              <LocationWithIcon {...{
+                style: [
+                  Style.textInput,
                   {
-                    Helper.locations.map((el, ndx) => {
-                      return (
-                        <Picker.Item label={el} value={el} key={'city' + ndx} />
-                      )
-                    })
+                    backgroundColor: Color.white,
+                    color: Color.primary
+                  },
+                  Style.textPlaceHolder
+                ],
+                selected: this.state.location,
+                placeholder: "Select location",
+                placeholderColor: Color.primary,
+                iconHeight: 20,
+                stores: this.state.stores,
+                onSelect: (selectedItem) => {
+                  // this.props.setLocation(selectedItem)
+                  // this.props.setStoreLocation(selectedItem);
+                  this.setState({ location: selectedItem.building_name, buildingId: selectedItem.id })
+                  if (selectedItem.building_name === 'Other') {
+                    this.setState({ isShowingCity: true })
+                  } else {
+                    this.setState({ isShowingCity: false })
                   }
-                </Picker>
-              </View>
-              <TextInput
-                style={Style.textInput}
-                {...Style.textPlaceHolder}
-                onChangeText={(postalOrZip) => this.setState({ postalOrZip: postalOrZip })}
-                value={this.state.postalOrZip}
-                placeholder={'Postal / Zip'}
-              />
+                }
+              }} />
+              { this.state.isShowingCity &&
+                <View>
+                  <TextInput
+                    style={Style.textInput}
+                    {...Style.textPlaceHolder}
+                    onChangeText={(streetAddress) => this.setState({ streetAddress: streetAddress })}
+                    value={this.state.streetAddress}
+                    placeholder={'Street address'}
+                  />
+                  <TextInput
+                    style={Style.textInput}
+                    {...Style.textPlaceHolder}
+                    onChangeText={(townDistrict) => this.setState({ townDistrict: townDistrict })}
+                    value={this.state.townDistrict}
+                    placeholder={'Town / District'}
+                  />
+                  <View style={Style.textInput}>
+                    <Picker
+                      selectedValue={this.state.selectedCity}
+                      style={[
+                        Style.textInput,
+                        {
+                          color: Color.primary
+                        }
+                      ]}
+                      onValueChange={this.selectCity}
+                    >
+                      {
+                        Helper.locations.map((el, ndx) => {
+                          return (
+                            <Picker.Item label={el} value={el} key={'city' + ndx} />
+                          )
+                        })
+                      }
+                    </Picker>
+                  </View>
+                  <TextInput
+                    style={Style.textInput}
+                    {...Style.textPlaceHolder}
+                    onChangeText={(postalOrZip) => this.setState({ postalOrZip: postalOrZip })}
+                    value={this.state.postalOrZip}
+                    placeholder={'Postal / Zip'}
+                  />
+                </View>
+              }
             </View>
-          }
-          <TouchableHighlight
-            style={[
-              BasicStyles.btn,
-              Style.btnWhite,
-              {
-                backgroundColor: Color.primary
-              }
-            ]}
-            onPress={() => this.addAddress()}
-            underlayColor={Color.gray}>
-            <Text style={[
-              Style.textPrimary,
-              Style.fontWeight('bold'),
-              Style.fontSize(18),
-              {
-                color: Color.white
-              }
-            ]}>
-              ADD
-            </Text>
-          </TouchableHighlight>
-          <Alert
-            show={this.state.alert}
-            text={this.state.alertText}
-            onClick={()=> this.setState({ alert: false}) }
-            alertType={this.state.isError == true ? 'error' : 'primary'}
-          />
-        </View>
-      </ScrollView>
+            <Alert
+              show={this.state.alert}
+              text={this.state.alertText}
+              onClick={()=> {
+                this.setState({ alert: false})
+                setTimeout(() => {
+                  this.props.navigation.pop();
+                }, 100)
+              }}
+              alertType={this.state.isError == true ? 'error' : 'primary'}
+            />
+          </View>
+        </ScrollView>
+        <TouchableHighlight
+          style={{
+            ...BasicStyles.btn,
+            ...Style.btnWhite,
+            backgroundColor: Color.primary,
+            position: 'absolute',
+            bottom: 0,
+            left: 20
+          }}
+          onPress={() => this.addAddress()}
+          underlayColor={Color.gray}>
+          <Text style={[
+            Style.textPrimary,
+            Style.fontWeight('bold'),
+            Style.fontSize(13),
+            {
+              color: Color.warning
+            }
+          ]}>
+            ADD
+          </Text>
+        </TouchableHighlight>
+      </View>
     );
   }
 }

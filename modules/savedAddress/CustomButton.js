@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import styles from './Styles';
+import { Color } from 'common';
 
 class CustomButton extends Component {
   constructor(props) {
@@ -18,7 +19,11 @@ class CustomButton extends Component {
           {backgroundColor: this.props.buttonColor},
         ]}>
         <View style={styles.ButtonTextContainer}>
-          <Text style={styles.ButtonTextStyle}>{this.props.buttonText}</Text>
+          <Text style={{
+            ...styles.ButtonTextStyle,
+            fontSize: 13,
+            color: Color.warning
+          }}>{this.props.buttonText}</Text>
         </View>
       </TouchableOpacity>
     );

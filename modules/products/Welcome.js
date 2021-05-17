@@ -9,7 +9,8 @@ import {
   TextInput,
   ScrollView,
   Dimensions,
-  SafeAreaView
+  SafeAreaView,
+  Linking
 } from 'react-native';
 import { BasicStyles, Color } from 'common';
 import Modal from 'react-native-modal';
@@ -522,7 +523,6 @@ class Welcome extends Component {
           }}>
           {/* {location === null && userLocation === null ? <Spinner mode="overlay" style={{zIndex: 999}}/> : null } */}
           <TouchableHighlight
-            // disabled={location === null && userLocation === null}
             activeOpacity={0.6}
             underlayColor={Color.lightGray}
             style={{
@@ -573,14 +573,18 @@ class Welcome extends Component {
                     style={Style.LogoSize}
                   />
                 </View>
-                <View style={Style.TextContainer}>
+                <View style={[
+                  Style.TextContainer,
+                  {
+                    width: '50%'
+                  }
+                ]}>
                   <Text style={[Style.textSecondary]}>
                     Products from our deli store right at your finger tips
                 {/* {this.props.state.location !== null && this.props.state.location !==  '' && this.props.state.location !==  undefined ? this.props.state.location.address : ''} */}
                   </Text>
                 </View>
                 <TouchableOpacity
-                  disabled={location === null && userLocation === null}
                   activeOpacity={0.6}
                   underlayColor={Color.lightGray}
                   style={[
@@ -598,13 +602,17 @@ class Welcome extends Component {
                     style={Style.LogoSize}
                   />
                 </View>
-                <View style={Style.TextContainer}>
+                <View style={[
+                  Style.TextContainer,
+                  {
+                    width: '50%'
+                  }
+                ]}>
                   <Text style={[Style.textSecondary]}>
                     Meals from our kitchen straight to your dinner table
               </Text>
                 </View>
                 <TouchableHighlight
-                  disabled={location === null && userLocation === null}
                   activeOpacity={0.6}
                   underlayColor={Color.lightGray}
                   style={[
@@ -612,6 +620,56 @@ class Welcome extends Component {
                   ]}
                   onPress={() => this.changeMenu(0)}>
                   <Text style={[Style.textPrimary]}>GO TO RESTAURANTS</Text>
+                </TouchableHighlight>
+              </View>
+
+              <View style={Style.circle}>
+                <View style={[
+                  Style.LogoContainer,
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }
+                ]}>
+                  <Image
+                    source={require('assets/logo.png')}
+                    style={[
+                      Style.LogoSize,
+                      {
+                        height: '70%',
+                        width: '70%'
+                      }
+                    ]}
+                  />
+                </View>
+                <View style={[
+                  Style.TextContainer,
+                  {
+                    width: '50%'
+                  }
+                ]}>
+                  <Text style={[Style.textSecondary]}>
+                    Know all about our story, identity, delivery and payment details.
+                  </Text>
+                </View>
+                <TouchableHighlight
+                  activeOpacity={0.6}
+                  underlayColor={Color.lightGray}
+                  style={[
+                    Style.btnWhite
+                  ]}
+                  onPress={() => {
+                    let url = 'https://www.meatthesea.com/'
+                    Linking.canOpenURL(url).then(supported => {
+                      if (supported) {
+                        Linking.openURL(url);
+                      } else {
+                        console.log("Don't know how to open URI: " + url);
+                      }
+                    });
+                  }}>
+                  <Text style={[Style.textPrimary]}>DISCOVER OUR STORY</Text>
                 </TouchableHighlight>
               </View>
             </SafeAreaView>

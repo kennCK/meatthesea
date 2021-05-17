@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import styles from '../Style';
-import { BasicStyles } from 'common';
+import { BasicStyles, Helper } from 'common';
 import Style from 'modules/accounts/Style';
 import { Color, Routes } from 'common';
 import Separator from '../components/Separator'
@@ -33,93 +33,198 @@ class OrderedItems extends Component {
     );
   }
 
-  render() {
-    let { data } = this.props;
-    const { cart } = this.props.state;
-    return (
-      <View><View style={{ paddingTop: 20, marginBottom: 15 }}>
-        {
-          data && (
-            <View>
-              <View >
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                  <Text style={[
-                      BasicStyles.titleText,
-                      Style.fontSize(BasicStyles.standardFontSize),
-                  ]}>
-                    <Text  >
-                      <>
-                      <TouchableOpacity disabled>
-                        <Text style={{
-                            fontSize: BasicStyles.standardFontSize,
-                            marginHorizontal: 4,
-                            lineHeight: 25
-                        }}>{data.quantity > 0 ? data.quantity : 0}</Text>
-                      </TouchableOpacity>
-                      </>
-                    </Text>
-                  </Text>
-                  <View>
-                    <Text style={[
-                        { marginVertical: 2 },
-                        Style.fontWeight("700"),
-                        Style.fontSize(BasicStyles.standardFontSize),
-                    ]}>
-                        {data.product.name}
-                    </Text>
-                    <Text style={[
-                        { marginVertical: 2 },
-                        Style.fontSize(BasicStyles.standardFontSize),
-                    ]}>
-                        {data.product.short_description}
-                    </Text>
-                  </View>
-                  <Text style={{
-                      position: 'absolute',
-                      fontSize:BasicStyles.standardFontSize,
-                      right: 25,
-                      top: 5
-                  }}>{'HK$ ' + data.product.price}</Text>
-                </View>
-                </View>
-                        {/*
-                            itemText.addOns.map((addOn, id) => {
-                                return (
-                                    <View key={id} >
-                                        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                                            <Text style={[
-                                                { marginVertical: 2, marginLeft: 10 },
-                                                BasicStyles.titleText,
-                                                Style.fontSize(BasicStyles.standardFontSize),
-                                            ]}>
-                                                <FontAwesomeIcon icon={faTrash} color={Color.primary} />
-                                            </Text>
-                                            <Text
-                                                style={[
-                                                    { color: Color.darkGray },
-                                                    BasicStyles.titleText,
-                                                    Style.fontWeight("100"),
-                                                    Style.fontSize(BasicStyles.standardFontSize)
-                                                ]}>{"\t"}
-                                                +{addOn.item}</Text>
-                                            <Text style={{
-                                                fontSize:BasicStyles.standardFontSize,
-                                                position: 'absolute',
-                                                right: 25,
-                                                top: 5
-                                            }}>{addOn.price}</Text>
-                                        </View>
-                                    </View>
-                                )
-                            })
-                        */}
-          </View>)
+  returnAttributes = (type, data) => {
+    if(data.product_attributes.length > 0){
+      let ids = []
+      let details = []
+      data.product_attributes.forEach((id, ndx) => {
+        ids.push(parseInt(id.value))
+      })
+      data.product.attributes[type].attribute_values.forEach( (el, ndx) => {
+        if(ids.includes(el.id)){
+          details.push(el)
         }
+      })
 
+      return (details.map((addOn, ndx) => {
+        return (
+          <View key={ndx + 'add-ons2'} style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}>
+            <Text
+              style={[
+                {
+                  color: Color.black,
+                  marginTop: 2,
+                  marginBottom: 2,
+                  fontSize: BasicStyles.standardFontSize
+                },
+              ]}
+            >
+              + {addOn.name }
+            </Text>
+            {data.product.attributes[type].product_attribute_id == 11 && <Text>
+              {'HK$ ' + addOn.price_adjustment}
+            </Text>}
+          </View>
+        )
+      }))
+    }else {
+      return null
+    }
+  }
+
+  render() {
+    let data  = this.props.data.order_items;
+    const { cart } = this.props.state;
+    let restaurant = []
+    let deli = []
+    data.forEach(el => {
+      if(el.product.category_type == 0){
+        restaurant.push(el)
+      }else if(el.product.category_type == 1){
+        deli.push(el)
+      }
+    })
+    console.log('ORDER DATA: ', data)
+    return (
+      <View style={{
+        width: '100%'
+      }}>
+      {
+        restaurant && (
+          <View 
+            style={{
+              paddingTop: 20
+            }}
+          >
+            <Text
+            style={{
+              textAlign: 'left',
+              elevation: 10,
+              fontWeight: 'bold',
+              fontSize: 20,
+              color: Color.primary,
+              marginBottom: 10,
+              paddingLeft: 15
+            }}
+          >RESTAURANT MENU ITEMS</Text>
+          {restaurant.map((el, ndx) => {
+            return (
+              <View style={{width: '100%', padding: 15, paddingBottom: 0}} key={'orderPlace-restaurant-' + ndx}>
+                <View style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between'
+                }}>
+                  <Text>
+                    {el.product.name}
+                  </Text>
+                  <Text>
+                  {Helper.currency[0].title} {el.product.price}
+                  </Text>
+                </View>
+                <View style={{
+                  marginTop: 10
+                }}>
+                  {this.returnAttributes(0, el)}
+                  {this.returnAttributes(1, el)}
+                </View>
+              </View>
+            )
+          })}
+        </View>
+      )}
+    
+      {
+        deli && (
+          <View
+            style={{
+              paddingTop: 20
+            }}
+          >
+            <Text
+              style={{
+                textAlign: 'left',
+                elevation: 10,
+                fontWeight: 'bold',
+                fontSize: 20,
+                color: Color.primary,
+                marginBottom: 10,
+                paddingLeft: 15
+              }}
+            >DELI-SHOP ITEMS</Text>
+          {deli.map((el, ndx) => {
+            return (
+              <View style={{width: '100%', padding: 15, paddingBottom: 0}} key={'orderPlace-deli-' + ndx}>
+                <View style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between'
+                }}>
+                  <Text>
+                    {el.product.name}
+                  </Text>
+                  <Text>
+                  {Helper.currency[0].title} {el.product.price}
+                  </Text>
+                </View>
+                <View style={{
+                  marginTop: 10
+                }}>
+                  {this.returnAttributes(0, el)}
+                  {this.returnAttributes(1, el)}
+                </View>
+              </View>
+            )
+          })}
+        </View>
+      )}
+      <View
+        style={{
+          width: '100%', 
+          padding: 15, 
+          paddingBottom: 0,
+          marginBottom: 20
+        }}
+      >
+        {/* <View
+          style={{
+            marginBottom: 20,
+            width: '100%'
+          }}
+        >
+          <Text>Contactless delivery: ---</Text>
+        </View> */}
+        <View
+          style={{
+            marginBottom: 20,
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Text>Sub total:</Text>
+          <Text>HKD {this.props.total ? this.props.total : 0}</Text>
+        </View>
+        <View
+          style={{
+            marginBottom: 20,
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Text>Total:</Text>
+          <Text style={{
+            textAlign: 'left',
+            fontWeight: 'bold',
+            fontSize: 20,
+            color: Color.black,
+          }}>HKD {this.props.total ? this.props.total : 0}</Text>
+        </View>
       </View>
-        <Separator />
-      </View>
-    )
+      <Separator />
+    </View>)
   }
 }
 

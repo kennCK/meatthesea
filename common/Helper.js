@@ -97,8 +97,8 @@ export default {
     account_number: '123-123-123-123'
   }],
   currency: [{
-    title: 'PHP',
-    value: 'php'
+    title: 'HKD',
+    value: 'HKD'
   }],
   retrieveDataFlag: 1,
   validateEmail(email){

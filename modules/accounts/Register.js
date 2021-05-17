@@ -12,6 +12,7 @@ import config from 'src/config';
 import LocationWithIcon from './components/LocationInput.js';
 import {Picker} from '@react-native-community/picker';
 import CheckBox from '@react-native-community/checkbox';
+import Alert from 'modules/generic/alert';
 
 let width = Math.round(Dimensions.get('window').width);
 
@@ -40,7 +41,10 @@ class Register extends Component {
       streetAddress: '',
       townDistrict: '',
       postalOrZip: '',
-      isAgree: false
+      isAgree: false,
+      alertText: '',
+      isError: true,
+      isAlert: false
       // floor: null
     };
   }
@@ -72,7 +76,6 @@ class Register extends Component {
     this.setState({ isLoading: true })
     this.getData();
     this.retrieveAllBuildings();
-    this.retrieveCountries();
   }
 
   redirect = (route) => {
@@ -128,10 +131,27 @@ class Register extends Component {
     // "Longitude": "string",
     // "TermsAndCondition": true
     if(this.validate()){
+      this.setState({isLoading: true});
       Api.postRequest(
-        Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname="+fullName+"&PhoneNumber="+phoneNumber + '&CountryId='+countryId+'&City='+selectedCity+"&PostalCode="+ postalOrZip + "&Address1="+ townDistrict + "&Address2="+streetAddress+"&BuildingId=" + buildingId + "&TermsAndCondition="+true,
+        Routes.customerRegister+"?Email="+email+"&Password="+password+"&Fullname="+fullName+"&PhoneNumber="+phoneNumber + '&City='+selectedCity+"&PostalCode="+ postalOrZip + "&Address1="+ townDistrict + "&Address2="+streetAddress+"&BuildingId=" + buildingId + "&TermsAndCondition="+true,
         {},
         response => {
+          this.setState({isLoading: false});
+          let error = {}
+          if(typeof response == 'string'){
+            error = JSON.parse(response)
+          }
+          if(error.errors) {
+            if(error.errors.registration != undefined) {
+              this.setState({
+                alertText: error.errors.registration[0],
+                isError: true
+              }, () => {
+                this.setState({isAlert: true})
+              })
+            }
+            return
+          }
           let { customer, authorization } = response;
           this.setState({ isLoading: false })
           login(email, password, customer, authorization);
@@ -142,7 +162,7 @@ class Register extends Component {
           login(null, null, null, null);
           this.setState({ isLoading: false })
           this.setState({ isResponseError: true })
-        },
+        },  
       );
     }
   }
@@ -407,6 +427,12 @@ class Register extends Component {
         {isResponseError ? <CustomError visible={isResponseError} onCLose={() => {
           this.setState({ isResponseError: false, isLoading: false })
         }} /> : null}
+        <Alert
+          show={this.state.isAlert}
+          text={this.state.alertText}
+          onClick={()=> this.setState({ isAlert: false}) }
+          alertType={this.state.isError == true ? 'error' : 'primary'}
+        />
       </ScrollView>
     );
   }

@@ -8,7 +8,7 @@ import {
   Dimensions,
   TextInput
 } from 'react-native';
-import {Color, BasicStyles, Routes} from 'common';
+import {Color, BasicStyles, Routes, Helper} from 'common';
 import Style from './Style.js';
 import { faMapMarkerAlt, faClock, faCreditCard, faStar, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -154,7 +154,7 @@ class OrderHistoryDetails extends Component {
                         + {le.name }
                       </Text>
                       <Text>
-                        {'HK$ ' + le.price_adjustment}
+                        {Helper.currency[0].title} {le.price_adjustment}
                       </Text>
                     </View>
                   )
@@ -367,18 +367,18 @@ class OrderHistoryDetails extends Component {
           }
           {this.itemMenu('store')}
           <View style={Style.totalSection}>
-            <Text style={Style.deliveryCondition}> Contactless delivery: ____</Text>
+            {/* <Text style={Style.deliveryCondition}> Contactless delivery: ____</Text> */}
             <View style={Style.flexDirectionBetween}>
               <Text> Sub total </Text>
-              <Text> {data.customer_currency_code} { data.order_subtotal_incl_tax } </Text>
+              <Text> {Helper.currency[0].title}  { data.order_subtotal_incl_tax } </Text>
             </View>
             <View style={Style.flexDirectionBetween}>
               <Text> Delivery fee </Text>
-              <Text> {data.customer_currency_code} {data.delivery_fee} </Text>
+              <Text> {Helper.currency[0].title}  {data.delivery_fee} </Text>
             </View>
             <View style={Style.flexDirectionBetween}>
               <Text> Total </Text>
-              <Text> {data.customer_currency_code} {data.order_total} </Text>
+              <Text> {Helper.currency[0].title} {data.order_total} </Text>
             </View>
           </View>
           <View style={Style.rateContainer}>

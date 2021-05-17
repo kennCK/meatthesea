@@ -18,6 +18,7 @@ import {connect} from 'react-redux';
 import Api from 'services/apiv2/index.js';
 import {Spinner} from 'components';
 import moment from 'moment';
+import {faMapMarkerAlt} from '@fortawesome/free-solid-svg-icons';
 
 class OrderedSummary extends Component {
   constructor(props) {
@@ -30,7 +31,8 @@ class OrderedSummary extends Component {
       key: 1,
       errorMessage: null,
       isLoading: false,
-      isRendered: false
+      isRendered: false,
+      data: []
     };
   }
 
@@ -48,6 +50,7 @@ class OrderedSummary extends Component {
           moment().format('HH:mm')
         ),
       {}, response=> {
+        this.setState({data: response.orders})
         console.log('CONFIRM ORDER PAYPAL RESPONSE: ', response);
         this.setState({isLoading: false, isRendered: true});
         const {setShowRating} = this.props;
@@ -147,7 +150,17 @@ class OrderedSummary extends Component {
     const { cart, orderDetails, deliveryTime } = this.props.state;
     const { errorMessage, isLoading, isRendered } = this.state;
     return (
-      <View style={{ flex: 1 }} key={this.state.key}>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }} 
+        style={[
+          styles.OrderHistoryListContainer,
+          {
+            width: '100%'
+          }
+        ]}
+      >
         <Modal visible={this.state.isVisible} >
           <View style={{ flex: 1, backgroundColor: Color.primary }}>
           <TouchableOpacity
@@ -201,36 +214,135 @@ class OrderedSummary extends Component {
             </View>
           </View>
         </Modal>
+        <View>
+        <View
+          style={{
+            alignItems: 'center',
+            width: '100%' 
+          }}
+        >
+          <Text
+            style={{
+              textAlign: 'center',
+              elevation: 10,
+              fontWeight: 'bold',
+              fontSize: 20,
+              color: Color.darkGray,
+              paddingLeft: 20,
+              paddingRight: 20,
+              paddingTop: 35,
+              paddingBottom: 35 
+            }}
+          >THANK YOU FOR YOUR ORDER!</Text>
+        </View>
+        </View>
         {
           isRendered && 
         
-          <View style={styles.HeaderContainer}>
-            {/* */}
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              <Text style={[Style.fontSize(BasicStyles.standardFontSize)]}>Delivery time : {deliveryTime}</Text>
-            </View>
-            <View style={[{ marginTop: 15 },]}>
-              <Text style={[{ color: Color.darkGray }, Style.fontSize(BasicStyles.standardFontSize)]}>Current wait time: around 30 mins
-              <View style={{ marginTop: 10 }}>
-                      <FontAwesomeIcon style={{ marginLeft: 10 }} color={Color.darkGray} icon={faInfoCircle} size={BasicStyles.standardFontSize} />
-                  </View>
-              </Text>
-            </View>
+          <View
+            style={{
+              alignItems: 'center',
+              width: '100%' 
+            }}
+          >
+            <Text
+              style={{
+                textAlign: 'center',
+                elevation: 10,
+                fontWeight: 'bold',
+                fontSize: 20,
+                color: Color.primary,
+                padding: 0
+              }}
+            >DELIVERY TIME: {this.state.data[0] ? this.state.data[0].delivery_time_requested : ''}</Text>
           </View>
+        }
+        {
+          isRendered && 
+            <View
+              style={{
+                alignItems: 'center',
+                width: '100%' 
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: 'center',
+                  elevation: 10,
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                  color: Color.black,
+                  padding: 20
+                }}
+              >Order number {this.state.data[0] ? this.state.data[0].id : ''}</Text>
+            </View>
         }
         <Separator />
         {
           isRendered && 
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={[styles.OrderHistoryListContainer]}>
-            <View >
-              {
-                cart && cart.map((cartItem, idx) => {
-                  return <OrderItems key={idx} data={cartItem} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>
-                })
-              }
+          <View >
+            {
+              this.state.data && this.state.data.map((cartItem, idx) => {
+                return <OrderItems key={idx} data={cartItem} total={this.state.data.order_total} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>
+              })
+            }
+            <View style={{
+              width: '100%',
+              padding: 15,
+              paddingTop: 20
+            }}>
+              <Text style={{
+                textAlign: 'left',
+                elevation: 10,
+                fontWeight: 'bold',
+                fontSize: 20,
+                color: Color.black,
+                marginBottom: 20
+              }}>Delivery details</Text>
+              <View
+                style={{
+                  marginBottom: 20,
+                  width: '100%',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  paddingLeft: 20,
+                  paddingRight: 20
+                }}
+              >
+                <Text>
+                  {
+                    this.state.data[0].shipping_address.address1 != '' && this.state.data[0].shipping_address.address1 != null && this.state.data[0].shipping_address.address1 != undefined ?
+                      this.state.data[0].shipping_address.address1
+                    :
+                      this.state.data[0].shipping_address.address2 != '' && this.state.data[0].shipping_address.address2 != null && this.state.data[0].shipping_address.address2 != undefined ?
+                        this.state.data[0].shipping_address.address2
+                      :
+                        ''
+                  }
+                </Text>
+              </View>
+              <View
+                style={{
+                  marginBottom: 20,
+                  width: '100%',
+                  paddingLeft: 20,
+                  paddingRight: 20
+                }}
+              >
+                <Text>Delivery time: {this.state.data[0].delivery_time_requested}</Text>
+              </View>
+              <View
+                style={{
+                  marginBottom: 20,
+                  width: '100%',
+                  paddingRight: 20,
+                  paddingLeft: 20
+                }}
+              >
+                <Text>Payment method: {this.state.data[0].payment_method_system_name}</Text>
+              </View>
             </View>
-
-          </ScrollView>
+          </View>
         }
         <View 
           style={
@@ -275,7 +387,7 @@ class OrderedSummary extends Component {
           } */}
         </View>
         {isLoading ? <Spinner mode="overlay"/> : null }
-      </View>
+      </ScrollView>
     );
   }
 }

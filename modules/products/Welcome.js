@@ -698,7 +698,7 @@ class Welcome extends Component {
                     Style.btnWhite
                   ]}
                   onPress={() => {
-                    let url = 'https://www.meatthesea.com/'
+                    let url = 'https://www.meatthesea.com/about-us/'
                     Linking.canOpenURL(url).then(supported => {
                       if (supported) {
                         Linking.openURL(url);

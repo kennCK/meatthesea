@@ -285,7 +285,7 @@ class OrderedSummary extends Component {
           <View >
             {
               this.state.data && this.state.data.map((cartItem, idx) => {
-                return <OrderItems key={idx} data={cartItem} total={this.state.data.order_total} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>
+                return <OrderItems key={idx} data={cartItem} total={this.state.data[0].order_total} editable={true} updateOrder={() => this.updateTotal()} onUpdate={() => this.retrieveCart()}/>
               })
             }
             <View style={{

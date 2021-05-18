@@ -16,6 +16,11 @@ class HeaderOptions extends Component {
     }
     goBack = () => {
         let { navigationProps } = this.props
+        const { setHomepageSettings } = this.props;
+        setHomepageSettings({
+            type: null,
+            selectedMenu: null
+        })
         navigationProps.navigate('homepageStack')
         // this.props.navigationProps.pop();
     };
@@ -49,6 +54,7 @@ const mapDispatchToProps = (dispatch) => {
     const { actions } = require('@redux');
     return {
         setActiveRoute: (route) => dispatch(actions.setActiveRoute(route)),
+        setHomepageSettings: (settings) => dispatch(actions.setHomepageSettings(settings)),
     };
 };
 

@@ -8,7 +8,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import styles from '../Style';
-import {BasicStyles} from 'common';
+import {BasicStyles, Helper} from 'common';
 import Style from 'modules/accounts/Style';
 import {Color} from 'common';
 import Separator from './Separator';
@@ -60,6 +60,7 @@ class DeliveryDetails extends Component {
       })
 
       total += (parseInt(item.quantity) * parseFloat(item.product.price) + temp_price)
+      console.log('ITEM: ', item)
       if(i == cart.length - 1){
         const { setOrderDetails } = this.props;
         setOrderDetails({
@@ -109,7 +110,7 @@ class DeliveryDetails extends Component {
                   </RadioButton>
                 </Text>
               </View>
-              <View style={{marginTop: 10}}>
+              {/* <View style={{marginTop: 10}}>
                 <Text
                   style={[
                     {marginVertical: 2, marginLeft: 5, color: Color.black},
@@ -138,7 +139,7 @@ class DeliveryDetails extends Component {
                     />
                   </RadioButton>
                 </Text>
-              </View>
+              </View> */}
             </View>
             <Separator />
           </>
@@ -160,7 +161,7 @@ class DeliveryDetails extends Component {
                 top: 5,
                 fontSize: BasicStyles.standardFontSize,
               }}>
-              HK$ {orderDetails && cart.length > 0? parseFloat(orderDetails.subtotal).toFixed(2) : 0}
+              {Helper.currency[0].title} $ {orderDetails && cart.length > 0? parseFloat(orderDetails.subtotal).toFixed(2) : 0}
             </Text>
           </View>
           {isSummary && (
@@ -241,7 +242,7 @@ class DeliveryDetails extends Component {
                 top: 5,
                 fontWeight: 'bold'
               }}>
-              HK$ {orderDetails && cart.length > 0? parseFloat(orderDetails.total).toFixed(2) : 0.00}
+              {Helper.currency[0].title} {orderDetails && cart.length > 0? parseFloat(orderDetails.total).toFixed(2) : 0.00}
             </Text>
           </View>
         </View>

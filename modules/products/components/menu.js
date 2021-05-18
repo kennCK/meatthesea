@@ -11,7 +11,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faArrowLeft, faTimes} from '@fortawesome/free-solid-svg-icons';
 import {faImage} from '@fortawesome/free-regular-svg-icons';
-import {BasicStyles, Color} from 'common';
+import {BasicStyles, Color, Helper} from 'common';
 import Style from './style.js';
 import Api from 'services/apiv2/index.js';
 import {Routes} from 'common';
@@ -22,6 +22,7 @@ import Counter from 'modules/products/components/Counter.js';
 import { color } from 'react-native-reanimated';
 import Alert from 'modules/generic/alert';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import { Spinner } from 'components';
 
 const width = Math.round(Dimensions.get('window').width);
 
@@ -275,21 +276,23 @@ class Menu extends Component {
       '&Quantity=' +
       this.state.qty +
       '&CartType=1';
-      this.state.selectedIds.forEach((el, ndx) => {
-        parameters += `&AttributesId=${this.state.addOn2.id}-${el}`
-      })
-      if(this.state.addOn1 !== undefined) {
-        if(Object.keys(this.state.addOn1).length > 0){
-          this.state.addOn1.attribute_values.forEach((el, ndx) => {
-            parameters += `&AttributesId=${this.state.addOn1.id}-${el.id}`
-          })
-        }
+    this.state.selectedIds.forEach((el, ndx) => {
+      parameters += `&AttributesId=${this.state.addOn2.id}-${el}`
+    })
+    if(this.state.addOn1 !== undefined) {
+      if(Object.keys(this.state.addOn1).length > 0){
+        this.state.addOn1.attribute_values.forEach((el, ndx) => {
+          parameters += `&AttributesId=${this.state.addOn1.id}-${el.id}`
+        })
       }
-      console.log('ADD TO CART PARAMETERS: ', Routes.shoppingCartItemsAddToCart + parameters)
+    }
+    console.log('ADD TO CART PARAMETERS: ', Routes.shoppingCartItemsAddToCart + parameters)
+    this.setState({isLoading: true})
     Api.postRequest(
-      Routes.shoppingCartItemsAddToCart + parameters,
+      (Routes.shoppingCartItemsAddToCart) + parameters,
       {},
       response => {
+        this.setState({isLoading: false})
         let error = {}
         if(typeof response == 'string'){
           error = JSON.parse(response)
@@ -316,11 +319,13 @@ class Menu extends Component {
         this.setState({
           alertText: 'Added to basket successfully!',
           isError: false,
-          isAddingAddressName: true
+          isAddingAddressName: true,
+          selectedIds: []
         })
         // this.alertMethod('Success Added!', 'Test');
       },
       error => {
+        this.setState({isLoading: false})
         if(error.errors.updatecart){
           this.setState({
             alertText: error.errors.updatecart[0],
@@ -400,7 +405,7 @@ class Menu extends Component {
                 alignItems: 'center'
               }}
             >
-              <Text>(+$ {el.price_adjustment}){el.initial}</Text>
+              <Text>({Helper.currency[0].title} {el.price_adjustment}){el.initial}</Text>
               <RadioForm
                 formHorizontal={true}
                 animation={true}
@@ -570,7 +575,7 @@ class Menu extends Component {
                           />
                         }
                         <Text style={{fontWeight: 'bold'}}>
-                          HK$ {item.price}
+                        {Helper.currency[0].title} {item.price}
                         </Text>
                         <Text>{item.name}</Text>
                       </View>
@@ -586,83 +591,84 @@ class Menu extends Component {
           onRequestClose={() => {
             this.setState({visibleModal: false});
           }}>
-          <View style={{alignItems: 'center', height: '100%', flex: 1}}>
-            { this.state.itemImage !== '#' && this.state.itemImage !== null && this.state.itemImage !== undefined &&
-              <Image
-                resizeMode={'contain'}
-                source={{uri: this.state.itemImage !== null && this.state.itemImage !== undefined ? this.state.itemImage : '#'}}
-                style={Style.productImageFull}
-              />
-            }
-            {this.state.itemImage === '#' && 
-              <FontAwesomeIcon
-                icon={faImage}
-                size={Style.menuImage.width + 50}
-                style={
-                  {
-                    color: Color.gray
+          <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+            <View style={{alignItems: 'center', height: '100%', flex: 1}}>
+              { this.state.itemImage !== '#' && this.state.itemImage !== null && this.state.itemImage !== undefined &&
+                <Image
+                  resizeMode={'contain'}
+                  source={{uri: this.state.itemImage !== null && this.state.itemImage !== undefined ? this.state.itemImage : '#'}}
+                  style={Style.productImageFull}
+                />
+              }
+              {this.state.itemImage === '#' && 
+                <FontAwesomeIcon
+                  icon={faImage}
+                  size={Style.menuImage.width + 50}
+                  style={
+                    {
+                      color: Color.gray
+                    }
                   }
-                }
-              />
-            }
-            <TouchableHighlight
-              activeOpacity={0.6}
-              underlayColor={Color.lightGray}
-              style={{
-                borderWidth: 1,
-                paddingTop: 0,
-                borderWidth: 0,
-                borderRadius: 20,
-                position: 'absolute',
-                top: 20,
-                left: 20,
-                backgroundColor: 'rgba(0,100,177,.7)'
-              }}
-              onPress={() => {
-                this.setState({visibleModal: false});
-              }}
-            >
-              <Text
-                style={[
-                  {
-                    color: Color.white,
-                    fontSize: BasicStyles.standardFontSize + 15,
-                    lineHeight: 21,
-                    marginBottom: -10,
-                    paddingTop: 7.5,
-                    paddingBottom: 7.5,
-                    paddingRight: 6,
-                    paddingLeft: 6
-                  }
-                ]}
-                >&times;</Text>
-            </TouchableHighlight>
-            <View
-              style={{
-                paddingLeft: 30,
-                paddingRight: 30,
-                paddingTop: 30,
-                paddingBottom: 0,
-                borderBottomWidth: 1,
-                borderBottomColor: Color.gray,
-                width: width
-              }}>
-              <Text style={{
-                fontWeight: 'bold',
-                marginBottom: 10
-              }}>{this.state.itemName}</Text>
-              <Text style={{
-                fontWeight: 'bold',
-                marginBottom: 10
-              }}>
-                HK$ {this.state.itemPrice}
-              </Text>
-              <Text style={{fontSize: BasicStyles.standardFontSize}}>
-                {/* {this.state.itemDescription} */}
-                {this.state.isError}
-              </Text>
-            </View>
-            <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+                />
+              }
+              <TouchableHighlight
+                activeOpacity={0.6}
+                underlayColor={Color.lightGray}
+                style={{
+                  borderWidth: 1,
+                  paddingTop: 0,
+                  borderWidth: 0,
+                  borderRadius: 20,
+                  position: 'absolute',
+                  top: 20,
+                  left: 20,
+                  backgroundColor: 'rgba(0,100,177,.7)'
+                }}
+                onPress={() => {
+                  this.setState({visibleModal: false});
+                }}
+              >
+                <Text
+                  style={[
+                    {
+                      color: Color.white,
+                      fontSize: BasicStyles.standardFontSize + 15,
+                      lineHeight: 21,
+                      marginBottom: -10,
+                      paddingTop: 7.5,
+                      paddingBottom: 7.5,
+                      paddingRight: 6,
+                      paddingLeft: 6
+                    }
+                  ]}
+                  >&times;</Text>
+              </TouchableHighlight>
+              <View
+                style={{
+                  paddingLeft: 30,
+                  paddingRight: 30,
+                  paddingTop: 30,
+                  paddingBottom: 0,
+                  borderBottomWidth: 1,
+                  borderBottomColor: Color.gray,
+                  width: width
+                }}>
+                <Text style={{
+                  fontWeight: 'bold',
+                  marginBottom: 10
+                }}>{this.state.itemName}</Text>
+                <Text style={{
+                  fontWeight: 'bold',
+                  marginBottom: 10
+                }}>
+                  {Helper.currency[0].title} {this.state.itemPrice}
+                </Text>
+                <Text style={{fontSize: BasicStyles.standardFontSize}}>
+                  {/* {this.state.itemDescription} */}
+                  {this.state.isError}
+                </Text>
+              </View>
+            
               <View
                 style={{
                   padding: 30,
@@ -679,50 +685,56 @@ class Menu extends Component {
                 {this.returnAddOn1()}
                 {this.returnAddOn2()}
               </View>
-            </ScrollView>
-          </View>
-          <View style={{
-            alignItems: 'center'
-          }}>
-            <Counter
-              count={this.state.qty}
-              increment={() => {
-                if(this.state.qty + 1 <= this.state.orderMaximumQuantity){
-                  this.setState({qty: this.state.qty + 1});
-                }
-              }}
-              decrement={() => {
-                if (this.state.qty > 1) {
-                  this.setState({qty: this.state.qty - 1});
-                }
-              }}
-            />
-            <TouchableHighlight
-              style={[BasicStyles.btn, {marginTop: 15}]}
-              underlayColor={Color.gray}
-              onPress={() => {
-                if (this.props.state.user == null) {
-                  this.props.router.push('loginStack');
-                  this.setState({visibleModal: false});
-                } else {
-                  this.addToCart();
-                }
-              }}>
-              <Text
-                style={[{color: 'white', fontWeight: 'bold', fontSize: 18}]}>
-                {this.props.state.user === null
-                  ? 'LOGIN TO CONTINUE'
-                  : 'ADD TO BASKET'}
-              </Text>
-            </TouchableHighlight>
-          </View>
+            </View>
+            <View style={{
+              alignItems: 'center'
+            }}>
+              <Counter
+                count={this.state.qty}
+                increment={() => {
+                  if(this.state.qty + 1 <= this.state.orderMaximumQuantity){
+                    this.setState({qty: this.state.qty + 1});
+                  }
+                }}
+                decrement={() => {
+                  if (this.state.qty > 1) {
+                    this.setState({qty: this.state.qty - 1});
+                  }
+                }}
+              />
+              <TouchableHighlight
+                style={[BasicStyles.btn, {marginTop: 15}]}
+                underlayColor={Color.gray}
+                onPress={() => {
+                  if (this.props.state.user == null) {
+                    this.props.router.push('loginStack');
+                    this.setState({visibleModal: false});
+                  } else {
+                    this.addToCart();
+                  }
+                }}>
+                <Text
+                  style={[{color: 'white', fontWeight: 'bold', fontSize: 18}]}>
+                  {this.props.state.user === null
+                    ? 'LOGIN TO CONTINUE'
+                    : 'ADD TO BASKET'}
+                </Text>
+              </TouchableHighlight>
+            </View>
+          </ScrollView>
         </Modal>
         <Alert
           show={this.state.isAddingAddressName}
           text={this.state.alertText}
-          onClick={()=> this.setState({ isAddingAddressName: false}) }
+          onClick={()=> {
+            this.setState({ isAddingAddressName: false, visibleModal: false})
+            if(!this.state.isError){
+              this.props.router.push('orderSummaryStack');
+            }
+          }}
           alertType={this.state.isError == true ? 'error' : 'primary'}
         />
+        {this.state.isLoading ? <Spinner mode="overlay" /> : null}
       </View>
     );
   }

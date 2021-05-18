@@ -26,7 +26,7 @@ class AddAddress extends Component {
       stores: [],
       c_password: '',
       isShowingCity: false,
-      selectedCity: '',
+      selectedCity: Helper.locations[0],
       countries: [],
       countryId: null,
       buildingId: null,

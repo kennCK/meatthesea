@@ -12,8 +12,8 @@ export default {
     backgroundColor: Color.lightGray
   },
   LogoContainer: {
-    height: width-260,
-    width: width-260,
+    // height: width-260,
+    // width: width-260,
     alignItems: 'center',
   },
   LogoSize: {
@@ -24,8 +24,10 @@ export default {
   TextContainer: {
     // flex: 1,
     flexDirection: 'row',
-    padding: 10,
-    paddingBotto: 30
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 30,
   },
   messageContainer: {
     height: 50,

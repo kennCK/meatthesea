@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   PickupRequestContainer: {
     alignItems: 'center',
-    paddingTop: '18%',
+    paddingTop: 45,
     width: 250,
   },
   PickupStatusStyle: {
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   PickupConfirmedContainer: {
     width: '75%',
-    paddingTop: '20%',
+    paddingTop: '11%',
     alignItems: 'center',
   },
   PickupCompleteContainer: {

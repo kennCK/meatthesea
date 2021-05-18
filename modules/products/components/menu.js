@@ -728,9 +728,9 @@ class Menu extends Component {
           text={this.state.alertText}
           onClick={()=> {
             this.setState({ isAddingAddressName: false, visibleModal: false})
-            if(!this.state.isError){
-              this.props.router.push('orderSummaryStack');
-            }
+            // if(!this.state.isError){
+            //   this.props.router.push('orderSummaryStack');
+            // }
           }}
           alertType={this.state.isError == true ? 'error' : 'primary'}
         />

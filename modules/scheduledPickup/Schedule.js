@@ -8,7 +8,12 @@ class Schedule extends Component {
   render() {
     return (
       <View style={styles.ScheduleContainer}>
-        <View style={styles.PickupRequestContainer}>
+        <View style={[
+          styles.PickupRequestContainer,
+          {
+            height: '20%'
+          }
+        ]}>
           <Text style={styles.PickupStatusStyle}>Pick-up requested from:</Text>
           {/*props here */}
           <Text style={styles.LocationTypeStyle}>home</Text>
@@ -22,7 +27,12 @@ class Schedule extends Component {
             </Text>
           </View>
         </View>
-        <View style={styles.PickupConfirmedContainer}>
+        <View style={[
+          styles.PickupConfirmedContainer,
+          {
+            height: '40%'
+          }
+        ]}>
           <Text style={styles.PickupStatusStyle}>Pick-up confirmed</Text>
           <Text style={styles.PickupInstructionsStyle}>
             Place the crockery in the Meat the Sea delivery bag and leave it on

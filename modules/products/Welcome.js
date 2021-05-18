@@ -226,7 +226,6 @@ class Welcome extends Component {
     }
     this.isLoading(true);
     Api.getRequest(Routes.shoppingCartItemsRetrieve + '/' + user.id, (response) => {
-      console.log('RETRIEVE CART: ', response)
       this.isLoading(false);
       const { setCart } = this.props;
       setCart(response.shopping_carts)
@@ -239,7 +238,6 @@ class Welcome extends Component {
     Api.getRequest(Routes.crockeryRetrieve + params, response => {
       const { setPickupCrockeries } = this.props;
       setPickupCrockeries(response.crockery)
-      console.log('\n\nRETRIEVING CROCKERY RESPONSE: ', response, '\n\n')
     }, error => {
       console.log('Retrieve crockery error: ', error)
     })
@@ -287,7 +285,6 @@ class Welcome extends Component {
     const { user, storeLocation } = this.props.state
     this.setState({ isLoading: true })
     Api.postRequest(Routes.addRatings(user.id, storeLocation.id, index + 1), {}, response => {
-      console.log("ADD RATING RESPONSE: ", response)
       this.setState({ isAddingComment: true })
       this.setState({
         isLoading: false,
@@ -306,7 +303,6 @@ class Welcome extends Component {
     console.log("Comment : ", this.state.value)
     this.setState({ isLoading: true })
     Api.postRequest(Routes.addFeedback(user.id, storeLocation.id, this.state.value), {}, response => {
-      console.log('Add Feedback Response: ', response)
       this.setState({ isAddingComment: false, isLoading: false })
       const { setShowRating } = this.props
       setShowRating(false)
@@ -521,7 +517,6 @@ class Welcome extends Component {
           onRequestClose={() => {
             this.setState({ visibleModal: false });
           }}>
-          {/* {location === null && userLocation === null ? <Spinner mode="overlay" style={{zIndex: 999}}/> : null } */}
           <TouchableHighlight
             activeOpacity={0.6}
             underlayColor={Color.lightGray}
@@ -566,25 +561,43 @@ class Welcome extends Component {
               paddingTop: 50,
               paddingBottom: 15
             }}>
-              <View style={Style.circle}>
-                <View style={Style.LogoContainer}>
+              <View style={[
+                Style.circle,
+                {
+                  width: 270,
+                  height: 270
+                }
+              ]}>
+                <View style={[
+                  Style.LogoContainer,
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }
+                ]}>
                   <Image
                     source={require('assets/groceries.png')}
-                    style={Style.LogoSize}
+                    style={[
+                      Style.LogoSize,
+                      {
+                        height: 120,
+                        width: 120
+                      }
+                    ]}
                   />
                 </View>
                 <View style={[
                   Style.TextContainer,
                   {
-                    width: '50%'
+                    width: '100%'
                   }
                 ]}>
                   <Text style={[Style.textSecondary]}>
-                    Products from our deli store right at your finger tips
-                {/* {this.props.state.location !== null && this.props.state.location !==  '' && this.props.state.location !==  undefined ? this.props.state.location.address : ''} */}
+                  Products from our deli store right at your finger tips
                   </Text>
                 </View>
-                <TouchableOpacity
+                <TouchableHighlight
                   activeOpacity={0.6}
                   underlayColor={Color.lightGray}
                   style={[
@@ -592,25 +605,44 @@ class Welcome extends Component {
                   ]}
                   onPress={() => this.changeMenu(1)}>
                   <Text style={[Style.textPrimary]}>GO TO GROCERIES</Text>
-                </TouchableOpacity>
+                </TouchableHighlight>
               </View>
 
-              <View style={Style.circle}>
-                <View style={Style.LogoContainer}>
+              <View style={[
+                Style.circle,
+                {
+                  width: 270,
+                  height: 270
+                }
+              ]}>
+                <View style={[
+                  Style.LogoContainer,
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }
+                ]}>
                   <Image
                     source={require('assets/restaurants.png')}
-                    style={Style.LogoSize}
+                    style={[
+                      Style.LogoSize,
+                      {
+                        height: 120,
+                        width: 120
+                      }
+                    ]}
                   />
                 </View>
                 <View style={[
                   Style.TextContainer,
                   {
-                    width: '50%'
+                    width: '100%'
                   }
                 ]}>
                   <Text style={[Style.textSecondary]}>
-                    Meals from our kitchen straight to your dinner table
-              </Text>
+                  Meals from our kitchen straight to your dinner table
+                  </Text>
                 </View>
                 <TouchableHighlight
                   activeOpacity={0.6}
@@ -623,7 +655,13 @@ class Welcome extends Component {
                 </TouchableHighlight>
               </View>
 
-              <View style={Style.circle}>
+              <View style={[
+                Style.circle,
+                {
+                  width: 270,
+                  height: 270
+                }
+              ]}>
                 <View style={[
                   Style.LogoContainer,
                   {
@@ -637,8 +675,8 @@ class Welcome extends Component {
                     style={[
                       Style.LogoSize,
                       {
-                        height: '70%',
-                        width: '70%'
+                        height: 120,
+                        width: 120
                       }
                     ]}
                   />
@@ -646,7 +684,7 @@ class Welcome extends Component {
                 <View style={[
                   Style.TextContainer,
                   {
-                    width: '50%'
+                    width: '100%'
                   }
                 ]}>
                   <Text style={[Style.textSecondary]}>
@@ -842,6 +880,7 @@ class Welcome extends Component {
           </View>
           {(homepage == null || (homepage && homepage.selectedMenu == null)) && (
             <Products
+              {...this.props}
               active={this.state.menu}
               click={(index) => this.changeMenu(index)}
               choose={async (data, type) => {
@@ -853,6 +892,7 @@ class Welcome extends Component {
           )}
           {(homepage && homepage.selectedMenu != null) && (
             <Menu
+              {...this.props}
               router={this.props.navigation}
               menu={homepage.selectedMenu}
               type={this.state.type}

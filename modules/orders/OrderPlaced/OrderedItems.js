@@ -87,7 +87,6 @@ class OrderedItems extends Component {
         deli.push(el)
       }
     })
-    console.log('ORDER DATA: ', data)
     return (
       <View style={{
         width: '100%'
@@ -214,7 +213,10 @@ class OrderedItems extends Component {
             justifyContent: 'space-between'
           }}
         >
-          <Text>Total:</Text>
+          <Text style={{
+            fontWeight: 'bold',
+            fontSize: 20,
+          }}>Total:</Text>
           <Text style={{
             textAlign: 'left',
             fontWeight: 'bold',

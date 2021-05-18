@@ -121,7 +121,12 @@ class Products extends Component {
               <Image source={require('assets/products/res.png')} style={{
                 width: '100%',
               }}/>
-              <View style={Style.imageRow}>
+              <View style={[
+                Style.imageRow,
+                {
+                  justifyContent: this.props.state.homepage == null || (this.props.state.homepage && this.props.state.homepage.selectedMenu != null) ? 'flex-start' : 'center'
+                }
+              ]}>
                 {restaurant != null &&
                   restaurant.map((data, idx) => {
                     return (
@@ -150,7 +155,12 @@ class Products extends Component {
               <Image source={require('assets/products/deli.png')} style={{
                 width: '100%'
               }} />
-              <View style={Style.imageRow}>
+              <View style={[
+                Style.imageRow,
+                {
+                  justifyContent: this.props.state.homepage == null || (this.props.state.homepage && this.props.state.homepage.selectedMenu != null) ? 'flex-start' : 'center'
+                }
+              ]}>
                 {deliStore != null &&
                   deliStore.map((data, idx) => {
                     return (

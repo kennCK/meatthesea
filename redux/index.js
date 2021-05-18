@@ -29,7 +29,8 @@ const types = {
   SET_PAYPAL_SUCCESS_DATA: 'SET_PAYPAL_SUCCESS_DATA',
   SET_MENU_PRODUCTS: 'SET_MENU_PRODUCTS',
   SET_SHOW_RATING: 'SET_SHOW_RATING',
-  SET_ISLOCATION_RETRIEVE: 'SET_ISLOCATION_RETRIEVE'
+  SET_ISLOCATION_RETRIEVE: 'SET_ISLOCATION_RETRIEVE',
+  SET_ISADDINGCUTLERY: 'SET_ISADDINGCUTLERY'
 };
 
 export const actions = {
@@ -110,6 +111,9 @@ export const actions = {
   },
   setIsLocationRetrieve(isLocationRetrieve) {
     return { type: types.SET_ISLOCATION_RETRIEVE, isLocationRetrieve}
+  },
+  setIsAddingCutlery(setIsAddingCutlery) {
+    return { type: types.SET_ISADDINGCUTLERY, setIsAddingCutlery}
   }
 };
 
@@ -139,7 +143,8 @@ const initialState = {
   paypalSuccessData: null,
   menuProducts: null,
   showRating: false,
-  isLocationRetrieve: true
+  isLocationRetrieve: true,
+  setIsAddingCutlery: false
 };
 
 storeData = async (key, value) => {
@@ -155,7 +160,7 @@ const reducer = (state = initialState, action) => {
   const {unread} = action;
   const {notification} = action;
   const {theme} = action;
-  const {location} = action;
+  const {location, setIsAddingCutlery} = action;
   const {stores, showRating, isLocationRetrieve} = action;
   const { filter, categories, settings, search } = action;
   const { cart, details, payment } = action;
@@ -349,6 +354,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isLocationRetrieve
+      }
+    case types.SET_ISADDINGCUTLERY:
+      return {
+        ...state,
+        setIsAddingCutlery
       }
     default:
       return {...state, nav: state.nav};

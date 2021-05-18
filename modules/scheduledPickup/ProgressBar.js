@@ -7,6 +7,7 @@ import styles from 'modules/scheduledPickup/Style.js';
 
 class ProgressBar extends Component {
   render() {
+    const { status } = this.props
     return (
       <View style={styles.ProgressBarContainer}>
         <FontAwesomeIcon
@@ -24,7 +25,7 @@ class ProgressBar extends Component {
             alignSelf: 'center',
           }}
         />
-        <FontAwesomeIcon icon={faCircle} size={35} style={{color: '#CADFEF'}} />
+        <FontAwesomeIcon icon={ status == 'Processing' || status == 'Complete' ? faCheckCircle : faCircle} size={35} style={{color: (status == 'Processing' || status == 'Complete' ? '#7ABC87' : '#CADFEF')}} />
         <Dash
           dashThickness={3}
           dashColor="#707070"
@@ -35,7 +36,7 @@ class ProgressBar extends Component {
             alignSelf: 'center',
           }}
         />
-        <FontAwesomeIcon icon={faCircle} size={35} style={{color: '#CADFEF'}} />
+        <FontAwesomeIcon icon={ status == 'Complete' ? faCheckCircle : faCircle} size={35} style={{color: (status == 'Complete' ? '#7ABC87' : '#CADFEF')}} />
       </View>
     );
   }

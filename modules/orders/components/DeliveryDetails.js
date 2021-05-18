@@ -102,7 +102,9 @@ class DeliveryDetails extends Component {
                       isSelected={this.state.value}
                       onPress={() => {
                         let {value} = this.state;
-                        this.setState({value: !value});
+                        this.setState({value: !value}, () => {
+                          this.props.isAddingCutlery(this.state.value)
+                        });
                       }}
                       buttonSize={5}
                       buttonWrapStyle={{marginRight: 10}}

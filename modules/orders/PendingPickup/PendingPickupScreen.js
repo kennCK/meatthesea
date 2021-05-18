@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import styles from '../Style';
 import {connect} from 'react-redux';
-
+const height = Math.round(Dimensions.get('window').height);
 class PendingPickupScreen extends Component {
     redirect = (route) => {
         this.props.navigation.push(route);
@@ -11,13 +11,35 @@ class PendingPickupScreen extends Component {
     render() {
       const { requestPickUpCrockery } = this.props.state;
         return (
-          <ScrollView>
-            <View style={styles.MainContainer}>
+          <ScrollView 
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          style={[
+            {
+              height: '100%'
+            }
+          ]}>
+            <View style={[styles.MainContainer, { 
+              height: height - (styles.TopContainer.height + 30),
+              flexDirection: 'column',
+              alignItems: 'center'
+            }]}>
               <View style={styles.TopContainer}>
                   <Text style={[styles.DescriptionContainer]}>Order number {requestPickUpCrockery.order_id}</Text>
               </View>
-              <View style={styles.BottomContainer}>
-                <View style={styles.SubtitleContainer}>
+              <View style={[styles.BottomContainer, {
+                height: '100%'
+              }]}>
+                <View style={[
+                  styles.SubtitleContainer,
+                  {
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: "center",
+                    height: height - (styles.TopContainer.height + 30),
+                    paddingBottom: 60
+                  }
+                ]}>
                   <TouchableOpacity onPress={() => {
                       this.redirect("returnInPersonStack")
                   }}>

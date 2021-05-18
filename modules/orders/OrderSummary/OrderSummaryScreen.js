@@ -68,7 +68,7 @@ class OrderSummaryScreen extends Component {
      * Executed each time we enter in this component &&
      * will be executed after going back to this component
     */
-    this.retrieveCountries();
+    // this.retrieveCountries();
     this.fetchAddress();
     const{userLocation, location} = this.props.state
     this.setState({
@@ -405,7 +405,11 @@ class OrderSummaryScreen extends Component {
           </View>
           {
             (
-              <DeliveryDetails navigate={(route) => this.props.navigation.navigate(route)} isSummary={false} key={orderDetails} errorMessage={errorMessage}/>
+              <DeliveryDetails navigate={(route) => this.props.navigation.navigate(route)} isSummary={false} key={orderDetails} errorMessage={errorMessage} isAddingCutlery={(val) => {
+                console.log('Is adding cutlery: ', val)
+                const { setIsAddingCutlery } = this.props
+                setIsAddingCutlery(val)
+              }}/>
             )
           }
 
@@ -473,7 +477,8 @@ const mapDispatchToProps = (dispatch) => {
     setOrderDetails: (details) => dispatch(actions.setOrderDetails(details)),
     setSelectedDeliveryTime: (time) => dispatch(actions.setSelectedDeliveryTime(time)),
     setPaypalSuccessData: (paypalSuccessData) => dispatch(actions.setPaypalSuccessData(paypalSuccessData)),
-    setUserLocation: (userLocation) => dispatch(actions.setUserLocation(userLocation))
+    setUserLocation: (userLocation) => dispatch(actions.setUserLocation(userLocation)),
+    setIsAddingCutlery: (setIsAddingCutlery) => dispatch(actions.setIsAddingCutlery(setIsAddingCutlery))
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(OrderSummaryScreen);

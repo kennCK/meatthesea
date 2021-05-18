@@ -37,7 +37,8 @@ class OrderedSummary extends Component {
   }
 
   onFocusFunction = () => {
-    const {paypalSuccessData, user, storeLocation, userLocation, deliveryTime} = this.props.state
+    const {paypalSuccessData, user, storeLocation, userLocation, deliveryTime, setIsAddingCutlery} = this.props.state
+    console.log('Is adding cutlery on confirm: ', setIsAddingCutlery)
     if(paypalSuccessData !== null) {
       this.setState({isLoading: true, isRendered: false})
       Api.postRequest(Routes.paypalConfirmOrder(
@@ -47,7 +48,8 @@ class OrderedSummary extends Component {
           paypalSuccessData.order_guid, 
           paypalSuccessData.paypal.paypal_id,
           deliveryTime,
-          moment().format('HH:mm')
+          moment().format('HH:mm'),
+          setIsAddingCutlery
         ),
       {}, response=> {
         this.setState({data: response.orders})

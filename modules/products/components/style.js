@@ -13,7 +13,7 @@ export default {
     paddingBottom: 5,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center'
+    // justifyContent: 'center'
   },
   productImageFull:{
     marginTop: 0,

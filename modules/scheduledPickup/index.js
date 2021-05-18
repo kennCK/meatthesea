@@ -14,7 +14,8 @@ class ScheduledPickup extends Component {
     super();
     this.state = {
       address: '',
-      order_number: null
+      order_number: null,
+      crockeryStatus: ''
     };
   }
 
@@ -27,19 +28,19 @@ class ScheduledPickup extends Component {
     Api.getRequest(
       Routes.ordersRetrieveById(id),
       response => {
+        this.retrieveCrockery(response.orders[0].id);
         const address =
           response.orders[0].shipping_address.address1 +
           ', ' +
           response.orders[0].shipping_address.city +
-          ', ' +
-          response.orders[0].shipping_address.province;
+          (response.orders[0].shipping_address.province ? ', ' + response.orders[0].shipping_address.province : '');
         this.setState(
           {
             address: address,
             order_number: response.orders[0].id
           },
           () => {
-            console.log('RESPONSE', this.state.address);
+            console.log(':::RESPONSE::: ', response);
           },
         );
       },
@@ -48,6 +49,16 @@ class ScheduledPickup extends Component {
       },
     );
   };
+
+  retrieveCrockery = (id) => {
+    const {storeLocation} = this.props.state
+    Api.getRequest(Routes.crockeryRetrieve + `?StoreId=${storeLocation.id}&OrderId=${id}`, response => {
+      this.setState({crockeryStatus: response.crockery[0].crockery_status})
+      console.log('CROCKERY RESPONSE: ', response)
+    }, error => {
+      console.log('Retrieve Crockery Error')
+    })
+  }
 
   render() {
     return (
@@ -60,7 +71,7 @@ class ScheduledPickup extends Component {
           </View>
 
           <View style={styles.ScheduleDetailsContainer}>
-            <ProgressBar />
+            <ProgressBar status={this.state.crockeryStatus} />
             <Schedule address={this.state.address} />
           </View>
         </View>

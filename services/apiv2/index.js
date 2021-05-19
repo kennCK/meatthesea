@@ -121,21 +121,23 @@ const Api = {
           return response.json();
         }
         if (response.status >= 400 && response.status < 500) {
-          console.warn(JSON.stringify(response))
-          errorCallback({
-            response,
-            message: 'Request failed',
-          });
+          // console.warn(JSON.stringify(response))
+          // errorCallback({
+          //   response,
+          //   message: 'Request failed',
+          // });
+          return response.text()
         }
       })
       .then((json) => {
         callback(json);
       })
       .catch((error) => {
-        console.log(error.message)
-        if (errorCallback) {
-          errorCallback(error);
-        }
+        // console.log(error.message)
+        // if (errorCallback) {
+        //   errorCallback(error);
+        // }
+        console.log('GET ERROR: ', error)
       });
   },
   putRequest: async (route, parameter, callback, errorCallback = null) => {

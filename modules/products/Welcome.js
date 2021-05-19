@@ -1030,31 +1030,6 @@ class Welcome extends Component {
               zIndex: 10,
               paddingBottom: 10
             }}>
-              { this.state.isAddingComment &&
-                <TouchableOpacity
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: '3%',
-                    paddingTop: 10,
-                    paddingBottom: 10,
-                    paddingRight: 20,
-                    paddingLeft: 20
-                  }}
-                  onPress={() => {
-                    const { setShowRating } = this.props
-                    setShowRating(false)
-                    this.setState({ isAddingComment: false })
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: BasicStyles.standardFontSize + 12,
-                      color: Color.lightYellow
-                    }}
-                  >&times;</Text>
-                </TouchableOpacity>
-              }
               <View style={{
                 width: '100%',
                 justifyContent: 'center',
@@ -1092,6 +1067,31 @@ class Welcome extends Component {
                     </Text>
                   </View>
                 }
+                { this.state.isAddingComment &&
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '3%',
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    paddingRight: 20,
+                    paddingLeft: 20
+                  }}
+                  onPress={() => {
+                    const { setShowRating } = this.props
+                    setShowRating(false)
+                    this.setState({ isAddingComment: false })
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: BasicStyles.standardFontSize + 12,
+                      color: Color.lightYellow
+                    }}
+                  >&times;</Text>
+                </TouchableOpacity>
+              }
               </View>
               <View>
                 {this.rating()}

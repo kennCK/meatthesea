@@ -8,6 +8,7 @@ import PendingTab from 'modules/pickupCrockery/tabs/PendingTab';
 import Api from 'services/apiv2/index.js';
 import {Routes} from 'common';
 import {connect} from 'react-redux';
+import Alert from 'modules/generic/alert';
 const height = Math.round(Dimensions.get('window').height);
 
 class PickupCrockery extends Component {
@@ -20,7 +21,10 @@ class PickupCrockery extends Component {
       pageNumber: 1,
       isLoading: false,
       scheduled: [],
-      pending: []
+      pending: [],
+      isError: true,
+      alertText: '',
+      showError: false
     };
   }
 
@@ -55,6 +59,21 @@ class PickupCrockery extends Component {
     let params = `get_crockery?StoreId=${storeLocation.id}&Status=10&CustomerId=${user.id}`;
     this.setState({isLoading: true});
     Api.getRequest(Routes.crockeryRetrieve + params , response => {
+      let error = {}
+      if(typeof response == 'string'){
+        error = JSON.parse(response)
+      }
+      if(error.errors) {
+        if(error.errors.internal_server_error != undefined) {
+          this.setState({
+            alertText: error.errors.internal_server_error[0],
+            isError: true
+          }, () => {
+            this.setState({showError: true})
+          })
+        }
+        return
+      }
       this.setState({pending : response.crockery})
       this.setState({isLoading: false});
     }, error => {
@@ -67,6 +86,21 @@ class PickupCrockery extends Component {
     let params = `StoreId=${storeLocation.id}&Status=40&CustomerId=${user.id}`;
     this.setState({isLoading: true});
     Api.getRequest(Routes.crockeryRetrieve + params , response => {
+      let error = {}
+      if(typeof response == 'string'){
+        error = JSON.parse(response)
+      }
+      if(error.errors) {
+        if(error.errors.internal_server_error != undefined) {
+          this.setState({
+            alertText: error.errors.internal_server_error[0],
+            isError: true
+          }, () => {
+            this.setState({showError: true})
+          })
+        }
+        return
+      }
       this.setState({scheduled : response.crockery})
       this.setState({isLoading: false});
     }, error => {
@@ -230,6 +264,17 @@ class PickupCrockery extends Component {
             />
           }
         </View>
+        <Alert
+          show={this.state.showError}
+          text={this.state.alertText}
+          onClick={()=> {
+            this.setState({ showError: false})
+            // if(!this.state.isError){
+            //   this.props.router.push('orderSummaryStack');
+            // }
+          }}
+          alertType={this.state.isError == true ? 'error' : 'primary'}
+        />
       </View>
     );
   }

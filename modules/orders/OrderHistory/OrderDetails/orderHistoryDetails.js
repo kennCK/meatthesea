@@ -294,6 +294,7 @@ class OrderHistoryDetails extends Component {
               }}
             >
               <TouchableOpacity
+                disabled={this.state.value !== '' ? false : true}
                 style={{
                   backgroundColor: Color.lightYellow,
                   width: '90%',

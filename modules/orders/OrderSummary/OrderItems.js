@@ -207,7 +207,7 @@ class OrderItems extends Component {
                       {data.product.name}
                     </Text>
                     <Text>
-                      {'HK$ ' + data.product.price}
+                      {'HKD ' + data.product.price}
                     </Text>
                   </View>
                   <View style={{

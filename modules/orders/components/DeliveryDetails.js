@@ -51,7 +51,7 @@ class DeliveryDetails extends Component {
           if(el.id === le.id) {
             le.attribute_values.forEach(me => {
               if(el.value == me.id){
-                p += me.price_adjustment
+                p += me.price_adjustment * item.quantity
               }
             })
           }
@@ -163,7 +163,7 @@ class DeliveryDetails extends Component {
                 top: 5,
                 fontSize: BasicStyles.standardFontSize,
               }}>
-              {Helper.currency[0].title} $ {orderDetails && cart.length > 0? parseFloat(orderDetails.subtotal).toFixed(2) : 0}
+              {Helper.currency[0].title} {orderDetails && cart.length > 0? parseFloat(orderDetails.subtotal).toFixed(2) : 0}
             </Text>
           </View>
           {isSummary && (

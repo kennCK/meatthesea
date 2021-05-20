@@ -16,5 +16,6 @@ export default{
     secret: 'd5e212f122e005bd91ef',
     cluster: 'ap1',
     encrypted: true
-  }
+  },
+  whats_app_number: '639352185241'
 }

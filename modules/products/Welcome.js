@@ -38,6 +38,7 @@ import moment from 'moment';
 import Alert from 'modules/generic/alert';
 import { fcmService } from 'services/FCMService';
 import { localNotificationService } from 'services/LocalNotificationService';
+import Whatsapp from 'modules/generic/whatsapp'
 
 const width = Math.round(Dimensions.get('window').width);
 const height = Math.round(Dimensions.get('window').height);
@@ -303,7 +304,7 @@ class Welcome extends Component {
     console.log("Comment : ", this.state.value)
     this.setState({ isLoading: true })
     Api.postRequest(Routes.addFeedback(user.id, storeLocation.id, this.state.value), {}, response => {
-      this.setState({ isAddingComment: false, isLoading: false })
+      this.setState({ isAddingComment: false, isLoading: false, value: '' })
       const { setShowRating } = this.props
       setShowRating(false)
     }, error => {
@@ -1099,6 +1100,7 @@ class Welcome extends Component {
             </View>
           )
         }
+        {/* <Whatsapp /> */}
         <Alert
           show={this.state.noProductFound}
           text={this.state.alertText}

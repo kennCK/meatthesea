@@ -25,6 +25,7 @@ import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'reac
 import { Spinner } from 'components';
 
 const width = Math.round(Dimensions.get('window').width);
+const height = Math.round(Dimensions.get('window').height);
 
 class Menu extends Component {
   constructor(props) {
@@ -587,12 +588,24 @@ class Menu extends Component {
         </ScrollView>
         <Modal
           isVisible={this.state.visibleModal}
-          style={Style.modalWhite}
+          style={[
+            Style.modalWhite,
+            {
+              paddingBottom: 0
+            }
+          ]}
           onRequestClose={() => {
             this.setState({visibleModal: false});
           }}>
-          <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-            <View style={{alignItems: 'center', height: '100%', flex: 1}}>
+          <ScrollView 
+            showsHorizontalScrollIndicator={false} 
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={{
+              alignItems: 'center',
+              height: height,
+              paddingBottom: 150
+            }}>
               { this.state.itemImage !== '#' && this.state.itemImage !== null && this.state.itemImage !== undefined &&
                 <Image
                   resizeMode={'contain'}
@@ -687,7 +700,10 @@ class Menu extends Component {
               </View>
             </View>
             <View style={{
-              alignItems: 'center'
+              alignItems: 'center',
+              position: 'absolute',
+              bottom: 0,
+              width: '100%'
             }}>
               <Counter
                 count={this.state.qty}

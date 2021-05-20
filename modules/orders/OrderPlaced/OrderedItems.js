@@ -65,7 +65,7 @@ class OrderedItems extends Component {
               + {addOn.name }
             </Text>
             {data.product.attributes[type].product_attribute_id == 11 && <Text>
-              {'HK$ ' + addOn.price_adjustment}
+              {'HKD ' + addOn.price_adjustment}
             </Text>}
           </View>
         )

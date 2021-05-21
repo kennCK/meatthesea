@@ -103,7 +103,6 @@ class OrderedItems extends Component {
               textAlign: 'left',
               elevation: 10,
               fontWeight: 'bold',
-              fontSize: 20,
               color: Color.primary,
               marginBottom: 10,
               paddingLeft: 15
@@ -147,7 +146,6 @@ class OrderedItems extends Component {
                 textAlign: 'left',
                 elevation: 10,
                 fontWeight: 'bold',
-                fontSize: 20,
                 color: Color.primary,
                 marginBottom: 10,
                 paddingLeft: 15
@@ -204,6 +202,17 @@ class OrderedItems extends Component {
         >
           <Text>Sub total:</Text>
           <Text>HKD {this.props.total ? this.props.total : 0}</Text>
+        </View>
+        <View
+          style={{
+            marginBottom: 20,
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Text>Delivery fee:</Text>
+          <Text>HKD {this.props.deliveryFee ? this.props.deliveryFee : 0}</Text>
         </View>
         <View
           style={{

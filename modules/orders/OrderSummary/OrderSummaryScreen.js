@@ -43,7 +43,10 @@ class OrderSummaryScreen extends Component {
       showAddAddressConfirmation: false,
       addresses: [],
       alertText: '',
-      isError: false
+      isError: false,
+      deliveryfeeError: false,
+      deliveryfeeText: '',
+      deliveryFee: 0
     };
   }
   
@@ -69,6 +72,7 @@ class OrderSummaryScreen extends Component {
      * will be executed after going back to this component
     */
     // this.retrieveCountries();
+    this.retrieveDeliveryFee();
     this.fetchAddress();
     const{userLocation, location} = this.props.state
     this.setState({
@@ -94,6 +98,30 @@ class OrderSummaryScreen extends Component {
 
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
+    })
+  }
+
+  retrieveDeliveryFee() {
+    const {userLocation, user} = this.props.state;
+    Api.getRequest(Routes.retrieveDeliveryFee(user.id, userLocation.id), response => {
+      let error = {}
+      if(typeof response == 'string'){
+        error = JSON.parse(response)
+      }
+      if(error.errors) {
+        if(error.errors.deliveryfee != undefined) {
+          this.setState({
+            deliveryfeeText: error.errors.deliveryfee[0]
+          }, () => {
+            this.setState({deliveryfeeError: true})
+          })
+        }
+        return
+      }
+      console.log('DELIVERY FEE: ', response)
+      this.setState({deliveryFee: response})
+    }, error => {
+      console.log('Retrieving Delivery Fee: ', error)
     })
   }
 
@@ -385,8 +413,8 @@ class OrderSummaryScreen extends Component {
           <View style={[{ marginTop: 15 },]}>
             <Text style={[{ color: Color.darkGray }, Style.fontSize(BasicStyles.standardFontSize)]}>Current wait time: around 30 mins
             <View style={{ marginTop: 10 }}>
-                    <FontAwesomeIcon style={{ marginLeft: 10 }} color={Color.darkGray} icon={faInfoCircle} size={BasicStyles.standardFontSize} />
-                </View>
+                <FontAwesomeIcon style={{ marginLeft: 10 }} color={Color.darkGray} icon={faInfoCircle} size={BasicStyles.standardFontSize} />
+              </View>
             </Text>
           </View>
         </View>
@@ -405,11 +433,17 @@ class OrderSummaryScreen extends Component {
           </View>
           {
             (
-              <DeliveryDetails navigate={(route) => this.props.navigation.navigate(route)} isSummary={false} key={orderDetails} errorMessage={errorMessage} isAddingCutlery={(val) => {
-                console.log('Is adding cutlery: ', val)
-                const { setIsAddingCutlery } = this.props
-                setIsAddingCutlery(val)
-              }}/>
+              <DeliveryDetails 
+                navigate={(route) => this.props.navigation.navigate(route)} 
+                isSummary={false} 
+                key={orderDetails}
+                deliveryFee={this.state.deliveryFee}
+                errorMessage={errorMessage} 
+                isAddingCutlery={(val) => {
+                  const { setIsAddingCutlery } = this.props
+                  setIsAddingCutlery(val)
+                }}
+              />
             )
           }
 
@@ -460,6 +494,12 @@ class OrderSummaryScreen extends Component {
           text={this.state.alertText}
           onClick={()=> this.setState({ isAddingAddressName: false}) }
           alertType={this.state.isError == true ? 'error' : 'primary'}
+        />
+        <Alert
+          show={this.state.deliveryfeeError}
+          text={this.state.deliveryfeeText}
+          onClick={()=> this.setState({ deliveryfeeError: false}) }
+          alertType={'error'}
         />
       </View>
     );

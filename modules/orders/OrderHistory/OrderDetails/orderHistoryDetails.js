@@ -221,7 +221,7 @@ class OrderHistoryDetails extends Component {
     this.setState({isLoading: true})
     Api.postRequest(Routes.addFeedback(user.id, storeLocation.id, this.state.value), {}, response => {
       console.log('Add Feedback Response: ', response)
-      this.setState({isLoading: false, showRatings: false})
+      this.setState({isLoading: false, showRatings: false, value: ''})
     }, error => {
       console.log('Add Feedback error')
     })

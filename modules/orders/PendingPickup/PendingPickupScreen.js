@@ -11,22 +11,18 @@ class PendingPickupScreen extends Component {
     render() {
       const { requestPickUpCrockery } = this.props.state;
         return (
-          <ScrollView 
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          style={[
-            {
-              height: '100%'
-            }
-          ]}>
             <View style={[styles.MainContainer, { 
-              height: height - (styles.TopContainer.height + 30),
+              height: height,
               flexDirection: 'column',
               alignItems: 'center'
             }]}>
               <View style={styles.TopContainer}>
-                  <Text style={[styles.DescriptionContainer]}>Order number {requestPickUpCrockery.order_id}</Text>
+                <Text style={[styles.DescriptionContainer]}>Order number {requestPickUpCrockery.order_id}</Text>
               </View>
+              <ScrollView 
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+              >
               <View style={[styles.BottomContainer, {
                 height: '100%'
               }]}>
@@ -41,24 +37,24 @@ class PendingPickupScreen extends Component {
                   }
                 ]}>
                   <TouchableOpacity onPress={() => {
-                      this.redirect("returnInPersonStack")
+                    this.redirect("returnInPersonStack")
                   }}>
                   
-                      <View style={[styles.LogoContainer]}>
-                          <Image resizeMode={'cover'} source={require('assets/logo1.png')} style={styles.LogoStyle} />
-                      </View>
+                    <View style={[styles.LogoContainer]}>
+                      <Image resizeMode={'cover'} source={require('assets/logo1.png')} style={styles.LogoStyle} />
+                    </View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
                       this.redirect("requestPickupStack")
                   }}>
                     <View style={styles.LogoContainer}>
-                        <Image source={require('assets/logo2.png')} style={styles.LogoStyle} />
+                      <Image source={require('assets/logo2.png')} style={styles.LogoStyle} />
                     </View>
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
-          </ScrollView>
+            </ScrollView>
+          </View>
         );
     }
 }

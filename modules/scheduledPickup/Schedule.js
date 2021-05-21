@@ -11,7 +11,7 @@ class Schedule extends Component {
         <View style={[
           styles.PickupRequestContainer,
           {
-            height: '20%'
+            minHeight: '25%'
           }
         ]}>
           <Text style={styles.PickupStatusStyle}>Pick-up requested from:</Text>
@@ -30,7 +30,7 @@ class Schedule extends Component {
         <View style={[
           styles.PickupConfirmedContainer,
           {
-            height: '40%'
+            minHeight: '40%'
           }
         ]}>
           <Text style={styles.PickupStatusStyle}>Pick-up confirmed</Text>

@@ -17,5 +17,5 @@ export default{
     cluster: 'ap1',
     encrypted: true
   },
-  whats_app_number: '639352185241'
+  whats_app_number: '852 6845 7395'
 }

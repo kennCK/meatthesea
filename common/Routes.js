@@ -139,6 +139,9 @@ export default {
   // FeedBack
   addFeedback: (CustomerId, StoreId, Comment) => apiUrl + `customer_add_feedback?CustomerId=${CustomerId}&StoreId=${StoreId}&Comment=${Comment}`, 
 
+  // Delivery fee
+  retrieveDeliveryFee: (customer, address) => apiUrl + `deliveryfee?customerId=${customer}&addressId=${address}`,
+
   // ShoppingCartItems
   shoppingCartItemsRetrieve: apiUrl + 'shopping_cart_items',
   shoppingCartItemsAdd: apiUrl + 'shopping_cart_items',

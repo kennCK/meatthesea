@@ -50,7 +50,9 @@ class Whatsapp extends Component {
             backgroundColor: Color.primary,
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
-            padding: 20
+            padding: 20,
+            borderWidth: 1,
+            borderColor: Color.white
           }}
         >
           <FontAwesomeIcon
@@ -77,7 +79,8 @@ class Whatsapp extends Component {
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 20
+            borderBottomRightRadius: 20,
+            borderColor: Color.white
           }}
         >
           <Text>Hello, how can we help you?</Text>

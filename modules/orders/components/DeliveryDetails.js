@@ -60,7 +60,6 @@ class DeliveryDetails extends Component {
       })
 
       total += (parseInt(item.quantity) * parseFloat(item.product.price) + temp_price)
-      console.log('ITEM: ', item)
       if(i == cart.length - 1){
         const { setOrderDetails } = this.props;
         setOrderDetails({
@@ -73,7 +72,7 @@ class DeliveryDetails extends Component {
   }
 
   render() {
-    let { isSummary, errorMessage } = this.props;
+    let { isSummary, errorMessage, deliveryFee } = this.props;
     const { orderDetails, userLocation, paymentMethod, deliveryTime, cart } = this.props.state;
     return (
       <View>
@@ -166,6 +165,25 @@ class DeliveryDetails extends Component {
               {Helper.currency[0].title} {orderDetails && cart.length > 0? parseFloat(orderDetails.subtotal).toFixed(2) : 0}
             </Text>
           </View>
+          <View>
+            <Text
+              style={[
+                {marginVertical: 2, marginLeft: 5, color: Color.darkGray},
+                BasicStyles.titleText,
+                Style.fontSize(BasicStyles.standardFontSize),
+              ]}>
+              Delivery fee
+            </Text>
+            <Text
+              style={{
+                position: 'absolute',
+                right: 25,
+                top: 5,
+                fontSize: BasicStyles.standardFontSize,
+              }}>
+              {Helper.currency[0].title} {deliveryFee}
+            </Text>
+          </View>
           {isSummary && (
             <View style={{marginTop: 10}}>
               <Text
@@ -244,7 +262,7 @@ class DeliveryDetails extends Component {
                 top: 5,
                 fontWeight: 'bold'
               }}>
-              {Helper.currency[0].title} {orderDetails && cart.length > 0? parseFloat(orderDetails.total).toFixed(2) : 0.00}
+              {Helper.currency[0].title} {orderDetails && cart.length > 0? parseFloat(orderDetails.total + + (deliveryFee ? deliveryFee : 0)).toFixed(2) : 0.00}
             </Text>
           </View>
         </View>

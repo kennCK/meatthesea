@@ -72,8 +72,8 @@ class OrderSummaryScreen extends Component {
      * will be executed after going back to this component
     */
     // this.retrieveCountries();
-    this.retrieveDeliveryFee();
     this.fetchAddress();
+    this.retrieveDeliveryFee();
     const{userLocation, location} = this.props.state
     this.setState({
       errorMessage: null, 

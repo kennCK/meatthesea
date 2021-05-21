@@ -5,6 +5,8 @@ import Api from 'services/apiv2/index.js';
 import styles from './Style';
 import {Routes} from 'common';
 import {Spinner} from 'components';
+import moment from 'moment';
+
 let dayOfWeek = [
   'Monday',
   'Tuesday',
@@ -75,9 +77,10 @@ class ReturnInPerson extends Component {
   };
 
   collectCrockery = () => {
+    let time = moment().format('HH : mm')
     const { requestPickUpCrockery } = this.props.state;
     this.setState({isLoading: true});
-    Api.putRequest(Routes.crockeryUpdate(requestPickUpCrockery.id, requestPickUpCrockery.address_id, 30), {}, response => {
+    Api.putRequest(Routes.crockeryUpdate(requestPickUpCrockery.id, requestPickUpCrockery.address_id, 30, time), {}, response => {
       console.log('RETURN CROCKERY RESPONSE: ', response)
       this.setState({isLoading: false});
     }, error => {

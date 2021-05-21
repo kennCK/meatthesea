@@ -83,7 +83,7 @@ export default {
 
   crockeryRetrieve: apiUrl + `get_crockery?`,
 
-  crockeryUpdate: (CrockeryID, AddressID, CrockeryStatusID) => apiUrl + `update_crockery?CrockeryId=${CrockeryID}&AddressId=${AddressID}&CrockeryStatusId=${CrockeryStatusID}`,
+  crockeryUpdate: (CrockeryID, AddressID, CrockeryStatusID, time) => apiUrl + `update_crockery?CrockeryId=${CrockeryID}&AddressId=${AddressID}&CrockeryStatusId=${CrockeryStatusID}&LocalTimePickupReturn=${time}`,
 
   // ProductAttributes
   productAttribuesRetrieve: apiUrl + 'productattributes',

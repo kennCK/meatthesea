@@ -169,7 +169,7 @@ class Welcome extends Component {
 
   onNotification = (notify) => {
     const {user} = this.props.state; 
-    console.log("[App] onNotification", notify)
+    console.log("[App] OnNotification", notify)
 
     // localNotificationService.showNotification(
     //   0,
@@ -181,7 +181,7 @@ class Welcome extends Component {
   }
 
   onOpenNotification = (notify) => {
-    console.log("[App] onOpenNotification", notify )
+    console.log("[App] OnOpenNotification", notify )
   }
 
   componentWillUnmount() {

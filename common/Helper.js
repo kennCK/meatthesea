@@ -9,37 +9,61 @@ export default {
   APP_HOST: 'com.meatthesea',
   Country: 'Hong Kong',
   DrawerMenu: [
-  {
-    title: 'Dashboard',
-    route: 'Dashboard',
-    icon: faShippingFast,
-    iconStyle: {
-      color: Color.primary
+    {
+      title: 'Dashboard',
+      route: 'Dashboard',
+      icon: faShippingFast,
+      iconStyle: {
+        color: Color.primary
+      }
     }
-  }
   ],
   DrawerMenuLogout: [],
   DrawerMenuBottom: [{
     title: 'Settings',
     route: 'Settings'
   },
-  // {
-  //   title: 'Terms and Conditions',
-  //   route: 'TermsAndConditions'
-  // }, {
-  //   title: 'Privacy Policy',
-  //   route: 'PrivacyPolicy'
-  // }
+    // {
+    //   title: 'Terms and Conditions',
+    //   route: 'TermsAndConditions'
+    // }, {
+    //   title: 'Privacy Policy',
+    //   route: 'PrivacyPolicy'
+    // }
   ],
   locations: [
-    'Sheung Wan, Hong Kong Island',
-    'Sai Ying Pun, Hong Kong Island',
-    'Tai Ping Shan, Hong Kong Island',
-    'SoHo/Mid-levels, Hong Kong Island',
-    'Central, Hong Kong Island',
-    'Hong Kong Island',
-    'Kowloon',
-    'New Territories'
+    {
+      building_name: 'Sheung Wan, Hong Kong Island',
+      id: 100
+    },
+    {
+      building_name: 'Sai Ying Pun, Hong Kong Island',
+      id: 101
+    },
+    {
+      building_name: 'Tai Ping Shan, Hong Kong Island',
+      id: 102
+    },
+    {
+      building_name: 'SoHo/Mid-levels, Hong Kong Island',
+      id: 103
+    },
+    {
+      building_name: 'Central, Hong Kong Island',
+      id: 104
+    },
+    {
+      building_name: 'Hong Kong Island',
+      id: 105
+    },
+    {
+      building_name: 'Kowloon',
+      id: 106
+    },
+    {
+      building_name: 'New Territories',
+      id: 107
+    }
   ],
   pagerMenu: [{
     title: 'FEATURED',
@@ -79,15 +103,15 @@ export default {
       `You’ll get ₱100 when they do!`,
     emailMessage: 'I\'d like to invite you on MeatTheSea!'
   },
-  categories:[
+  categories: [
     {
-      type:'Asian',
+      type: 'Asian',
     },
     {
-      type:'American',
+      type: 'American',
     },
     {
-      type:'Beverages',
+      type: 'Beverages',
     }
   ],
   paymentCenters: [{
@@ -101,11 +125,11 @@ export default {
     value: 'HKD'
   }],
   retrieveDataFlag: 1,
-  validateEmail(email){
+  validateEmail(email) {
     let reg = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+.[a-zA-Z0-9]*$/
-    if(reg.test(email) === false){
+    if (reg.test(email) === false) {
       return false
-    }else{
+    } else {
       return true
     }
   }

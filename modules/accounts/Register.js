@@ -10,7 +10,6 @@ import CustomError from 'components/Modal/Error.js';
 import Header from './Header';
 import config from 'src/config';
 import LocationWithIcon from './components/LocationInput.js';
-import {Picker} from '@react-native-community/picker';
 import CheckBox from '@react-native-community/checkbox';
 import Alert from 'modules/generic/alert';
 
@@ -34,7 +33,7 @@ class Register extends Component {
       stores: [],
       c_password: '',
       isShowingCity: false,
-      selectedCity: Helper.locations[0],
+      selectedCity: Helper.locations[0].building_name,
       countries: [],
       countryId: null,
       buildingId: null,
@@ -95,11 +94,6 @@ class Register extends Component {
     }, error => {
       this.setState({ isLoading: false})
     })
-  }
-
-  selectCity = (itemValue, itemIndex) => {
-    console.log('ITEM: VALUE: ', itemValue)
-    this.setState({selectedCity: itemValue})
   }
 
   submit() {
@@ -233,7 +227,6 @@ class Register extends Component {
 
   retrieveAllBuildings = () => {
     Api.getRequest(Routes.allBuildings(), response => {
-      console.log('ALL BUILDINGS: ', response)
       this.setState({ isLoading: false, stores: response.buildings })
     }, error => {
       console.log('Error: ', error)
@@ -307,8 +300,6 @@ class Register extends Component {
               iconHeight: 20,
               stores: this.state.stores,
               onSelect: (selectedItem) => {
-                // this.props.setLocation(selectedItem)
-                // this.props.setStoreLocation(selectedItem);
                 this.setState({ location: selectedItem.building_name, buildingId: selectedItem.id })
                 if(selectedItem.building_name === 'Other') {
                   this.setState({isShowingCity: true})
@@ -316,7 +307,9 @@ class Register extends Component {
                   this.setState({isShowingCity: false})
                 }
               }
-            }} />
+              }}
+              key={1}
+            />
             { this.state.isShowingCity && 
               <View>
                 <TextInput
@@ -333,26 +326,18 @@ class Register extends Component {
                   value={this.state.townDistrict}
                   placeholder={'Town / District'}
                 />
-                <View style={Style.textInput}>
-                  <Picker
-                      selectedValue={this.state.selectedCity}
-                      style={[
-                        Style.textInput,
-                        {
-                          color: Color.gray
-                        }
-                      ]}
-                      onValueChange={this.selectCity}
-                    >
-                      {
-                        Helper.locations.map((el, ndx) => {
-                          return (
-                            <Picker.Item label={el} value={el} key={'city'+ndx} />
-                          )
-                        })
-                      }
-                  </Picker>
-                </View>
+                <LocationWithIcon {...{
+                  style: Style.textInput,
+                  selected: this.state.selectedCity,
+                  placeholder: "Select location",
+                  iconHeight: 20,
+                  stores: Helper.locations,
+                  onSelect: (selectedItem) => {
+                    this.setState({selectedCity: selectedItem.building_name})
+                  }
+                  }}
+                  key={2}
+                />
                 <TextInput
                   style={Style.textInput}
                   {...Style.textPlaceHolder}

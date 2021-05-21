@@ -38,23 +38,27 @@ export default class LocationInput extends React.Component {
 
 
   render() {
-
       let { modalVisible } = this.state
       let { stores, selected, placeholder, iconHeight = 15, style, iconStyle = {
           position: 'absolute',
           right: 10,
           top: 12
-      }, disabled, placeholderColor } = this.props
+      }, disabled, placeholderColor, backgroundColor } = this.props
       return (
         <View>
           <TouchableHighlight
-            style={[BasicStyles.btn, Style.textInput, style]}
+            style={[BasicStyles.btn, Style.textInput, style, {
+              backgroundColor: backgroundColor ? backgroundColor : BasicStyles.btn.backgroundColor
+            }]}
             onPress={() => this.setModalVisible(!modalVisible)}
             underlayColor={Color.gray}  
             disabled={disabled}
           >
             <>
-              <Text style={[{ alignSelf: 'flex-start', color: placeholderColor ? placeholderColor : Color.gray, }]}>
+              <Text style={[{ 
+                alignSelf: 'flex-start', 
+                color: placeholderColor ? placeholderColor : Color.gray,
+              }]}>
                 {!selected ? placeholder : selected}
               </Text>
               <TouchableHighlight
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    width: Style.getWidth() - 100
+    width: Style.getWidth() - 87
   },
   modalOverlay: {
     position: 'absolute',

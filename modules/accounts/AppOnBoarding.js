@@ -75,6 +75,7 @@ class AppOnBoarding extends Component {
   retrieveAllBuildings = () => {
     this.setState({ isLoading: true });
     Api.getRequest(Routes.allBuildings(), response => {
+      console.log("all building: ", response.buildings)
       this.setState({ isLoading: false, stores: response.buildings })
     }, error => {
       console.log('Error: ', error)

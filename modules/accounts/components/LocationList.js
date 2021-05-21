@@ -13,6 +13,7 @@ export default class LocationsList extends Component {
             { key: 'Holywood Terrace Block A' },
             { key: 'Holywood Terrace Block B' },
         ];
+        console.log('Passed data: ', stores)
         return (
             <FlatList
                 data={stores}
@@ -22,7 +23,7 @@ export default class LocationsList extends Component {
                             {...{ item: item, callback: this.props.callback, selected: this.props.selected }}
                         />
                 }
-                keyExtractor={(item, index) => 'locations ' + item.id}
+                keyExtractor={(item, index) => index + 'locations' + item.id}
             />
         );
     }

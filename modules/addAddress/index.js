@@ -4,7 +4,6 @@ import GooglePlacesAutoCompleteWithMap from 'components/Location/GooglePlacesAut
 import Location from 'components/Location';
 import Style from './Styles';
 import LocationWithIcon from 'modules/accounts/components/LocationInput.js';
-import {Picker} from '@react-native-community/picker';
 import {Helper, Color, Routes, BasicStyles} from 'common';
 import Api from 'services/apiv2/index.js';
 import { connect } from 'react-redux';
@@ -26,7 +25,7 @@ class AddAddress extends Component {
       stores: [],
       c_password: '',
       isShowingCity: false,
-      selectedCity: Helper.locations[0],
+      selectedCity: Helper.locations[0].building_name,
       countries: [],
       countryId: null,
       buildingId: null,
@@ -69,10 +68,6 @@ class AddAddress extends Component {
     }, error => {
       this.setState({ isLoading: false})
     })
-  }
-
-  selectCity = (itemValue, itemIndex) => {
-    this.setState({selectedCity: itemValue})
   }
 
   validate() {
@@ -262,6 +257,7 @@ class AddAddress extends Component {
                 selected: this.state.location,
                 placeholder: "Select location",
                 placeholderColor: Color.primary,
+                backgroundColor: Color.white,
                 iconHeight: 20,
                 stores: this.state.stores,
                 onSelect: (selectedItem) => {
@@ -274,7 +270,8 @@ class AddAddress extends Component {
                     this.setState({ isShowingCity: false })
                   }
                 }
-              }} />
+                }}
+              />
               { this.state.isShowingCity &&
                 <View>
                   <TextInput
@@ -291,26 +288,19 @@ class AddAddress extends Component {
                     value={this.state.townDistrict}
                     placeholder={'Town / District'}
                   />
-                  <View style={Style.textInput}>
-                    <Picker
-                      selectedValue={this.state.selectedCity}
-                      style={[
-                        Style.textInput,
-                        {
-                          color: Color.primary
-                        }
-                      ]}
-                      onValueChange={this.selectCity}
-                    >
-                      {
-                        Helper.locations.map((el, ndx) => {
-                          return (
-                            <Picker.Item label={el} value={el} key={'city' + ndx} />
-                          )
-                        })
-                      }
-                    </Picker>
-                  </View>
+                  <LocationWithIcon {...{
+                    style: Style.textInput,
+                    selected: this.state.selectedCity,
+                    placeholder: "Select location",
+                    backgroundColor: Color.white,
+                    placeholderColor: Color.primary,
+                    iconHeight: 20,
+                    stores: Helper.locations,
+                    onSelect: (selectedItem) => {
+                      this.setState({selectedCity: selectedItem.building_name})
+                    }
+                    }}
+                  />
                   <TextInput
                     style={Style.textInput}
                     {...Style.textPlaceHolder}

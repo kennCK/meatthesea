@@ -8,6 +8,7 @@ import Separator from '../components/Separator';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import { connect } from 'react-redux';
 import Api from 'services/apiv2/index.js';
+import moment from 'moment';
 
 class RequestPickup extends Component {
   constructor(props) {
@@ -47,7 +48,8 @@ class RequestPickup extends Component {
 
   collectCrockery = () => {
     const { requestPickUpCrockery } = this.props.state;
-    Api.putRequest(Routes.crockeryUpdate(requestPickUpCrockery.id, requestPickUpCrockery.address_id, 20), {}, response => {
+    let time = moment().format('HH : mm')
+    Api.putRequest(Routes.crockeryUpdate(requestPickUpCrockery.id, requestPickUpCrockery.address_id, 20, time), {}, response => {
       console.log('UPDATING CROCKERY RESPONSE: ', response)
       this.props.navigation.navigate('scheduledPickupStack', {id: requestPickUpCrockery.order_id})
     }, error => {

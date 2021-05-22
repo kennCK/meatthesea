@@ -17,5 +17,6 @@ export default{
     cluster: 'ap1',
     encrypted: true
   },
-  whats_app_number: '852 6845 7395'
+  whats_app_number: '852 6845 7395',
+  ioSWhatApp: '85268457395'
 }

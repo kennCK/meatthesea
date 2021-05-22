@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Tooltip, Text } from 'react-native-elements';
-import { View, TouchableOpacity, Linking } from 'react-native'
+import { View, TouchableOpacity, Linking, Platform } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faWhatsapp
@@ -20,6 +20,9 @@ class Whatsapp extends Component {
   }
   openWhatsApp = () => {
     let link = `whatsapp://send?text=&phone=${Config.whats_app_number}`
+    if(Platform.OS == 'ios'){
+      link = 'https://wa.me/' + Config.ioSWhatApp + '?text='
+    }
     if(link) {
       Linking.canOpenURL(link)
        .then(supported => {

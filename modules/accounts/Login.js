@@ -91,8 +91,18 @@ class Login extends Component {
     if ((email != null && email != '') && (password != null && password != '')) {
       this.setState({ isLoading: true, error: 0 });
       Api.getRequest(Routes.customerLogin + `?Email=${email}&Password=${password}`, response => {
-        let { customer, authorization } = response;
         this.setState({ isLoading: false})
+        let error = {}
+        if(typeof response == 'string'){
+          error = JSON.parse(response)
+        }
+        if(error.errors) {
+          if(error.errors.customer != undefined) {
+            this.setState({ error: 2 })
+          }
+          return
+        }
+        let { customer, authorization } = response;
         login(email, password, customer, authorization);
         this.fetchAddress()
         this.redirect("homepageStack")

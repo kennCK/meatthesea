@@ -81,7 +81,6 @@ class ReturnInPerson extends Component {
     const { requestPickUpCrockery } = this.props.state;
     this.setState({isLoading: true});
     Api.putRequest(Routes.crockeryUpdate(requestPickUpCrockery.id, requestPickUpCrockery.address_id, 30, time), {}, response => {
-      console.log('RETURN CROCKERY RESPONSE: ', response)
       this.setState({isLoading: false});
     }, error => {
       console.log('RETURN CROCKERY ERROR: ', error)

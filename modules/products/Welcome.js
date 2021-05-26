@@ -87,9 +87,9 @@ class Welcome extends Component {
     if (search == null || search == '' || storeLocation == null) {
       let params = ''
       if (filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item.length > 0) {
-        params = (filter === null ? '' : `?CategoryId=${filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true'
+        params = (filter === null ? '' : `?CategoryId=${filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true' + '&LocalTime=' + moment().format('HH:mm')
       } else {
-        params = (filter === null ? '' : `?CategoryId=${filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true'
+        params = (filter === null ? '' : `?CategoryId=${filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true' + '&LocalTime=' + moment().format('HH:mm')
       }
       console.log(params)
       Api.getRequest(
@@ -109,7 +109,9 @@ class Welcome extends Component {
         '&StoreId=' +
         storeLocation.id +
         (filter === null ? '' : `&CategoryId=${filter[this.state.menu === 0 ? 'restaurant' : 'deli'].item[0].id}`) +
-        '&CategoryType=' + this.state.menu
+        '&CategoryType=' + this.state.menu +
+        '&PublishedStatus=true' +
+        '&LocalTime=' + moment().format('HH:mm')
       Api.getRequest(
         Routes.productSearch + parameters,
         response => {

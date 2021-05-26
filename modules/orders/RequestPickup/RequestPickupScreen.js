@@ -50,7 +50,6 @@ class RequestPickup extends Component {
     const { requestPickUpCrockery } = this.props.state;
     let time = moment().format('HH : mm')
     Api.putRequest(Routes.crockeryUpdate(requestPickUpCrockery.id, requestPickUpCrockery.address_id, 20, time), {}, response => {
-      console.log('UPDATING CROCKERY RESPONSE: ', response)
       this.props.navigation.navigate('scheduledPickupStack', {id: requestPickUpCrockery.order_id})
     }, error => {
       console.log('UPDATING CROCKERY ERROR: ', error)

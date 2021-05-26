@@ -97,7 +97,7 @@ class Menu extends Component {
         '&StoreId=' +
         storeLocation.id +
         (filter === null ? '' : `&CategoryId=${filter[homepage.type === 0 ? 'restaurant' : 'deli'].item[0].id}`) +
-        '&CategoryType=' + this.state.menu
+        '&CategoryType=' + this.state.menu + '&PublishedStatus=true'
       Api.getRequest(
         Routes.productSearch + parameters,
         response => {
@@ -482,110 +482,17 @@ class Menu extends Component {
             <Text style={{fontWeight: 'bold'}}>DELI-STORE MENU</Text>
           )}
         </View>
-        <ScrollView showsHorizontalScrollIndicator={false}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {(homepage && homepage.type == 0 && restaurant != null) &&
-              restaurant.map((data, idx) => {
-                return (
-                  <TouchableOpacity
-                    style={[Style.menuButton, {
-                      backgroundColor: filter && this.filterCheck(data.id, 'restaurant') ? Color.secondary : Color.white
-                    }]}
-                    onPress={() => this.setSelectedFilter(data, 'restaurant')}
-                    key={idx}>
-                    <Text
-                      style={{
-                        color:
-                          filter && filter.id == data.id
-                            ? Color.primary
-                            : Color.black,
-                        fontWeight:
-                          filter && filter.id == data.id ? 'bold' : 'normal',
-                      }}>
-                      {data.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            {(homepage && homepage.type == 1 && deliStore != null) && deliStore != null &&
-              deliStore.map((data, idx) => {
-                return (
-                  <TouchableOpacity
-                    style={[Style.menuButton, {
-                      backgroundColor: filter && this.filterCheck(data.id, 'deli') ? Color.secondary : Color.white
-                    }]}
-                    onPress={() => this.setSelectedFilter(data, 'deli')}
-                    key={idx}>
-                    <Text
-                      style={{
-                        color:
-                          filter && filter.id == data.id
-                            ? Color.primary
-                            : Color.black,
-                        fontWeight:
-                          filter && filter.id == data.id ? 'bold' : 'normal',
-                      }}>
-                      {data.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-          </ScrollView>
-          <View style={{alignItems: 'center'}}>
-            <View style={Style.imageRow}>
-              {menuProducts !== null &&
-                menuProducts.map((item, idx) => {
-                  return (
-                    <TouchableHighlight
-                      activeOpacity={0.9}
-                      underlayColor={Color.lightGray}
-                      onPress={() => this.selectItem(item)}
-                      key={idx} 
-                    >
-                      <View style={Style.menuContainer}>
-                        {item.images.length > 0 && 
-                          <View style={{
-                            width: Style.menuImage.width,
-                            height: Style.menuImage.height,
-                            backgroundColor: Color.white,
-                            shadowColor: "#000",
-                            shadowOffset:{
-                              width: 0,
-                              height: 3,
-                            },
-                            shadowOpacity: 0.27,
-                            shadowRadius: 4.65,
-                            elevation: 6,
-                          }}>
-                            <Image
-                              resizeMode={'contain'}
-                              source={{uri: item.images.length > 0 ? item.images[0].src : '#'}}
-                              style={Style.menuImage}
-                            />
-                          </View>
-                        }
-                        {item.images.length === 0 && 
-                          <FontAwesomeIcon
-                            icon={faImage}
-                            size={Style.menuImage.width}
-                            style={
-                              {
-                                color: Color.gray
-                              }
-                            }
-                          />
-                        }
-                        <Text style={{fontWeight: 'bold'}}>
-                        {Helper.currency[0].title} {item.price}
-                        </Text>
-                        <Text>{item.name}</Text>
-                      </View>
-                    </TouchableHighlight>
-                  );
-                })}
-            </View>
-          </View>
-        </ScrollView>
+        <Alert
+          show={this.state.isAddingAddressName}
+          text={this.state.alertText}
+          onClick={()=> {
+            this.setState({ isAddingAddressName: false, visibleModal: false})
+            // if(!this.state.isError){
+            //   this.props.router.push('orderSummaryStack');
+            // }
+          }}
+          alertType={this.state.isError == true ? 'error' : 'primary'}
+        />
         <Modal
           isVisible={this.state.visibleModal}
           style={[
@@ -739,17 +646,110 @@ class Menu extends Component {
             </View>
           </ScrollView>
         </Modal>
-        <Alert
-          show={this.state.isAddingAddressName}
-          text={this.state.alertText}
-          onClick={()=> {
-            this.setState({ isAddingAddressName: false, visibleModal: false})
-            // if(!this.state.isError){
-            //   this.props.router.push('orderSummaryStack');
-            // }
-          }}
-          alertType={this.state.isError == true ? 'error' : 'primary'}
-        />
+        <ScrollView showsHorizontalScrollIndicator={false}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {(homepage && homepage.type == 0 && restaurant != null) &&
+              restaurant.map((data, idx) => {
+                return (
+                  <TouchableOpacity
+                    style={[Style.menuButton, {
+                      backgroundColor: filter && this.filterCheck(data.id, 'restaurant') ? Color.secondary : Color.white
+                    }]}
+                    onPress={() => this.setSelectedFilter(data, 'restaurant')}
+                    key={idx}>
+                    <Text
+                      style={{
+                        color:
+                          filter && filter.id == data.id
+                            ? Color.primary
+                            : Color.black,
+                        fontWeight:
+                          filter && filter.id == data.id ? 'bold' : 'normal',
+                      }}>
+                      {data.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            {(homepage && homepage.type == 1 && deliStore != null) && deliStore != null &&
+              deliStore.map((data, idx) => {
+                return (
+                  <TouchableOpacity
+                    style={[Style.menuButton, {
+                      backgroundColor: filter && this.filterCheck(data.id, 'deli') ? Color.secondary : Color.white
+                    }]}
+                    onPress={() => this.setSelectedFilter(data, 'deli')}
+                    key={idx}>
+                    <Text
+                      style={{
+                        color:
+                          filter && filter.id == data.id
+                            ? Color.primary
+                            : Color.black,
+                        fontWeight:
+                          filter && filter.id == data.id ? 'bold' : 'normal',
+                      }}>
+                      {data.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+          </ScrollView>
+          <View style={{alignItems: 'center'}}>
+            <View style={Style.imageRow}>
+              {menuProducts !== null &&
+                menuProducts.map((item, idx) => {
+                  return (
+                    <TouchableHighlight
+                      activeOpacity={0.9}
+                      underlayColor={Color.lightGray}
+                      onPress={() => this.selectItem(item)}
+                      key={idx} 
+                    >
+                      <View style={Style.menuContainer}>
+                        {item.images.length > 0 && 
+                          <View style={{
+                            width: Style.menuImage.width,
+                            height: Style.menuImage.height,
+                            backgroundColor: Color.white,
+                            shadowColor: "#000",
+                            shadowOffset:{
+                              width: 0,
+                              height: 3,
+                            },
+                            shadowOpacity: 0.27,
+                            shadowRadius: 4.65,
+                            elevation: 6,
+                          }}>
+                            <Image
+                              resizeMode={'contain'}
+                              source={{uri: item.images.length > 0 ? item.images[0].src : '#'}}
+                              style={Style.menuImage}
+                            />
+                          </View>
+                        }
+                        {item.images.length === 0 && 
+                          <FontAwesomeIcon
+                            icon={faImage}
+                            size={Style.menuImage.width}
+                            style={
+                              {
+                                color: Color.gray
+                              }
+                            }
+                          />
+                        }
+                        <Text style={{fontWeight: 'bold'}}>
+                        {Helper.currency[0].title} {item.price}
+                        </Text>
+                        <Text>{item.name}</Text>
+                      </View>
+                    </TouchableHighlight>
+                  );
+                })}
+            </View>
+          </View>
+        </ScrollView>
         {this.state.isLoading ? <Spinner mode="overlay" /> : null}
       </View>
     );

@@ -99,6 +99,8 @@ class Login extends Component {
         if(error.errors) {
           if(error.errors.customer != undefined) {
             this.setState({ error: 2 })
+          }else if(error.errors.password != undefined) {
+            this.setState({ error: 2 })
           }
           return
         }

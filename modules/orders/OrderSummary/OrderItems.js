@@ -204,7 +204,7 @@ class OrderItems extends Component {
                     justifyContent: 'space-between'
                   }}>
                     <Text>
-                      {data.product.name}
+                      {data.product.name.length <= 32 ? data.product.name.length: (data.product.name.substring(0, 31) + '...')}
                     </Text>
                     <Text>
                       {'HKD ' + data.product.price}

@@ -203,10 +203,19 @@ class OrderItems extends Component {
                     flexDirection: 'row',
                     justifyContent: 'space-between'
                   }}>
-                    <Text>
-                      {data.product.name.length <= 32 ? data.product.name.length: (data.product.name.substring(0, 31) + '...')}
+                    <Text
+                      style={{
+                        width: '70%'
+                      }}
+                    >
+                      {data.product.name}
                     </Text>
-                    <Text>
+                    <Text
+                      style={{
+                        width: '30%',
+                        textAlign: 'right'
+                      }}
+                    >
                       {'HKD ' + data.product.price}
                     </Text>
                   </View>

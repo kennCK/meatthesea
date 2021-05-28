@@ -504,113 +504,121 @@ class Menu extends Component {
           onRequestClose={() => {
             this.setState({visibleModal: false});
           }}>
-          <ScrollView 
-            showsHorizontalScrollIndicator={false} 
-            showsVerticalScrollIndicator={false}
+          <View
+            style={{
+              paddingBottom: 120
+            }}
           >
-            <View style={{
-              alignItems: 'center',
-              height: height,
-              paddingBottom: 150
-            }}>
-              { this.state.itemImage !== '#' && this.state.itemImage !== null && this.state.itemImage !== undefined &&
-                <Image
-                  resizeMode={'contain'}
-                  source={{uri: this.state.itemImage !== null && this.state.itemImage !== undefined ? this.state.itemImage : '#'}}
-                  style={Style.productImageFull}
-                />
-              }
-              {this.state.itemImage === '#' && 
-                <FontAwesomeIcon
-                  icon={faImage}
-                  size={Style.menuImage.width + 50}
-                  style={
-                    {
-                      color: Color.gray
-                    }
-                  }
-                />
-              }
-              <TouchableHighlight
-                activeOpacity={0.6}
-                underlayColor={Color.lightGray}
-                style={{
-                  borderWidth: 1,
-                  paddingTop: 0,
-                  borderWidth: 0,
-                  borderRadius: 20,
-                  position: 'absolute',
-                  top: 20,
-                  left: 20,
-                  backgroundColor: 'rgba(0,100,177,.7)'
-                }}
-                onPress={() => {
-                  this.setState({visibleModal: false});
-                }}
-              >
-                <Text
-                  style={[
-                    {
-                      color: Color.white,
-                      fontSize: BasicStyles.standardFontSize + 15,
-                      lineHeight: 21,
-                      marginBottom: -10,
-                      paddingTop: 7.5,
-                      paddingBottom: 7.5,
-                      paddingRight: 6,
-                      paddingLeft: 6
-                    }
-                  ]}
-                  >&times;</Text>
-              </TouchableHighlight>
-              <View
-                style={{
-                  paddingLeft: 30,
-                  paddingRight: 30,
-                  paddingTop: 30,
-                  paddingBottom: 0,
-                  borderBottomWidth: 1,
-                  borderBottomColor: Color.gray,
-                  width: width
-                }}>
-                <Text style={{
-                  fontWeight: 'bold',
-                  marginBottom: 10
-                }}>{this.state.itemName}</Text>
-                <Text style={{
-                  fontWeight: 'bold',
-                  marginBottom: 10
-                }}>
-                  {Helper.currency[0].title} {this.state.itemPrice}
-                </Text>
-                <Text style={{fontSize: BasicStyles.standardFontSize}}>
-                  {/* {this.state.itemDescription} */}
-                  {this.state.isError}
-                </Text>
-              </View>
-            
-              <View
-                style={{
-                  padding: 30,
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start',
-                  width: width
-                }}
-              >
-                {this.state.addOn1 !== undefined && this.state.addOn2 !== undefined &&
-                  <Text style={{
-                    fontWeight: 'bold'
-                  }}>Add more</Text>
+            <ScrollView 
+              showsHorizontalScrollIndicator={false} 
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom: 100
+              }}
+            >
+              <View style={{
+                alignItems: 'center',
+                height: height
+              }}>
+                { this.state.itemImage !== '#' && this.state.itemImage !== null && this.state.itemImage !== undefined &&
+                  <Image
+                    resizeMode={'contain'}
+                    source={{uri: this.state.itemImage !== null && this.state.itemImage !== undefined ? this.state.itemImage : '#'}}
+                    style={Style.productImageFull}
+                  />
                 }
-                {this.returnAddOn1()}
-                {this.returnAddOn2()}
+                {this.state.itemImage === '#' && 
+                  <FontAwesomeIcon
+                    icon={faImage}
+                    size={Style.menuImage.width + 50}
+                    style={
+                      {
+                        color: Color.gray
+                      }
+                    }
+                  />
+                }
+                <TouchableHighlight
+                  activeOpacity={0.6}
+                  underlayColor={Color.lightGray}
+                  style={{
+                    borderWidth: 1,
+                    paddingTop: 0,
+                    borderWidth: 0,
+                    borderRadius: 20,
+                    position: 'absolute',
+                    top: 20,
+                    left: 20,
+                    backgroundColor: 'rgba(0,100,177,.7)'
+                  }}
+                  onPress={() => {
+                    this.setState({visibleModal: false});
+                  }}
+                >
+                  <Text
+                    style={[
+                      {
+                        color: Color.white,
+                        fontSize: BasicStyles.standardFontSize + 15,
+                        lineHeight: 21,
+                        marginBottom: -10,
+                        paddingTop: 7.5,
+                        paddingBottom: 7.5,
+                        paddingRight: 6,
+                        paddingLeft: 6
+                      }
+                    ]}
+                    >&times;</Text>
+                </TouchableHighlight>
+                <View
+                  style={{
+                    paddingLeft: 30,
+                    paddingRight: 30,
+                    paddingTop: 30,
+                    paddingBottom: 0,
+                    borderBottomWidth: 1,
+                    borderBottomColor: Color.gray,
+                    width: width
+                  }}>
+                  <Text style={{
+                    fontWeight: 'bold',
+                    marginBottom: 10
+                  }}>{this.state.itemName}</Text>
+                  <Text style={{
+                    fontWeight: 'bold',
+                    marginBottom: 10
+                  }}>
+                    {Helper.currency[0].title} {this.state.itemPrice}
+                  </Text>
+                  <Text style={{fontSize: BasicStyles.standardFontSize}}>
+                    {/* {this.state.itemDescription} */}
+                    {this.state.isError}
+                  </Text>
+                </View>
+              
+                <View
+                  style={{
+                    padding: 30,
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    width: width
+                  }}
+                >
+                  {this.state.addOn1 !== undefined && this.state.addOn2 !== undefined &&
+                    <Text style={{
+                      fontWeight: 'bold'
+                    }}>Add more</Text>
+                  }
+                  {this.returnAddOn1()}
+                  {this.returnAddOn2()}
+                </View>
               </View>
-            </View>
+            </ScrollView>
             <View style={{
               alignItems: 'center',
+              width: '100%',
               position: 'absolute',
-              bottom: 0,
-              width: '100%'
+              bottom: 0
             }}>
               <Counter
                 count={this.state.qty}
@@ -644,7 +652,7 @@ class Menu extends Component {
                 </Text>
               </TouchableHighlight>
             </View>
-          </ScrollView>
+          </View>
         </Modal>
         <ScrollView showsHorizontalScrollIndicator={false}>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

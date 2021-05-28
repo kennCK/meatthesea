@@ -26,7 +26,8 @@ class Login extends Component {
       isLoading: false,
       token: null,
       error: 0,
-      isResponseError: false
+      isResponseError: false,
+      invalidCredentialText: ''
     };
   }
 
@@ -93,14 +94,15 @@ class Login extends Component {
       Api.getRequest(Routes.customerLogin + `?Email=${email}&Password=${password}`, response => {
         this.setState({ isLoading: false})
         let error = {}
+        console.log('LOGIN RESPONSE: ', response)
         if(typeof response == 'string'){
           error = JSON.parse(response)
         }
         if(error.errors) {
           if(error.errors.customer != undefined) {
-            this.setState({ error: 2 })
+            this.setState({ error: 2, invalidCredentialText:  error.errors.customer[0]})
           }else if(error.errors.password != undefined) {
-            this.setState({ error: 2 })
+            this.setState({ error: 2, invalidCredentialText:  error.errors.password[0] })
           }
           return
         }
@@ -119,7 +121,7 @@ class Login extends Component {
   }
 
   render() {
-    const { isLoading, error, isResponseError } = this.state;
+    const { isLoading, error, isResponseError, invalidCredentialText } = this.state;
     return (
       <ScrollView contentContainerStyle={Style.container} style={Style.ScrollView}>
         <View style={Style.MainContainer}>
@@ -130,7 +132,7 @@ class Login extends Component {
             ) : null}
 
             {error == 2 ? (
-              <Text style={Style.messageText}>Email and password didn't match.</Text>
+              <Text style={Style.messageText}>{invalidCredentialText}</Text>
             ) : null}
           </View> : null}
 

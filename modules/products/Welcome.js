@@ -10,7 +10,9 @@ import {
   ScrollView,
   Dimensions,
   SafeAreaView,
-  Linking
+  Linking,
+  Keyboard,
+  Platform
 } from 'react-native';
 import { BasicStyles, Color } from 'common';
 import Modal from 'react-native-modal';
@@ -64,7 +66,9 @@ class Welcome extends Component {
       value: '',
       addresses: [],
       defaultIndex: null,
-      noProductFound: false
+      noProductFound: false,
+      keyboardStatus: false,
+      keyboardHeight: 0
     };
   }
 
@@ -151,6 +155,15 @@ class Welcome extends Component {
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
     })
+
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow,
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide,
+    );
   }
 
   firebaseNotification(){
@@ -191,6 +204,17 @@ class Welcome extends Component {
      * removing the event listener added in the componentDidMount()
      */
     this.focusListener.remove();
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  _keyboardDidShow = (e) => {
+    this.setState({ keyboardStatus: true, keyboardHeight: e.endCoordinates.height });
+    console.log('\n\nKEYBOARD HEIGHT: ', e.endCoordinates.height, '\n\n')
+  }
+
+  _keyboardDidHide = () => {
+    this.setState({ keyboardStatus: false });
   }
 
   fetchAddress = () => {
@@ -1023,7 +1047,14 @@ class Welcome extends Component {
           showRating && user && (
             <View style={{
               position: 'absolute',
-              bottom: 0,
+              ...Platform.select({
+                ios: {
+                  bottom: this.state.keyboardStatus ? this.state.keyboardHeight : 0,
+                },
+                android: {
+                  bottom: 0,
+                },
+              }),
               left: 0,
               minHeight: 125,
               borderTopLeftRadius: 15,

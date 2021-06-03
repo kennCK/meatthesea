@@ -142,7 +142,7 @@ const initialState = {
   requestPickUpCrockery: null,
   paypalSuccessData: null,
   menuProducts: null,
-  showRating: false,
+  showRating: false, // set to false, for default
   isLocationRetrieve: true,
   setIsAddingCutlery: false
 };

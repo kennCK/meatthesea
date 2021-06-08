@@ -23,6 +23,7 @@ import { color } from 'react-native-reanimated';
 import Alert from 'modules/generic/alert';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import { Spinner } from 'components';
+import moment from 'moment';
 
 const width = Math.round(Dimensions.get('window').width);
 const height = Math.round(Dimensions.get('window').height);
@@ -96,7 +97,7 @@ class Menu extends Component {
     }
     if (search == null || search == '' || storeLocation == null) {
       Api.getRequest(
-        Routes.productsRetrieve + (filter === null ? '' : `?CategoryId=${filter[homepage.type === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true',
+        Routes.productsRetrieve + (filter === null ? '' : `?CategoryId=${filter[homepage.type === 0 ? 'restaurant' : 'deli'].item[0].id}`) + '&PublishedStatus=true' + '&LocalTime=' + moment().format('HH:mm'),
         response => {
           setMenuProducts(response.products);
         },
@@ -112,7 +113,7 @@ class Menu extends Component {
         '&StoreId=' +
         storeLocation.id +
         (filter === null ? '' : `&CategoryId=${filter[homepage.type === 0 ? 'restaurant' : 'deli'].item[0].id}`) +
-        '&CategoryType=' + this.state.menu + '&PublishedStatus=true'
+        '&CategoryType=' + this.state.menu + '&PublishedStatus=true' + '&LocalTime=' + moment().format('HH:mm')
       Api.getRequest(
         Routes.productSearch + parameters,
         response => {

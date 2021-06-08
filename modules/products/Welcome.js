@@ -465,7 +465,9 @@ class Welcome extends Component {
         search +
         '&StoreId=' +
         storeLocation.id +
-        '&CategoryType=' + this.state.menu
+        '&CategoryType=' + this.state.menu +
+        '&PublishedStatus=true' +
+        '&LocalTime=' + moment().format('HH:mm')
 
       if (filter !== null) {
         if (filter[this.state.menu === 0 ? 'restaurant' : 'deli'] !== undefined) {

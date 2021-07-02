@@ -25,12 +25,15 @@ class Browser extends Component {
         console.log('[WEB VIEW] ', event)
         if(event.url.includes('paypalSuccess')) {
             this.props.navigation.navigate('orderPlacedStack');
-            return;
+            return false;
+        }else {
+            return true;
         }
     }
 
     render() {
         const { params } = this.props.navigation.state
+        console.log('params link: ', params.link)
         return (
             <WebView
                 source={{ uri: params.link }}
@@ -38,8 +41,9 @@ class Browser extends Component {
                 startInLoadingState={true}
                 domStorageEnabled={true}
                 javaScriptEnabled={true}
-                onNavigationStateChange = {this.handleNavigationStateChange}
-            />
+                onShouldStartLoadWithRequest={this.handleNavigationStateChange}
+                />
+                // onNavigationStateChange = {this.handleNavigationStateChange}
         )
     }
 }
